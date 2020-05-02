@@ -56,15 +56,16 @@ digraph {
 		rank=same
 		2016
 		"Duelling-DQN" [label="{Duelling-DQN|{OFP|CS|DA|QV}}" shape=record style=rounded]
-		A3C [label="{A3C|{ONP|CS|CA|ADV}}" shape=record style=rounded]
+		A3C [label="{A3C|{ONP|CS|CA|ADV|SP}}" shape=record style=rounded]
 	}
 	{
 		rank=same
 		2017
 		"QR-DQN" [label="{QR-DQN|{OFP|CS|DA|QV|RB}}" shape=record style=rounded]
 		"DQN+HER" [label="{DQN+HER|{OFP|CS|DA|QV|RB}}" shape=record style=rounded]
+		MADDPG [label="{MADDPG|{OFP|CS|CA|DP|RB}}" shape=record style=rounded]
 		"DDPG+HER" [label="{DDPG+HER|{OFP|CS|DA|DP|QV|RB}}" shape=record style=rounded]
-		A2C [label="{A2C|{ONP|CS|CA|ADV}}" shape=record style=rounded]
+		A2C [label="{A2C|{ONP|CS|CA|ADV|SP}}" shape=record style=rounded]
 		ACER [label="{ACER|{OFP|CS|CA|ADV|RB}}" shape=record style=rounded]
 		ACKTR [label="{ACKTR|{ONP|CS|CA|ADV}}" shape=record style=rounded]
 		PPO [label="{PPO|{ONP|CS|DA|CA|ADV}}" shape=record style=rounded]
@@ -72,6 +73,7 @@ digraph {
 	{
 		rank=same
 		2018
+		D4PG [label="{D4PG|{OFP|CS|CA|DP|RB}}" shape=record style=rounded]
 		TD3 [label="{TD3|{OFP|CS|DA|DP|QV|RB}}" shape=record style=rounded]
 		SAC [label="{SAC|{OFP|CS|CA|CA|QV|SP}}" shape=record style=rounded]
 	}
@@ -91,6 +93,8 @@ digraph {
 	DQN -> DDPG [label="replay buffer" style=dotted]
 	DDPG -> "DDPG+HER" [style=dotted]
 	DDPG -> TD3
+	DDPG -> MADDPG
+	DDPG -> D4PG
 	"Actor Critic" -> TRPO
 	"Actor Critic" -> A3C
 	A3C -> A2C

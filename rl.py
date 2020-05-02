@@ -175,14 +175,14 @@ edges += [Edge(rl, value_based),
 # VALUE BASED
 #
 sarsa = Node('SARSA',
-           'SARSA',
+           'SARSA (State-Action-Reward-State-Action) is an on-policy TD control method',
            flags=[Flag.ONP, Flag.DA],
            authors='G. A. Rummery, M. Niranjan',
            year=1994, 
            url='http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.17.2539&rep=rep1&type=pdf')
 
 qlearning = Node('Q-learning',
-           'Q-learning',
+           'Q-learning an off-policy TD control method. Unlike SARSA, it doesn\'t follow the policy to find the next action but rather chooses most optimal action in a greedy fashion',
            flags=[Flag.OFP, Flag.DA, Flag.QV],
            authors='Chris Watkins',
            year=1989, 
@@ -209,7 +209,7 @@ ddqn = Node('DDQN',
             links=['https://towardsdatascience.com/deep-q-learning-for-the-cartpole-44d761085c2f'])
 
 duel_dqn = Node('Duelling-DQN',
-                'Duelling DQN',
+                'Duelling DQN represents two separate estimators: one for the state value function and one for the state-dependent action advantage function. The main benefit of this factoring is to generalize learning across actions without imposing any change to the underlying reinforcement learning algorithm.',
                 flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.QV],
                 authors='Ziyu Wang, Tom Schaul, Matteo Hessel, Hado van Hasselt, Marc Lanctot, Nando de Freitas',
                 year=2016, 
@@ -225,7 +225,7 @@ qr_dqn = Node('QR-DQN',
            links=['https://github.com/senya-ashukha/quantile-regression-dqn-pytorch'])
 
 dqn_her = Node('DQN+HER',
-           'Hindsight Experience Replay (HER)',
+           'DQN with Hindsight Experience Replay (HER)',
            flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.QV, Flag.RB],
            authors='Marcin Andrychowicz, Filip Wolski, Alex Ray, Jonas Schneider, Rachel Fong, Peter Welinder, Bob McGrew, Josh Tobin, Pieter Abbeel, Wojciech Zaremba',
            year=2017, 
@@ -246,12 +246,14 @@ edges += [Edge(value_based, sarsa),
 # POLICY BASED
 #
 reinforce = Node('REINFORCE',
-           'REINFORCE',
+           'REINFORCE (Monte-Carlo policy gradient). The agent collects a trajectory of one episode using its current policy, and uses the returns to update the policy parameter',
            flags=[Flag.MC, Flag.ONP, Flag.CS, Flag.DA],
            authors='Ronald J. Williams',
            year=1992, 
            url='https://people.cs.umass.edu/~barto/courses/cs687/williams92simple.pdf',
-           links=['https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/']
+           links=['http://www.cs.toronto.edu/~tingwuwang/REINFORCE.pdf', 
+                  'https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/'
+                  ]
            )
 """
 vpg = Node('VPG',
@@ -294,6 +296,24 @@ ddpg = Node('DDPG',
                   'https://pemami4911.github.io/blog/2016/08/21/ddpg-rl.html']
            )
 
+d4pg = Node('D4PG',
+           'Distributed Distributional Deep Deterministic Policy Gradient (D4PG) adopts the very successful distributional perspective on reinforcement learning and adapts it to the continuous control setting. It combines this within a distributed framework. It also combines this technique with a number of additional, simple improvements such as the use of N-step returns and prioritized experience replay',
+           flags=[Flag.OFP, Flag.CS, Flag.CA, Flag.DP, Flag.RB],
+           authors='Gabriel Barth-Maron, Matthew W. Hoffman, David Budden, Will Dabney, Dan Horgan, Dhruva TB, Alistair Muldal, Nicolas Heess, Timothy Lillicrap',
+           year=2018, 
+           url='https://arxiv.org/abs/1804.08617',
+           links=[]
+           )
+
+maddpg = Node('MADDPG',
+           'Multi-agent DDPG (MADDPG) extends DDPG to an environment where multiple agents are coordinating to complete tasks with only local information. In the viewpoint of one agent, the environment is non-stationary as policies of other agents are quickly upgraded and remain unknown. MADDPG is an actor-critic model redesigned particularly for handling such a changing environment and interactions between agents (source: [Lilian Weng blog](https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html#reinforce))',
+           flags=[Flag.OFP, Flag.CS, Flag.CA, Flag.DP, Flag.RB],
+           authors='Ryan Lowe, Yi Wu, Aviv Tamar, Jean Harb, Pieter Abbeel, Igor Mordatch',
+           year=2017, 
+           url='https://arxiv.org/abs/1706.02275',
+           links=[]
+           )
+
 ddpg_her = Node('DDPG+HER',
            'Hindsight Experience Replay (HER)',
            flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.DP, Flag.QV, Flag.RB],
@@ -323,23 +343,25 @@ trpo = Node('TRPO',
 
 a3c = Node('A3C',
            'Asynchronous Advantage Actor-Critic (A3C)',
-           flags=[Flag.ONP, Flag.CS, Flag.CA, Flag.ADV],
+           flags=[Flag.ONP, Flag.CS, Flag.CA, Flag.ADV, Flag.SP],
            authors='Volodymyr Mnih, Adrià Puigdomènech Badia, Mehdi Mirza, Alex Graves, Timothy P. Lillicrap, Tim Harley, David Silver, Koray Kavukcuoglu',
            year=2016, 
            url='https://arxiv.org/abs/1602.01783',
-           links=['https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-8-asynchronous-actor-critic-agents-a3c-c88f72a5e9f2']
+           links=['https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-8-asynchronous-actor-critic-agents-a3c-c88f72a5e9f2',
+                  'https://github.com/dennybritz/reinforcement-learning/tree/master/PolicyGradient/a3c']
            )
 
 a2c = Node('A2C',
            'A2C is a synchronous, deterministic variant of Asynchronous Advantage Actor Critic (A3C). '
            'It uses multiple workers to avoid the use of a replay buffer.',
-           flags=[Flag.ONP, Flag.CS, Flag.CA, Flag.ADV],
+           flags=[Flag.ONP, Flag.CS, Flag.CA, Flag.ADV, Flag.SP],
            authors='OpenAI',
            year=2017, 
            url='https://openai.com/blog/baselines-acktr-a2c/',
            links=[
                'https://openai.com/blog/baselines-acktr-a2c/',
-               'https://www.freecodecamp.org/news/an-intro-to-advantage-actor-critic-methods-lets-play-sonic-the-hedgehog-86d6240171d/'
+               'https://www.freecodecamp.org/news/an-intro-to-advantage-actor-critic-methods-lets-play-sonic-the-hedgehog-86d6240171d/',
+               'https://stable-baselines.readthedocs.io/en/master/modules/a2c.html'
                ]
            )
 
@@ -390,6 +412,8 @@ edges += [Edge(actor_critic, dpg),
           Edge(dqn, ddpg, style=WEAK_LINK, label='replay buffer'),
           Edge(ddpg, ddpg_her, style=WEAK_LINK),
           Edge(ddpg, td3),
+          Edge(ddpg, maddpg),
+          Edge(ddpg, d4pg),
           Edge(actor_critic, trpo),
           Edge(actor_critic, a3c),
           Edge(a3c, a2c),

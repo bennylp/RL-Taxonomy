@@ -31,7 +31,7 @@ The algorithm contains value function to estimate the value of each state or sta
 
 
 #### <a name="SARSA"></a>SARSA
-SARSA
+SARSA (State-Action-Reward-State-Action) is an on-policy TD control method
 
 - Authors: G. A. Rummery, M. Niranjan
 - Year: 1994
@@ -41,7 +41,7 @@ SARSA
   - Discrete action space (DA)
 
 #### <a name="Qlearning"></a>Q-learning
-Q-learning
+Q-learning an off-policy TD control method. Unlike SARSA, it doesn't follow the policy to find the next action but rather chooses most optimal action in a greedy fashion
 
 - Authors: Chris Watkins
 - Year: 1989
@@ -80,7 +80,7 @@ Double DQN adds another neural network, making separate network for policy and t
   - Q-Value (QV)
 
 #### <a name="DuellingDQN"></a>Duelling-DQN
-Duelling DQN
+Duelling DQN represents two separate estimators: one for the state value function and one for the state-dependent action advantage function. The main benefit of this factoring is to generalize learning across actions without imposing any change to the underlying reinforcement learning algorithm.
 
 - Authors: Ziyu Wang, Tom Schaul, Matteo Hessel, Hado van Hasselt, Marc Lanctot, Nando de Freitas
 - Year: 2016
@@ -106,7 +106,7 @@ Distributional Reinforcement Learning with Quantile Regression (QR-DQN). In QR-D
   - Replay Buffer (RB)
 
 #### <a name="DQNHER"></a>DQN+HER
-Hindsight Experience Replay (HER)
+DQN with Hindsight Experience Replay (HER)
 
 - Authors: Marcin Andrychowicz, Filip Wolski, Alex Ray, Jonas Schneider, Rachel Fong, Peter Welinder, Bob McGrew, Josh Tobin, Pieter Abbeel, Wojciech Zaremba
 - Year: 2017
@@ -164,6 +164,32 @@ Twin Delayed DDPG (TD3). TD3 addresses function approximation error in DDPG by i
   - Q-Value (QV)
   - Replay Buffer (RB)
 
+#### <a name="MADDPG"></a>MADDPG
+Multi-agent DDPG (MADDPG) extends DDPG to an environment where multiple agents are coordinating to complete tasks with only local information. In the viewpoint of one agent, the environment is non-stationary as policies of other agents are quickly upgraded and remain unknown. MADDPG is an actor-critic model redesigned particularly for handling such a changing environment and interactions between agents (source: [Lilian Weng blog](https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html#reinforce))
+
+- Authors: Ryan Lowe, Yi Wu, Aviv Tamar, Jean Harb, Pieter Abbeel, Igor Mordatch
+- Year: 2017
+- Paper: https://arxiv.org/abs/1706.02275
+- Flags:
+  - Off-Policy (OFP)
+  - Continuous state space (CS)
+  - Continuous action space (CA)
+  - Deterministic Policy (DP)
+  - Replay Buffer (RB)
+
+#### <a name="D4PG"></a>D4PG
+Distributed Distributional Deep Deterministic Policy Gradient (D4PG) adopts the very successful distributional perspective on reinforcement learning and adapts it to the continuous control setting. It combines this within a distributed framework. It also combines this technique with a number of additional, simple improvements such as the use of N-step returns and prioritized experience replay
+
+- Authors: Gabriel Barth-Maron, Matthew W. Hoffman, David Budden, Will Dabney, Dan Horgan, Dhruva TB, Alistair Muldal, Nicolas Heess, Timothy Lillicrap
+- Year: 2018
+- Paper: https://arxiv.org/abs/1804.08617
+- Flags:
+  - Off-Policy (OFP)
+  - Continuous state space (CS)
+  - Continuous action space (CA)
+  - Deterministic Policy (DP)
+  - Replay Buffer (RB)
+
 #### <a name="DDPGHER"></a>DDPG+HER
 Hindsight Experience Replay (HER)
 
@@ -198,12 +224,13 @@ Asynchronous Advantage Actor-Critic (A3C)
 - Authors: Volodymyr Mnih, Adrià Puigdomènech Badia, Mehdi Mirza, Alex Graves, Timothy P. Lillicrap, Tim Harley, David Silver, Koray Kavukcuoglu
 - Year: 2016
 - Paper: https://arxiv.org/abs/1602.01783
-- Useful links: [medium.com](https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-8-asynchronous-actor-critic-agents-a3c-c88f72a5e9f2)
+- Useful links: [medium.com](https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-8-asynchronous-actor-critic-agents-a3c-c88f72a5e9f2), [github.com](https://github.com/dennybritz/reinforcement-learning/tree/master/PolicyGradient/a3c)
 - Flags:
   - On-Policy (ONP)
   - Continuous state space (CS)
   - Continuous action space (CA)
   - Advantage (ADV)
+  - Stochastic Policy (SP)
 
 #### <a name="A2C"></a>A2C
 A2C is a synchronous, deterministic variant of Asynchronous Advantage Actor Critic (A3C). It uses multiple workers to avoid the use of a replay buffer.
@@ -211,12 +238,13 @@ A2C is a synchronous, deterministic variant of Asynchronous Advantage Actor Crit
 - Authors: OpenAI
 - Year: 2017
 - Paper: https://openai.com/blog/baselines-acktr-a2c/
-- Useful links: [openai.com](https://openai.com/blog/baselines-acktr-a2c/), [freecodecamp.org](https://www.freecodecamp.org/news/an-intro-to-advantage-actor-critic-methods-lets-play-sonic-the-hedgehog-86d6240171d/)
+- Useful links: [openai.com](https://openai.com/blog/baselines-acktr-a2c/), [freecodecamp.org](https://www.freecodecamp.org/news/an-intro-to-advantage-actor-critic-methods-lets-play-sonic-the-hedgehog-86d6240171d/), [readthedocs.io](https://stable-baselines.readthedocs.io/en/master/modules/a2c.html)
 - Flags:
   - On-Policy (ONP)
   - Continuous state space (CS)
   - Continuous action space (CA)
   - Advantage (ADV)
+  - Stochastic Policy (SP)
 
 #### <a name="ACER"></a>ACER
 Sample Efficient Actor-Critic with Experience Replay (ACER) combines several ideas of previous algorithms: it uses multiple workers (as A2C), implements a replay buffer (as in DQN), uses Retrace for Q-value estimation, importance sampling and a trust region.
@@ -279,12 +307,12 @@ The algorithm stores the policy and works directly to optimize the policy withou
 - Useful links: [medium.com](https://medium.com/@jonathan_hui/rl-policy-gradients-explained-9b13b688b146), [freecodecamp.org](https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/)
 
 #### <a name="REINFORCE"></a>REINFORCE
-REINFORCE
+REINFORCE (Monte-Carlo policy gradient). The agent collects a trajectory of one episode using its current policy, and uses the returns to update the policy parameter
 
 - Authors: Ronald J. Williams
 - Year: 1992
 - Paper: https://people.cs.umass.edu/~barto/courses/cs687/williams92simple.pdf
-- Useful links: [freecodecamp.org](https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/)
+- Useful links: [toronto.edu](http://www.cs.toronto.edu/~tingwuwang/REINFORCE.pdf), [freecodecamp.org](https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/)
 - Flags:
   - Monte Carlo (MC)
   - On-Policy (ONP)
