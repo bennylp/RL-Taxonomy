@@ -1,0 +1,87 @@
+digraph {
+	compound=true
+	rankdir=LR
+	"Reinforcement Learning" [label="{Reinforcement Learning}" shape=record style=rounded]
+	DQN -> DDPG [label="replay buffer" color=darkgray fontsize=8 style=dashed]
+	DQN -> ACER [label="replay buffer, workers" color=darkgray fontsize=8 style=dashed]
+	DDQN -> TD3 [label="double Q-learning" color=darkgray fontsize=8 style=dashed]
+	subgraph "clusterValue Gradient" {
+		label="Value Gradient"
+		color=black
+		style=dashed
+		"Value Gradient" [label="{Value Gradient}" shape=record style=rounded]
+		"Value Gradient" -> SARSA
+		"Value Gradient" -> "Q-learning"
+		SARSA [label="{SARSA|1994}" shape=record style=rounded]
+		"Q-learning" [label="{Q-learning|1989}" shape=record style=rounded]
+		"Q-learning" -> DQN
+		DQN [label="{DQN|2013}" shape=record style=rounded]
+		DQN -> DRQN
+		DQN -> DDQN
+		DQN -> PER
+		DQN -> "QR-DQN"
+		DQN -> "DQN+HER"
+		DRQN [label="{DRQN|2015}" shape=record style=rounded]
+		DDQN [label="{DDQN|2015}" shape=record style=rounded]
+		DDQN -> "Duelling-DQN"
+		DDQN -> RAINBOW [color=darkgray fontsize=8 style=dashed]
+		PER [label="{PER|2015}" shape=record style=rounded]
+		PER -> RAINBOW [color=darkgray fontsize=8 style=dashed]
+		"Duelling-DQN" [label="{Duelling-DQN|2016}" shape=record style=rounded]
+		"Duelling-DQN" -> RAINBOW [color=darkgray fontsize=8 style=dashed]
+		"QR-DQN" [label="{QR-DQN|2017}" shape=record style=rounded]
+		"QR-DQN" -> RAINBOW [color=darkgray fontsize=8 style=dashed]
+		RAINBOW [label="{RAINBOW|2017}" shape=record style=rounded]
+		"DQN+HER" [label="{DQN+HER|2017}" shape=record style=rounded]
+	}
+	A3C -> RAINBOW [color=darkgray fontsize=8 style=dashed]
+	subgraph "clusterPolicy Gradient/Actor-Critic" {
+		label="Policy Gradient/Actor-Critic"
+		color=black
+		style=dashed
+		"Policy Gradient" [label="{Policy Gradient}" shape=record style=rounded]
+		"Policy Gradient" -> REINFORCE
+		"Policy Gradient" -> DPG
+		"Policy Gradient" -> TRPO
+		"Policy Gradient" -> GAE
+		"Policy Gradient" -> A3C
+		"Policy Gradient" -> ACKTR
+		"Policy Gradient" -> SVPG
+		"Policy Gradient" -> SAC
+		"Policy Gradient" -> IMPALA
+		REINFORCE [label="{REINFORCE|1992}" shape=record style=rounded]
+		DPG [label="{DPG|2014}" shape=record style=rounded]
+		DPG -> DDPG
+		DDPG [label="{DDPG|2015}" shape=record style=rounded]
+		DDPG -> "DDPG+HER" [color=darkgray fontsize=8 style=dashed]
+		DDPG -> MADDPG
+		DDPG -> D4PG
+		DDPG -> TD3
+		TRPO [label="{TRPO|2015}" shape=record style=rounded]
+		TRPO -> GAE [color=darkgray fontsize=8 style=dashed]
+		TRPO -> ACER [label="TRPO technique" color=darkgray fontsize=8 style=dashed]
+		TRPO -> PPO [color=darkgray fontsize=8 style=dashed]
+		GAE [label="{GAE|2015}" shape=record style=rounded]
+		A3C [label="{A3C|2016}" shape=record style=rounded]
+		A3C -> A2C
+		A3C -> ACER
+		"DDPG+HER" [label="{DDPG+HER|2017}" shape=record style=rounded]
+		MADDPG [label="{MADDPG|2017}" shape=record style=rounded]
+		A2C [label="{A2C|2017}" shape=record style=rounded]
+		A2C -> ACER [style=invis]
+		A2C -> ACKTR [style=invis]
+		A2C -> SVPG [style=invis]
+		A2C -> IMPALA [style=invis]
+		ACER [label="{ACER|2017}" shape=record style=rounded]
+		ACKTR [label="{ACKTR|2017}" shape=record style=rounded]
+		PPO [label="{PPO|2017}" shape=record style=rounded]
+		PPO -> SAC [style=invis]
+		SVPG [label="{SVPG|2017}" shape=record style=rounded]
+		D4PG [label="{D4PG|2018}" shape=record style=rounded]
+		SAC [label="{SAC|2018}" shape=record style=rounded]
+		TD3 [label="{TD3|2018}" shape=record style=rounded]
+		IMPALA [label="{IMPALA|2018}" shape=record style=rounded]
+	}
+	"Reinforcement Learning" -> "Value Gradient" [lhead="clusterValue Gradient"]
+	"Reinforcement Learning" -> "Policy Gradient" [lhead="clusterPolicy Gradient/Actor-Critic"]
+}

@@ -1,1 +1,4 @@
 .README*
+.project
+.settings
+.py*
