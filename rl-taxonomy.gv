@@ -3,18 +3,20 @@ digraph {
 	rankdir=TB
 	newrank=true
 	subgraph timeline {
-		1989 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
-		1992 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
-		1994 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
-		2011 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
-		2013 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
-		2014 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
-		2015 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
-		2016 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
-		2017 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
-		2018 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
-		2019 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
-		2020 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
+		Past [fontcolor=darkblue fontname="sans-serif" fontsize=14 group=timeline shape=plaintext]
+		1989 [fontcolor=darkblue fontname="sans-serif" fontsize=14 group=timeline shape=plaintext]
+		1992 [fontcolor=darkblue fontname="sans-serif" fontsize=14 group=timeline shape=plaintext]
+		1994 [fontcolor=darkblue fontname="sans-serif" fontsize=14 group=timeline shape=plaintext]
+		2011 [fontcolor=darkblue fontname="sans-serif" fontsize=14 group=timeline shape=plaintext]
+		2013 [fontcolor=darkblue fontname="sans-serif" fontsize=14 group=timeline shape=plaintext]
+		2014 [fontcolor=darkblue fontname="sans-serif" fontsize=14 group=timeline shape=plaintext]
+		2015 [fontcolor=darkblue fontname="sans-serif" fontsize=14 group=timeline shape=plaintext]
+		2016 [fontcolor=darkblue fontname="sans-serif" fontsize=14 group=timeline shape=plaintext]
+		2017 [fontcolor=darkblue fontname="sans-serif" fontsize=14 group=timeline shape=plaintext]
+		2018 [fontcolor=darkblue fontname="sans-serif" fontsize=14 group=timeline shape=plaintext]
+		2019 [fontcolor=darkblue fontname="sans-serif" fontsize=14 group=timeline shape=plaintext]
+		2020 [fontcolor=darkblue fontname="sans-serif" fontsize=14 group=timeline shape=plaintext]
+		Past -> 1989 [color=darkblue]
 		1989 -> 1992 [color=darkblue]
 		1992 -> 1994 [color=darkblue]
 		1994 -> 2011 [color=darkblue]
@@ -33,6 +35,8 @@ digraph {
 	DQN -> DDPG [label="replay buffer" color=darkgray constraint=false fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
 	DQN -> ACER [label="replay buffer" color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
 	DDQN -> TD3 [label="double Q-learning" color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
+	"DQN+HER" -> "DDPG+HER" [label=HER arrowhead=none color=darkgray constraint=false fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
+	"APE-X DQN" -> "APE-X DDPG" [label="APE-X" arrowhead=none color=darkgray constraint=false fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
 	A3C -> RAINBOW [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
 	subgraph "clusterModel Free" {
 		label="Model Free"
@@ -61,6 +65,7 @@ digraph {
 			DQN -> C51 [fontcolor=black fontname="sans-serif" fontsize=10]
 			DQN -> "DQN+HER" [fontcolor=black fontname="sans-serif" fontsize=10]
 			DQN -> IQN [fontcolor=black fontname="sans-serif" fontsize=10]
+			DQN -> "APE-X DQN" [fontcolor=black fontname="sans-serif" fontsize=10]
 			DQN -> R2D2 [fontcolor=black fontname="sans-serif" fontsize=10]
 			DRQN [label=DRQN fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			DDQN [label=DDQN fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
@@ -76,6 +81,7 @@ digraph {
 			RAINBOW [label=RAINBOW fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			"DQN+HER" [label="DQN+HER" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			IQN [label=IQN fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			"APE-X DQN" [label="APE-X DQN" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			R2D2 [label=R2D2 fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			R2D2 -> NGU [fontcolor=black fontname="sans-serif" fontsize=10]
 			NGU [label=NGU fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
@@ -105,6 +111,7 @@ digraph {
 			DDPG -> "DDPG+HER" [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
 			DDPG -> MADDPG [fontcolor=black fontname="sans-serif" fontsize=10]
 			DDPG -> D4PG [fontcolor=black fontname="sans-serif" fontsize=10]
+			DDPG -> "APE-X DDPG" [fontcolor=black fontname="sans-serif" fontsize=10]
 			DDPG -> TD3 [fontcolor=black fontname="sans-serif" fontsize=10]
 			TRPO [label=TRPO fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			TRPO -> GAE [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
@@ -127,6 +134,7 @@ digraph {
 			PPO -> SAC [fontcolor=black fontname="sans-serif" fontsize=10 style=invis]
 			SVPG [label=SVPG fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			D4PG [label=D4PG fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			"APE-X DDPG" [label="APE-X DDPG" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			SAC [label=SAC fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			TD3 [label=TD3 fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			IMPALA [label=IMPALA fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
@@ -177,10 +185,12 @@ digraph {
 		"Meta-RL" -> "RL^2" [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Meta-RL" -> MAML [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Meta-RL" -> SNAIL [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
+		"Meta-RL" -> ProMP [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		DMRL [label=DMRL fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 		"RL^2" [label="RL^2" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 		MAML [label=MAML fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 		SNAIL [label=SNAIL fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		ProMP [label=ProMP fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 	}
 	"Reinforcement Learning" -> "Model Free" [fontcolor=black fontname="sans-serif" fontsize=10]
 	"Reinforcement Learning" -> "Model Based" [fontcolor=black fontname="sans-serif" fontsize=10]
@@ -258,7 +268,9 @@ digraph {
 		rank=same
 		2018
 		IQN
+		"APE-X DQN"
 		D4PG
+		"APE-X DDPG"
 		SAC
 		TD3
 		IMPALA
@@ -268,6 +280,7 @@ digraph {
 		"MB-MPO"
 		"World Models"
 		PETS
+		ProMP
 	}
 	{
 		rank=same
@@ -284,6 +297,7 @@ digraph {
 	}
 	{
 		rank=same
+		Past
 		"Model Free"
 		"Model Based"
 		"Meta-RL"

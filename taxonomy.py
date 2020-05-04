@@ -25,7 +25,7 @@ ORDER_EDGE = "invis"
 FONT_NAME = "sans-serif"
 NODE_FONT_SIZE = 12
 TIMELINE_COLOR = "darkblue"
-TIMELINE_FONT_SIZE = 12
+TIMELINE_FONT_SIZE = 14
 EDGE_FONT_COLOR = 'black'
 EDGE_FONT_SIZE = 10
 
@@ -544,6 +544,17 @@ iqn = Node('IQN',
 dqn.connect(iqn)
 # dqn_per.connecT(c51, syle=INVIS)
 
+apex_dqn = Node('APE-X DQN',
+           'DQN with Distributed Prioritized Experience Replay',
+           value_gradient,
+           flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.RB],
+           authors='Dan Horgan, John Quan, David Budden, Gabriel Barth-Maron, Matteo Hessel, Hado van Hasselt, David Silver',
+           year=2018,
+           url='https://arxiv.org/abs/1803.00933',
+           links=[('Understanding and Implementing Distributed Prioritized Experience Replay (Horgan et al., 2018)', 'https://towardsdatascience.com/understanding-and-implementing-distributed-prioritized-experience-replay-horgan-et-al-2018-d2c1640e0520')])
+dqn.connect(apex_dqn)
+# dqn_per.connecT(c51, syle=INVIS)
+
 r2d2 = Node('R2D2',
            'Recurrent Replay Distributed DQN (R2D2). (from the abstract) Building on the recent successes of distributed training of RL agents, in this paper we investigate the training of RNN-based RL agents from distributed prioritized experience replay. We study the effects of parameter lag resulting in representational drift and recurrent state staleness and empirically derive an improved training strategy. Using a single network architecture and fixed set of hyper-parameters, the resulting agent, Recurrent Replay Distributed DQN, quadruples the previous state of the art on Atari-57, and matches the state of the art on DMLab-30. It is the first agent to exceed human-level performance in 52 of the 57 Atari games.',
            value_gradient,
@@ -674,6 +685,7 @@ ddpg_her = Node('DDPG+HER',
            url='https://arxiv.org/abs/1707.01495',
            links=['https://becominghuman.ai/learning-from-mistakes-with-hindsight-experience-replay-547fce2b3305'])
 ddpg.connect(ddpg_her, style=WEAK_LINK)
+dqn_her.connect(ddpg_her, style=WEAK_LINK, label='HER', constraint='false', arrowhead='none')
 
 maddpg = Node('MADDPG',
            'Multi-agent DDPG (MADDPG) extends DDPG to an environment where multiple agents are coordinating to complete tasks with only local information. In the viewpoint of one agent, the environment is non-stationary as policies of other agents are quickly upgraded and remain unknown. MADDPG is an actor-critic model redesigned particularly for handling such a changing environment and interactions between agents (from [Lilian Weng\'s blog](https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html#maddpg))',
@@ -766,6 +778,17 @@ d4pg = Node('D4PG',
            links=[]
            )
 ddpg.connect(d4pg)
+
+apex_ddpg = Node('APE-X DDPG',
+           'DDPG with Distributed Prioritized Experience Replay',
+           policy_gradient,
+           flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.RB],
+           authors='Dan Horgan, John Quan, David Budden, Gabriel Barth-Maron, Matteo Hessel, Hado van Hasselt, David Silver',
+           year=2018,
+           url='https://arxiv.org/abs/1803.00933',
+           links=[('Understanding and Implementing Distributed Prioritized Experience Replay (Horgan et al., 2018)', 'https://towardsdatascience.com/understanding-and-implementing-distributed-prioritized-experience-replay-horgan-et-al-2018-d2c1640e0520')])
+ddpg.connect(apex_ddpg)
+apex_dqn.connect(apex_ddpg, label='APE-X', style=WEAK_LINK, constraint='false', arrowhead='none')
 
 sac = Node('SAC',
            'Soft Actor Critic (SAC) is an algorithm that optimizes a stochastic policy in an off-policy way, forming a bridge between stochastic policy optimization and DDPG-style approaches.',
@@ -981,6 +1004,17 @@ snail = Node('SNAIL',
              )
 root_meta_rl.connect(snail, style=ROOT_EDGE)
 
+pro_mp = Node('ProMP',
+            'ProMP: Proximal Meta-Policy Search (from the abstract) Credit assignment in Meta-reinforcement learning (Meta-RL) is still poorly understood. Existing methods either neglect credit assignment to pre-adaptation behavior or implement it naively. This leads to poor sample-efficiency during meta-training as well as ineffective task identification strategies. This paper provides a theoretical analysis of credit assignment in gradient-based Meta-RL. Building on the gained insights we develop a novel meta-learning algorithm that overcomes both the issue of poor credit assignment and previous difficulties in estimating meta-policy gradients. By controlling the statistical distance of both pre-adaptation and adapted policies during meta-policy search, the proposed algorithm endows efficient and stable meta-learning. Our approach leads to superior pre-adaptation policy behavior and consistently outperforms previous Meta-RL algorithms in sample-efficiency, wall-clock time, and asymptotic performance. ',
+             meta_rl,
+             flags=[],
+             authors='Jonas Rothfuss, Dennis Lee, Ignasi Clavera, Tamim Asfour, Pieter Abbeel',
+             year=2018,
+             url='https://arxiv.org/abs/1810.06784',
+             links=[],
+             )
+root_meta_rl.connect(pro_mp, style=ROOT_EDGE)
+
 
 def generate_graph(output, format):
     from graphviz import Digraph, Source
@@ -1001,7 +1035,7 @@ def generate_graph(output, format):
 
     # The global timeline graph
     with graph.subgraph(name='timeline') as timeline_graph:
-        years = [k for k in ranks.keys() if k > 1900]
+        years = ['Past'] + [k for k in ranks.keys() if k >= 1900]
         for year in years:
             timeline_graph.node(f'{year}', fontcolor=TIMELINE_COLOR, shape='plaintext',
                                 fontname=FONT_NAME, fontsize=str(TIMELINE_FONT_SIZE),
@@ -1024,6 +1058,7 @@ def generate_graph(output, format):
     # Align value gradient and policy gradient
     with graph.subgraph() as rank_cluster:
         rank_cluster.attr(rank='same')
+        rank_cluster.node('Past')
         rank_cluster.node(root_model_free.graph_name)
         rank_cluster.node(root_model_based.graph_name)
         rank_cluster.node(root_meta_rl.graph_name)

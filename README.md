@@ -20,6 +20,7 @@ This is a loose taxonomy of reinforcement learning algorithms. I'm by no means e
     - [RAINBOW](#RAINBOW)
     - [DQN+HER](#DQNHER)
     - [IQN](#IQN)
+    - [APE-X DQN](#APEXDQN)
     - [R2D2](#R2D2)
     - [NGU](#NGU)
     - [Agent57](#Agent57)
@@ -38,6 +39,7 @@ This is a loose taxonomy of reinforcement learning algorithms. I'm by no means e
     - [PPO](#PPO)
     - [SVPG](#SVPG)
     - [D4PG](#D4PG)
+    - [APE-X DDPG](#APEXDDPG)
     - [SAC](#SAC)
     - [TD3](#TD3)
     - [IMPALA](#IMPALA)
@@ -60,6 +62,7 @@ This is a loose taxonomy of reinforcement learning algorithms. I'm by no means e
   - [RL^2](#RL2)
   - [MAML](#MAML)
   - [SNAIL](#SNAIL)
+  - [ProMP](#ProMP)
 
 ## <A name="taxonomy"></a>Taxonomy
 
@@ -155,6 +158,7 @@ Deep Q Network. Q-Learning with using deep neural network as value estimator
   - [C51](#C51)
   - [DQN+HER](#DQNHER)
   - [IQN](#IQN)
+  - [APE-X DQN](#APEXDQN)
   - [R2D2](#R2D2)
   - [DDPG](#DDPG) (replay buffer)
   - [ACER](#ACER) (replay buffer)
@@ -310,6 +314,8 @@ DQN with Hindsight Experience Replay (HER)
   - Replay Buffer (RB)
 - Related to prior idea:
   - [DQN](#DQN)
+- Related to subsequent idea:
+  - [DDPG+HER](#DDPGHER) (HER)
 - Useful links:
   - [Learning from mistakes with Hindsight Experience Replay](https://becominghuman.ai/learning-from-mistakes-with-hindsight-experience-replay-547fce2b3305)
 
@@ -331,6 +337,26 @@ Implicit Quantile Networks (IQN)
   - [DQN](#DQN)
 - Useful links:
   - [(StackExchange) How does Implicit Quantile-Regression Network (IQN) differ from QR-DQN?](https://datascience.stackexchange.com/questions/40874/how-does-implicit-quantile-regression-network-iqn-differ-from-qr-dqn)
+
+##### <a name="APEXDQN"></a>APE-X DQN
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Free](#ModelFree) --> [Value Gradient](#ValueGradient) --> [APE-X DQN](#APEXDQN))
+
+DQN with Distributed Prioritized Experience Replay
+
+- Paper: https://arxiv.org/abs/1803.00933
+- Authors: Dan Horgan, John Quan, David Budden, Gabriel Barth-Maron, Matteo Hessel, Hado van Hasselt, David Silver
+- Year: 2018
+- Flags:
+  - Off-Policy (OFP)
+  - Continuous state space (CS)
+  - Discrete action space (DA)
+  - Replay Buffer (RB)
+- Related to prior idea:
+  - [DQN](#DQN)
+- Related to subsequent idea:
+  - [APE-X DDPG](#APEXDDPG) (APE-X)
+- Useful links:
+  - [Understanding and Implementing Distributed Prioritized Experience Replay (Horgan et al., 2018)](https://towardsdatascience.com/understanding-and-implementing-distributed-prioritized-experience-replay-horgan-et-al-2018-d2c1640e0520)
 
 ##### <a name="R2D2"></a>R2D2
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Free](#ModelFree) --> [Value Gradient](#ValueGradient) --> [R2D2](#R2D2))
@@ -456,6 +482,7 @@ Deep Deterministic Policy Gradient (DDPG).
   - [DDPG+HER](#DDPGHER)
   - [MADDPG](#MADDPG)
   - [D4PG](#D4PG)
+  - [APE-X DDPG](#APEXDDPG)
   - [TD3](#TD3)
 - Useful links:
   - [Deep Deterministic Policy Gradient - Spinning Up](https://spinningup.openai.com/en/latest/algorithms/ddpg.html)
@@ -540,8 +567,9 @@ Hindsight Experience Replay (HER)
   - Discrete action space (DA)
   - Deterministic Policy (DP)
   - Replay Buffer (RB)
-- Related to prior idea:
+- Related to prior ideas:
   - [DDPG](#DDPG)
+  - [DQN+HER](#DQNHER) (HER)
 - Useful links:
   - [becominghuman.ai](https://becominghuman.ai/learning-from-mistakes-with-hindsight-experience-replay-547fce2b3305)
 
@@ -676,6 +704,25 @@ Distributed Distributional Deep Deterministic Policy Gradient (D4PG) adopts the 
   - Replay Buffer (RB)
 - Related to prior idea:
   - [DDPG](#DDPG)
+
+##### <a name="APEXDDPG"></a>APE-X DDPG
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Free](#ModelFree) --> [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic) --> [APE-X DDPG](#APEXDDPG))
+
+DDPG with Distributed Prioritized Experience Replay
+
+- Paper: https://arxiv.org/abs/1803.00933
+- Authors: Dan Horgan, John Quan, David Budden, Gabriel Barth-Maron, Matteo Hessel, Hado van Hasselt, David Silver
+- Year: 2018
+- Flags:
+  - Off-Policy (OFP)
+  - Continuous state space (CS)
+  - Discrete action space (DA)
+  - Replay Buffer (RB)
+- Related to prior ideas:
+  - [DDPG](#DDPG)
+  - [APE-X DQN](#APEXDQN) (APE-X)
+- Useful links:
+  - [Understanding and Implementing Distributed Prioritized Experience Replay (Horgan et al., 2018)](https://towardsdatascience.com/understanding-and-implementing-distributed-prioritized-experience-replay-horgan-et-al-2018-d2c1640e0520)
 
 ##### <a name="SAC"></a>SAC
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Free](#ModelFree) --> [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic) --> [SAC](#SAC))
@@ -971,6 +1018,17 @@ Deep Meta RL. (from the abstract) In recent years deep reinforcement learning (R
   - [Meta-RL](#MetaRL)
 - Useful links:
   - [A Simple Neural Attentive Meta-Learner — SNAIL](https://medium.com/towards-artificial-intelligence/a-simple-neural-attentive-meta-learner-snail-1e6b1d487623)
+
+#### <a name="ProMP"></a>ProMP
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Meta-RL](#MetaRL) --> [ProMP](#ProMP))
+
+ProMP: Proximal Meta-Policy Search (from the abstract) Credit assignment in Meta-reinforcement learning (Meta-RL) is still poorly understood. Existing methods either neglect credit assignment to pre-adaptation behavior or implement it naively. This leads to poor sample-efficiency during meta-training as well as ineffective task identification strategies. This paper provides a theoretical analysis of credit assignment in gradient-based Meta-RL. Building on the gained insights we develop a novel meta-learning algorithm that overcomes both the issue of poor credit assignment and previous difficulties in estimating meta-policy gradients. By controlling the statistical distance of both pre-adaptation and adapted policies during meta-policy search, the proposed algorithm endows efficient and stable meta-learning. Our approach leads to superior pre-adaptation policy behavior and consistently outperforms previous Meta-RL algorithms in sample-efficiency, wall-clock time, and asymptotic performance. 
+
+- Paper: https://arxiv.org/abs/1810.06784
+- Authors: Jonas Rothfuss, Dennis Lee, Ignasi Clavera, Tamim Asfour, Pieter Abbeel
+- Year: 2018
+- Related to prior idea:
+  - [Meta-RL](#MetaRL)
 
 <HR>
     
