@@ -56,7 +56,7 @@ class Flag(Enum):
     # Miscellaneous:
     RB = "Replay Buffer"
     RNN = "Recurrent Neural Network"
-
+    DI = "Distributional"
 
 
 def url2md(url):
@@ -374,12 +374,12 @@ rl = Group('Reinforcement Learning',
            links=[('A (Long) Peek into Reinforcement Learning', 'https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html'),
                   ('(book) Reinforcement Learning: An Introduction - 2nd Edition - Richard S. Sutton and Andrew G. Barto', 'http://incompleteideas.net/book/the-book.html')
                ],
-           videos=[('(playlist ) Introduction to Reinforcement learning with David Silver', 'https://www.youtube.com/playlist?list=PLqYmG7hTraZBiG_XpjnPrSNw-1XQaM_gB'),
-                   ('(playlist ) Reinforcement Learning Course | DeepMind & UCL', 'https://www.youtube.com/playlist?list=PLqYmG7hTraZBKeNJ-JE_eyJHZ7XgBoAyb'),
-                   ('(playlist ) Reinforcement Learning Tutorials', 'https://www.youtube.com/playlist?list=PLWzQK00nc192L7UMJyTmLXaHa3KcO0wBT'),
-                   ('(playlist ) Deep RL Bootcamp 2017', 'https://www.youtube.com/playlist?list=PLAdk-EyP1ND8MqJEJnSvaoUShrAWYe51U'),
-                   ('(playlist ) CS885 Reinforcement Learning - Spring 2018 - University of Waterloo', 'https://www.youtube.com/playlist?list=PLdAoL1zKcqTXFJniO3Tqqn6xMBBL07EDc'),
-                   ('(playlist ) CS234: Reinforcement Learning | Winter 2019', 'https://www.youtube.com/playlist?list=PLoROMvodv4rOSOPzutgyCTapiGlY2Nd8u'),
+           videos=[('(playlist) Introduction to Reinforcement learning with David Silver', 'https://www.youtube.com/playlist?list=PLqYmG7hTraZBiG_XpjnPrSNw-1XQaM_gB'),
+                   ('(playlist) Reinforcement Learning Course | DeepMind & UCL', 'https://www.youtube.com/playlist?list=PLqYmG7hTraZBKeNJ-JE_eyJHZ7XgBoAyb'),
+                   ('(playlist) Reinforcement Learning Tutorials', 'https://www.youtube.com/playlist?list=PLWzQK00nc192L7UMJyTmLXaHa3KcO0wBT'),
+                   ('(playlist) Deep RL Bootcamp 2017', 'https://www.youtube.com/playlist?list=PLAdk-EyP1ND8MqJEJnSvaoUShrAWYe51U'),
+                   ('(playlist) CS885 Reinforcement Learning - Spring 2018 - University of Waterloo', 'https://www.youtube.com/playlist?list=PLdAoL1zKcqTXFJniO3Tqqn6xMBBL07EDc'),
+                   ('(playlist) CS234: Reinforcement Learning | Winter 2019', 'https://www.youtube.com/playlist?list=PLoROMvodv4rOSOPzutgyCTapiGlY2Nd8u'),
                ])
 
 value_gradient = Group('Value Gradient', 
@@ -396,8 +396,8 @@ policy_gradient = Group('Policy Gradient/Actor-Critic',
                         ('An introduction to Policy Gradients with Cartpole and Doom', 'https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/')
                         ])
 
-root_value_gradient = Node('vg', '', value_gradient, output_md=False, style=INVIS)
-root_policy_gradient = Node('pg', '', policy_gradient, output_md=False, style=INVIS)
+root_value_gradient = Node('Value Gradient', '', value_gradient, output_md=False, style=INVIS)
+root_policy_gradient = Node('Policy Gradient/Actor-Critic', '', policy_gradient, output_md=False, style=INVIS)
 
 rl.connect(root_value_gradient, lhead=value_gradient.graph_name)
 rl.connect(root_policy_gradient, lhead=policy_gradient.graph_name)
@@ -413,7 +413,7 @@ sarsa = Node('SARSA',
              authors='G. A. Rummery, M. Niranjan',
              year=1994, 
              url='http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.17.2539&rep=rep1&type=pdf')
-root_value_gradient.connect(sarsa, style=INVIS)
+#root_value_gradient.connect(sarsa, style=INVIS)
 
 qlearning = Node('Q-learning',
            'Q-learning an off-policy TD control method. Unlike SARSA, it doesn\'t follow the policy to find the next action but rather chooses most optimal action in a greedy fashion',
@@ -480,7 +480,7 @@ ddqn.connect(duel_dqn)
 qr_dqn = Node('QR-DQN',
            'Distributional Reinforcement Learning with Quantile Regression (QR-DQN). In QR-DQN, distribution of values values are used for each state-action pair instead of a single mean value',
            value_gradient,
-           flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.RB],
+           flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.RB, Flag.DI],
            authors='Will Dabney, Mark Rowland, Marc G. Bellemare, Rémi Munos',
            year=2017, 
            url='https://arxiv.org/abs/1710.10044',
@@ -490,12 +490,12 @@ dqn.connect(qr_dqn)
 c51 = Node('C51',
            'C51 Algorithm. The core idea of Distributional Bellman is to ask the following questions. If we can model the Distribution of the total future rewards, why restrict ourselves to the expected value (i.e. Q function)? There are several benefits to learning an approximate distribution rather than its approximate expectation. [[source: flyyufelix\'s blog](https://flyyufelix.github.io/2017/10/24/distributional-bellman.html)]',
            value_gradient,
-           flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.RB],
+           flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.RB, Flag.DI],
            authors='Marc G. Bellemare, Will Dabney, Rémi Munos',
            year=2017, 
            url='https://arxiv.org/abs/1707.06887',
            links=[('Distributional Bellman and the C51 Algorithm', 'https://flyyufelix.github.io/2017/10/24/distributional-bellman.html')])
-root_value_gradient.connect(c51, style=INVIS)
+dqn.connect(c51)
 #dqn_per.connecT(c51, syle=INVIS)
 
 rainbow = Node('RAINBOW',
@@ -521,6 +521,17 @@ dqn_her = Node('DQN+HER',
            links=[('Learning from mistakes with Hindsight Experience Replay', 'https://becominghuman.ai/learning-from-mistakes-with-hindsight-experience-replay-547fce2b3305')])
 dqn.connect(dqn_her)
 
+iqn = Node('IQN',
+           'Implicit Quantile Networks (IQN)',
+           value_gradient,
+           flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.RB, Flag.DI],
+           authors='Will Dabney, Georg Ostrovski, David Silver, Rémi Munos',
+           year=2018, 
+           url='https://arxiv.org/abs/1806.06923',
+           links=[('(StackExchange) How does Implicit Quantile-Regression Network (IQN) differ from QR-DQN?', 'https://datascience.stackexchange.com/questions/40874/how-does-implicit-quantile-regression-network-iqn-differ-from-qr-dqn')])
+dqn.connect(iqn)
+#dqn_per.connecT(c51, syle=INVIS)
+
 
 #
 # POLICY GRADIENT / ACTOR-CRITIC
@@ -536,7 +547,7 @@ reinforce = Node('REINFORCE',
                   ('An introduction to Policy Gradients with Cartpole and Doom', 'https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/')
                   ]
            )
-root_policy_gradient.connect(reinforce, style=INVIS)
+#root_policy_gradient.connect(reinforce, style=INVIS)
 
 """
 vpg = Node('VPG',
@@ -559,7 +570,7 @@ dpg = Node('DPG',
            url='http://proceedings.mlr.press/v32/silver14.pdf',
            links=[]
            )
-root_policy_gradient.connect(dpg, style=INVIS)
+#root_policy_gradient.connect(dpg, style=INVIS)
 
 ddpg = Node('DDPG',
            'Deep Deterministic Policy Gradient (DDPG).',
@@ -584,7 +595,7 @@ trpo = Node('TRPO',
            links=[('RL — Trust Region Policy Optimization (TRPO) Explained', 'https://medium.com/@jonathan_hui/rl-trust-region-policy-optimization-trpo-explained-a6ee04eeeee9'),
                   ('RL — Trust Region Policy Optimization (TRPO) Part 2', 'https://medium.com/@jonathan_hui/rl-trust-region-policy-optimization-trpo-part-2-f51e3b2e373a')]
            )
-root_policy_gradient.connect(trpo, style=INVIS)
+#root_policy_gradient.connect(trpo, style=INVIS)
 
 gae = Node('GAE',
            'Generalized Advantage Estimation',
@@ -596,7 +607,7 @@ gae = Node('GAE',
            links=[('Generalized Advantage Estimator Explained','https://notanymike.github.io/GAE/'),
                   ('Notes on the Generalized Advantage Estimation Paper', 'https://danieltakeshi.github.io/2017/04/02/notes-on-the-generalized-advantage-estimation-paper/')]
            )
-root_policy_gradient.connect(gae, style=INVIS)
+#root_policy_gradient.connect(gae, style=INVIS)
 trpo.connect(gae, style=WEAK_LINK)
 
 a3c = Node('A3C',
@@ -609,7 +620,7 @@ a3c = Node('A3C',
            links=[('Simple Reinforcement Learning with Tensorflow Part 8: Asynchronous Actor-Critic Agents (A3C)', 'https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-8-asynchronous-actor-critic-agents-a3c-c88f72a5e9f2'),
                   ('An implementation of A3C', 'https://github.com/dennybritz/reinforcement-learning/tree/master/PolicyGradient/a3c')]
            )
-root_policy_gradient.connect(a3c, style=INVIS)
+#root_policy_gradient.connect(a3c, style=INVIS)
 a3c.connect(rainbow, style=WEAK_LINK)
 
 ddpg_her = Node('DDPG+HER',
@@ -674,7 +685,7 @@ acktr = Node('ACKTR',
            links=[
                ]
            )
-root_policy_gradient.connect(acktr, style=INVIS)
+#root_policy_gradient.connect(acktr, style=INVIS)
 a2c.connect(acktr, style=INVIS) # just to maintain relative timeline order
 
 ppo = Node('PPO',
@@ -700,7 +711,7 @@ svpg = Node('SVPG',
            links=[('Policy Gradient Algorithms', 'https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html#svpg'),
                   ]
            )
-root_policy_gradient.connect(svpg, style=INVIS)
+#root_policy_gradient.connect(svpg, style=INVIS)
 a2c.connect(svpg, style=INVIS) # just to maintain relative timeline order
 
 d4pg = Node('D4PG',
@@ -723,7 +734,7 @@ sac = Node('SAC',
            url='https://arxiv.org/abs/1801.01290',
            links=[('Spinning Up SAC page', 'https://spinningup.openai.com/en/latest/algorithms/sac.html'),
                   ('(GitHub) SAC code by its author', 'https://github.com/haarnoja/sac')])
-root_policy_gradient.connect(sac, style=INVIS)
+#root_policy_gradient.connect(sac, style=INVIS)
 ppo.connect(sac, style=INVIS) # just to maintain relative timeline order
 
 td3 = Node('TD3',
@@ -745,7 +756,7 @@ impala = Node('IMPALA',
            year=2018, 
            url='https://arxiv.org/abs/1802.01561',
            links=[('Policy Gradient Algorithms', 'https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html')])
-root_policy_gradient.connect(impala, style=INVIS)
+#root_policy_gradient.connect(impala, style=INVIS)
 a2c.connect(impala, style=INVIS) # just to maintain relative timeline order
 
 
@@ -802,7 +813,7 @@ def generate_md():
     
     md = """# RL Taxonomy
 
-This is a loose taxonomy of reinforcement learning algorithms. I'm by no means expert in this area, I'm making this as part of my learning process, so please PR to correct things or suggest new stuff.
+This is a loose taxonomy of reinforcement learning algorithms. I'm by no means expert in this area, I'm making this as part of my learning process. Note that there are a lot more algorithms than the ones listed here, and often I don't even know how to categorize them. In any case, please PR to correct things or suggest new stuff.
 
 """
     md += '#### Table of Contents:<HR>\n\n'

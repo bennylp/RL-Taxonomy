@@ -1,6 +1,6 @@
 # RL Taxonomy
 
-This is a loose taxonomy of reinforcement learning algorithms. I'm by no means expert in this area, I'm making this as part of my learning process, so please PR to correct things or suggest new stuff.
+This is a loose taxonomy of reinforcement learning algorithms. I'm by no means expert in this area, I'm making this as part of my learning process. Note that there are a lot more algorithms than the ones listed here, and often I don't even know how to categorize them. In any case, please PR to correct things or suggest new stuff.
 
 #### Table of Contents:<HR>
 
@@ -18,6 +18,7 @@ This is a loose taxonomy of reinforcement learning algorithms. I'm by no means e
   - [C51](#C51)
   - [RAINBOW](#RAINBOW)
   - [DQN+HER](#DQNHER)
+  - [IQN](#IQN)
 - [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic)
   - [REINFORCE](#REINFORCE)
   - [DPG](#DPG)
@@ -47,18 +48,18 @@ Solid line indicates some progression from one idea to another. Dashed line indi
 Reinforcement learning (RL) is an area of machine learning concerned with how software agents ought to take actions in an environment in order to maximize the notion of cumulative reward [from Wikipedia]
 
 - Related to subsequent ideas:
-  - [vg](#vg)
-  - [pg](#pg)
+  - [Value Gradient](#ValueGradient)
+  - [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic)
 - Useful links:
   - [A (Long) Peek into Reinforcement Learning](https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html)
   - [(book) Reinforcement Learning: An Introduction - 2nd Edition - Richard S. Sutton and Andrew G. Barto](http://incompleteideas.net/book/the-book.html)
 - Videos:
-  - [(playlist ) Introduction to Reinforcement learning with David Silver](https://www.youtube.com/playlist?list=PLqYmG7hTraZBiG_XpjnPrSNw-1XQaM_gB)
-  - [(playlist ) Reinforcement Learning Course | DeepMind & UCL](https://www.youtube.com/playlist?list=PLqYmG7hTraZBKeNJ-JE_eyJHZ7XgBoAyb)
-  - [(playlist ) Reinforcement Learning Tutorials](https://www.youtube.com/playlist?list=PLWzQK00nc192L7UMJyTmLXaHa3KcO0wBT)
-  - [(playlist ) Deep RL Bootcamp 2017](https://www.youtube.com/playlist?list=PLAdk-EyP1ND8MqJEJnSvaoUShrAWYe51U)
-  - [(playlist ) CS885 Reinforcement Learning - Spring 2018 - University of Waterloo](https://www.youtube.com/playlist?list=PLdAoL1zKcqTXFJniO3Tqqn6xMBBL07EDc)
-  - [(playlist ) CS234: Reinforcement Learning | Winter 2019](https://www.youtube.com/playlist?list=PLoROMvodv4rOSOPzutgyCTapiGlY2Nd8u)
+  - [(playlist) Introduction to Reinforcement learning with David Silver](https://www.youtube.com/playlist?list=PLqYmG7hTraZBiG_XpjnPrSNw-1XQaM_gB)
+  - [(playlist) Reinforcement Learning Course | DeepMind & UCL](https://www.youtube.com/playlist?list=PLqYmG7hTraZBKeNJ-JE_eyJHZ7XgBoAyb)
+  - [(playlist) Reinforcement Learning Tutorials](https://www.youtube.com/playlist?list=PLWzQK00nc192L7UMJyTmLXaHa3KcO0wBT)
+  - [(playlist) Deep RL Bootcamp 2017](https://www.youtube.com/playlist?list=PLAdk-EyP1ND8MqJEJnSvaoUShrAWYe51U)
+  - [(playlist) CS885 Reinforcement Learning - Spring 2018 - University of Waterloo](https://www.youtube.com/playlist?list=PLdAoL1zKcqTXFJniO3Tqqn6xMBBL07EDc)
+  - [(playlist) CS234: Reinforcement Learning | Winter 2019](https://www.youtube.com/playlist?list=PLoROMvodv4rOSOPzutgyCTapiGlY2Nd8u)
 
 ### <a name="ValueGradient"></a>Value Gradient
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Value Gradient](#ValueGradient))
@@ -66,7 +67,7 @@ Reinforcement learning (RL) is an area of machine learning concerned with how so
 The algorithm is learning the value function of each state or state-action. The policy is implicit, usually by just selecting the best value
 
 
- <a name="vg"></a>
+ <a name="ValueGradient"></a>
 #### <a name="SARSA"></a>SARSA
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Value Gradient](#ValueGradient) --> [SARSA](#SARSA))
 
@@ -78,7 +79,6 @@ SARSA (State-Action-Reward-State-Action) is an on-policy TD control method
 - Flags:
   - On-Policy (ONP)
   - Discrete action space (DA)
-- Related to prior idea:
 
 #### <a name="Qlearning"></a>Q-learning
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Value Gradient](#ValueGradient) --> [Q-learning](#Qlearning))
@@ -118,7 +118,9 @@ Deep Q Network. Q-Learning with using deep neural network as value estimator
   - [DDQN](#DDQN)
   - [PER](#PER)
   - [QR-DQN](#QRDQN)
+  - [C51](#C51)
   - [DQN+HER](#DQNHER)
+  - [IQN](#IQN)
   - [DDPG](#DDPG) (replay buffer)
   - [ACER](#ACER) (replay buffer, workers)
 - Useful links:
@@ -211,6 +213,7 @@ Distributional Reinforcement Learning with Quantile Regression (QR-DQN). In QR-D
   - Continuous state space (CS)
   - Discrete action space (DA)
   - Replay Buffer (RB)
+  - Distributional (DI)
 - Related to prior idea:
   - [DQN](#DQN)
 - Related to subsequent idea:
@@ -231,7 +234,9 @@ C51 Algorithm. The core idea of Distributional Bellman is to ask the following q
   - Continuous state space (CS)
   - Discrete action space (DA)
   - Replay Buffer (RB)
+  - Distributional (DI)
 - Related to prior idea:
+  - [DQN](#DQN)
 - Useful links:
   - [Distributional Bellman and the C51 Algorithm](https://flyyufelix.github.io/2017/10/24/distributional-bellman.html)
 
@@ -273,6 +278,25 @@ DQN with Hindsight Experience Replay (HER)
 - Useful links:
   - [Learning from mistakes with Hindsight Experience Replay](https://becominghuman.ai/learning-from-mistakes-with-hindsight-experience-replay-547fce2b3305)
 
+#### <a name="IQN"></a>IQN
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Value Gradient](#ValueGradient) --> [IQN](#IQN))
+
+Implicit Quantile Networks (IQN)
+
+- Paper: https://arxiv.org/abs/1806.06923
+- Authors: Will Dabney, Georg Ostrovski, David Silver, Rémi Munos
+- Year: 2018
+- Flags:
+  - Off-Policy (OFP)
+  - Continuous state space (CS)
+  - Discrete action space (DA)
+  - Replay Buffer (RB)
+  - Distributional (DI)
+- Related to prior idea:
+  - [DQN](#DQN)
+- Useful links:
+  - [(StackExchange) How does Implicit Quantile-Regression Network (IQN) differ from QR-DQN?](https://datascience.stackexchange.com/questions/40874/how-does-implicit-quantile-regression-network-iqn-differ-from-qr-dqn)
+
 ### <a name="PolicyGradientActorCritic"></a>Policy Gradient/Actor-Critic
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic))
 
@@ -284,7 +308,7 @@ The algorithm works directly to optimize the policy, with or without value funct
   - [Going Deeper Into Reinforcement Learning: Fundamentals of Policy Gradients](https://danieltakeshi.github.io/2017/03/28/going-deeper-into-reinforcement-learning-fundamentals-of-policy-gradients/)
   - [An introduction to Policy Gradients with Cartpole and Doom](https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/)
 
- <a name="pg"></a>
+ <a name="PolicyGradientActorCritic"></a>
 #### <a name="REINFORCE"></a>REINFORCE
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic) --> [REINFORCE](#REINFORCE))
 
@@ -298,7 +322,6 @@ REINFORCE (Monte-Carlo policy gradient) is a pure policy gradient algorithm that
   - On-Policy (ONP)
   - Continuous state space (CS)
   - Discrete action space (DA)
-- Related to prior idea:
 - Useful links:
   - [LearningReinforcementLearningbyLearningREINFORCE (PDF)](http://www.cs.toronto.edu/~tingwuwang/REINFORCE.pdf)
   - [An introduction to Policy Gradients with Cartpole and Doom](https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/)
@@ -316,7 +339,6 @@ Deterministic Policy Gradient. Abstract: In this paper we consider deterministic
   - Continuous state space (CS)
   - Continuous action space (CA)
   - Deterministic Policy (DP)
-- Related to prior idea:
 - Related to subsequent idea:
   - [DDPG](#DDPG)
 
@@ -358,7 +380,6 @@ Trust Region Policy Optimization (TRPO) improves training stability by enforcing
   - Continuous state space (CS)
   - Continuous action space (CA)
   - Advantage (ADV)
-- Related to prior idea:
 - Related to subsequent ideas:
   - [GAE](#GAE)
   - [ACER](#ACER) (TRPO technique)
@@ -379,7 +400,7 @@ Generalized Advantage Estimation
   - On-Policy (ONP)
   - Continuous state space (CS)
   - Continuous action space (CA)
-- Related to prior ideas:
+- Related to prior idea:
   - [TRPO](#TRPO)
 - Useful links:
   - [Generalized Advantage Estimator Explained](https://notanymike.github.io/GAE/)
@@ -399,7 +420,6 @@ Asynchronous Advantage Actor-Critic (A3C) is a classic policy gradient method wi
   - Continuous action space (CA)
   - Advantage (ADV)
   - Stochastic Policy (SP)
-- Related to prior idea:
 - Related to subsequent ideas:
   - [RAINBOW](#RAINBOW)
   - [A2C](#A2C)
@@ -498,7 +518,7 @@ Actor Critic using Kronecker-Factored Trust Region (ACKTR) is applying trust reg
   - Continuous state space (CS)
   - Continuous action space (CA)
   - Advantage (ADV)
-- Related to prior ideas:
+- Related to prior idea:
 
 #### <a name="PPO"></a>PPO
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic) --> [PPO](#PPO))
@@ -536,7 +556,7 @@ Stein Variational Policy Gradient (SVPG)
   - Continuous state space (CS)
   - Discrete action space (DA)
   - Continuous action space (CA)
-- Related to prior ideas:
+- Related to prior idea:
 - Useful links:
   - [Policy Gradient Algorithms](https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html#svpg)
 
@@ -571,7 +591,7 @@ Soft Actor Critic (SAC) is an algorithm that optimizes a stochastic policy in an
   - Continuous action space (CA)
   - Continuous action space (CA)
   - Stochastic Policy (SP)
-- Related to prior ideas:
+- Related to prior idea:
 - Useful links:
   - [Spinning Up SAC page](https://spinningup.openai.com/en/latest/algorithms/sac.html)
   - [(GitHub) SAC code by its author](https://github.com/haarnoja/sac)
@@ -608,7 +628,7 @@ Importance Weighted Actor-Learner Architecture (IMPALA)
   - Off-Policy (OFP)
   - Continuous state space (CS)
   - Continuous action space (CA)
-- Related to prior ideas:
+- Related to prior idea:
 - Useful links:
   - [Policy Gradient Algorithms](https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html)
 

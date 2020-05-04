@@ -31,10 +31,8 @@ digraph {
 		style=dashed
 		fontname="sans-serif"
 		fontsize=16
-		vg [label="{vg}" fontname="sans-serif" fontsize=12 shape=record style=invis]
-		vg -> SARSA [style=invis]
-		vg -> "Q-learning" [style=invis]
-		vg -> C51 [style=invis]
+		"Value Gradient" [label="{Value Gradient}" fontname="sans-serif" fontsize=12 shape=record style=invis]
+		"Value Gradient" -> "Q-learning" [style=invis]
 		SARSA [label="{SARSA}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
 		"Q-learning" [label="{Q-learning}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
 		"Q-learning" -> DQN
@@ -43,7 +41,9 @@ digraph {
 		DQN -> DDQN
 		DQN -> PER
 		DQN -> "QR-DQN"
+		DQN -> C51
 		DQN -> "DQN+HER"
+		DQN -> IQN
 		DRQN [label="{DRQN}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
 		DDQN [label="{DDQN}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
 		DDQN -> "Duelling-DQN"
@@ -57,6 +57,7 @@ digraph {
 		C51 [label="{C51}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
 		RAINBOW [label="{RAINBOW}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
 		"DQN+HER" [label="{DQN+HER}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+		IQN [label="{IQN}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
 	}
 	A3C -> RAINBOW [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
 	subgraph "clusterPolicy Gradient/Actor-Critic" {
@@ -65,16 +66,7 @@ digraph {
 		style=dashed
 		fontname="sans-serif"
 		fontsize=16
-		pg [label="{pg}" fontname="sans-serif" fontsize=12 shape=record style=invis]
-		pg -> REINFORCE [style=invis]
-		pg -> DPG [style=invis]
-		pg -> TRPO [style=invis]
-		pg -> GAE [style=invis]
-		pg -> A3C [style=invis]
-		pg -> ACKTR [style=invis]
-		pg -> SVPG [style=invis]
-		pg -> SAC [style=invis]
-		pg -> IMPALA [style=invis]
+		"Policy Gradient/Actor-Critic" [label="{Policy Gradient/Actor-Critic}" fontname="sans-serif" fontsize=12 shape=record style=invis]
 		REINFORCE [label="{REINFORCE}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
 		DPG [label="{DPG}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
 		DPG -> DDPG
@@ -108,8 +100,8 @@ digraph {
 		TD3 [label="{TD3}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
 		IMPALA [label="{IMPALA}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
 	}
-	"Reinforcement Learning" -> vg [lhead="clusterValue Gradient"]
-	"Reinforcement Learning" -> pg [lhead="clusterPolicy Gradient/Actor-Critic"]
+	"Reinforcement Learning" -> "Value Gradient" [lhead="clusterValue Gradient"]
+	"Reinforcement Learning" -> "Policy Gradient/Actor-Critic" [lhead="clusterPolicy Gradient/Actor-Critic"]
 	{
 		rank=same
 		1989
@@ -169,6 +161,7 @@ digraph {
 	{
 		rank=same
 		2018
+		IQN
 		D4PG
 		SAC
 		TD3
@@ -176,7 +169,7 @@ digraph {
 	}
 	{
 		rank=same
-		vg
-		pg
+		"Value Gradient"
+		"Policy Gradient/Actor-Critic"
 	}
 }
