@@ -17,6 +17,8 @@ WEAK_LINK = 'dashed'
 # This is the style of the edge for such connection. 
 INVIS = "invis"
 
+USE_TIMELINE = True
+FONT_NAME = "arial"
 
 # Useful graphviz links:
 # - https://graphviz.readthedocs.io/en/stable/index.html
@@ -182,11 +184,15 @@ class NodeBase(ABC):
         if RANKDIR=="LR":
             # For left to right rank
             attrs = copy.copy(self.attrs)
+            attrs['fontname'] = FONT_NAME
             if 'shape' not in attrs:
                 attrs['shape']='record'
             if 'style' not in attrs:
                 attrs['style']='rounded'
-            year = f'|{self.year}' if self.year else ''
+            if not USE_TIMELINE:
+                year = f'|{self.year}' if self.year else ''
+            else:
+                year = ''
             graph.node(self.graph_name, label=f'{{{self.title}{year}}}', **attrs)
         else:
             # For top down rank
@@ -199,6 +205,7 @@ class NodeBase(ABC):
             if fields:
                 label += f'|{{{"|".join(fields)}}}'
             attrs = copy.copy(self.attrs)
+            attrs['fontname'] = FONT_NAME
             if 'shape' not in attrs:
                 attrs['shape']='record'
             if 'style' not in attrs:
@@ -211,6 +218,7 @@ class NodeBase(ABC):
             if attrs.get('style', '')==WEAK_LINK:
                 attrs['color'] = 'darkgray'
                 attrs['fontsize'] = '8'
+                attrs['fontname'] = FONT_NAME
             if edge.dest.group == self.group:
                 cluster.edge(self.graph_name, edge.dest.graph_name, **attrs)
             else:
@@ -218,7 +226,7 @@ class NodeBase(ABC):
         
     def _export_md(self):
         if not self.output_md:
-            return ''
+            return f' <a name="{self.name}"></a>\n'
         parents = self.get_parents()
         md = ('#' * min(len(parents)+2,5)) + f' <a name="{self.name}"></a>{self.title}\n'
  
@@ -271,10 +279,11 @@ class Group(NodeBase):
     """
     
     def __init__(self, title, description, group, flags=[], authors=None, year=None, url=None,
-                 videos=[], links=[], graph_type="cluster", output_md=True, **attrs):
+                 videos=[], links=[], graph_type="cluster", timeline=False, output_md=True, **attrs):
         super().__init__(title, description, group, flags=flags, authors=authors, year=year, url=url,
                  videos=videos, links=links, graph_type=graph_type, output_md=output_md, **attrs)
         self.nodes = []
+        self.timeline = timeline
         
     def collect_nodes(self):
         nodes = [self]
@@ -301,15 +310,57 @@ class Group(NodeBase):
 
         self._export_connections(graph, cluster)
     
+    def _export_graph_with_timeline(self, graph, cluster):
+        nodes = copy.copy(self.nodes)
+        nodes = sorted(nodes, key=lambda n: n.graph_rank)
+        
+        ranks = OrderedDict()
+        for node in nodes:
+            lst = ranks.get(node.graph_rank, [])
+            lst.append(node)
+            ranks[node.graph_rank] = lst
+
+        # The timeline graph
+        with cluster.subgraph(name='clusterTimeline' + self.title) as timeline_graph:
+            #timeline_graph.attr(rankdir=RANKDIR)
+            timeline_graph.attr('node', shape='plaintext')
+            years = [k for k in ranks.keys() if k > 1900]
+            for iy in range(len(years)-1):
+                timeline_graph.edge(f'{self.title}{years[iy]}', f'{self.title}{years[iy+1]}',
+                                    color='darkgray')
+
+        # The nodes
+        for rank, lst in ranks.items():
+            if not rank:
+                for node in lst:
+                    node.export_graph(graph, cluster)
+            else:
+                with cluster.subgraph() as rank_graph:
+                    rank_graph.attr(rank='same')
+                    if rank > 1900:
+                        rank_graph.node(f'{self.title}{rank}', label=str(rank), fontcolor='darkgray',
+                                        fontname=FONT_NAME)
+
+                    for node in lst:
+                        node._export_node(rank_graph)
+                        node._export_connections(graph, cluster)
+
+            
     def export_graph(self, graph, cluster):
         if self.graph_type == "cluster":
             with cluster.subgraph(name=self.graph_name) as c:
                 c.attr(label=self.title)
                 c.attr(color='black')
                 c.attr(style='dashed')
-                self._export_node(c)
-                for child in self.nodes:
-                    child.export_graph(graph, c)
+                c.attr(fontname=FONT_NAME)
+                c.attr(fontsize='16')
+                
+                if self.timeline:
+                    self._export_graph_with_timeline(graph, c)
+                else:
+                    self._export_node(c)
+                    for child in self.nodes:
+                        child.export_graph(graph, c)
         else:
             self._export_node(cluster)
             for child in self.nodes:
@@ -358,18 +409,23 @@ rl = Group('Reinforcement Learning',
            'Reinforcement learning (RL) is an area of machine learning concerned with how software agents ought to take actions in an environment in order to maximize the notion of cumulative reward [from Wikipedia]',
            None, graph_type="node",
            links=[('A (Long) Peek into Reinforcement Learning', 'https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html'),
-                  ('Reinforcement Learning: An Introduction - 2nd Edition (book) - Richard S. Sutton and Andrew G. Barto', 'http://incompleteideas.net/book/the-book.html')
+                  ('(book) Reinforcement Learning: An Introduction - 2nd Edition - Richard S. Sutton and Andrew G. Barto', 'http://incompleteideas.net/book/the-book.html')
                ],
-           videos=[('All Reinforcement Courses on YouTube', 'https://www.youtube.com/playlist?list=PLvan4zSb2Rar-jNURaahH81uMyKHkGcHS'),
+           videos=[('(playlist ) Introduction to Reinforcement learning with David Silver', 'https://www.youtube.com/playlist?list=PLqYmG7hTraZBiG_XpjnPrSNw-1XQaM_gB'),
+                   ('(playlist ) Reinforcement Learning Course | DeepMind & UCL', 'https://www.youtube.com/playlist?list=PLqYmG7hTraZBKeNJ-JE_eyJHZ7XgBoAyb'),
+                   ('(playlist ) Reinforcement Learning Tutorials', 'https://www.youtube.com/playlist?list=PLWzQK00nc192L7UMJyTmLXaHa3KcO0wBT'),
+                   ('(playlist ) Deep RL Bootcamp 2017', 'https://www.youtube.com/playlist?list=PLAdk-EyP1ND8MqJEJnSvaoUShrAWYe51U'),
+                   ('(playlist ) CS885 Reinforcement Learning - Spring 2018 - University of Waterloo', 'https://www.youtube.com/playlist?list=PLdAoL1zKcqTXFJniO3Tqqn6xMBBL07EDc'),
+                   ('(playlist ) CS234: Reinforcement Learning | Winter 2019', 'https://www.youtube.com/playlist?list=PLoROMvodv4rOSOPzutgyCTapiGlY2Nd8u'),
                ])
 
 value_gradient = Group('Value Gradient', 
                     'The algorithm is learning the value function of each state or state-action. The policy is implicit, usually by just selecting the best value',
-                    rl)
+                    rl, timeline=USE_TIMELINE)
 
 policy_gradient = Group('Policy Gradient/Actor-Critic', 
                      'The algorithm works directly to optimize the policy, with or without value function. If the value function is learned in addition to the policy, we would get Actor-Critic algorithm. Most policy gradient algorithms are Actor-Critic. The *Critic* updates value function parameters *w* and depending on the algorithm it could be action-value ***Q(a|s;w)*** or state-value ***V(s;w)***. The *Actor* updates policy parameters θ, in the direction suggested by the critic, ***π(a|s;θ)***. [from [Lilian Weng\' blog](https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html)]', 
-                     rl,
+                     rl, timeline=USE_TIMELINE,
                      links=[
                         ('Policy Gradient Algorithms', 'https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html'),
                         ('RL — Policy Gradient Explained', 'https://medium.com/@jonathan_hui/rl-policy-gradients-explained-9b13b688b146'),
@@ -403,8 +459,8 @@ qlearning = Node('Q-learning',
            authors='Chris Watkins',
            year=1989, 
            url='http://www.cs.rhul.ac.uk/~chrisw/new_thesis.pdf',
-           links=['https://www.freecodecamp.org/news/diving-deeper-into-reinforcement-learning-with-q-learning-c18d0db58efe/',
-                  'https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-0-q-learning-with-tables-and-neural-networks-d195264329d0']
+           links=[('Diving deeper into Reinforcement Learning with Q-Learning', 'https://www.freecodecamp.org/news/diving-deeper-into-reinforcement-learning-with-q-learning-c18d0db58efe/'),
+                  ('Simple Reinforcement Learning with Tensorflow Part 0: Q-Learning with Tables and Neural Networks', 'https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-0-q-learning-with-tables-and-neural-networks-d195264329d0')]
            )
 root_value_gradient.connect(qlearning)
 
@@ -415,8 +471,8 @@ dqn = Node('DQN',
            authors='Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Alex Graves, Ioannis Antonoglou, Daan Wierstra, Martin Riedmiller',
            year=2013, 
            url='https://arxiv.org/abs/1312.5602',
-           links=['https://towardsdatascience.com/deep-q-learning-for-the-cartpole-44d761085c2f',
-                  'https://www.freecodecamp.org/news/an-introduction-to-deep-q-learning-lets-play-doom-54d02d8017d8/'])
+           links=[('(tutorial) Deep Q Learning for the CartPole', 'https://towardsdatascience.com/deep-q-learning-for-the-cartpole-44d761085c2f'),
+                  ('An introduction to Deep Q-Learning: let’s play Doom', 'https://www.freecodecamp.org/news/an-introduction-to-deep-q-learning-lets-play-doom-54d02d8017d8/')])
 qlearning.connect(dqn)
 
 drqn = Node('DRQN',
@@ -436,7 +492,7 @@ ddqn = Node('DDQN',
             authors='Hado van Hasselt, Arthur Guez, David Silver',
             year=2015,
             url='https://arxiv.org/abs/1509.06461',
-            links=['https://towardsdatascience.com/deep-q-learning-for-the-cartpole-44d761085c2f'])
+            links=[('(tutorial) Deep Q Learning for the CartPole', 'https://towardsdatascience.com/deep-q-learning-for-the-cartpole-44d761085c2f')])
 dqn.connect(ddqn)
 
 dqn_per = Node('PER',
@@ -465,7 +521,7 @@ qr_dqn = Node('QR-DQN',
            authors='Will Dabney, Mark Rowland, Marc G. Bellemare, Rémi Munos',
            year=2017, 
            url='https://arxiv.org/abs/1710.10044',
-           links=['https://github.com/senya-ashukha/quantile-regression-dqn-pytorch'])
+           links=[('(GitHub) Quantile Regression DQN', 'https://github.com/senya-ashukha/quantile-regression-dqn-pytorch')])
 dqn.connect(qr_dqn)
 
 rainbow = Node('RAINBOW',
@@ -488,7 +544,7 @@ dqn_her = Node('DQN+HER',
            authors='Marcin Andrychowicz, Filip Wolski, Alex Ray, Jonas Schneider, Rachel Fong, Peter Welinder, Bob McGrew, Josh Tobin, Pieter Abbeel, Wojciech Zaremba',
            year=2017, 
            url='https://arxiv.org/abs/1707.01495',
-           links=['https://becominghuman.ai/learning-from-mistakes-with-hindsight-experience-replay-547fce2b3305'])
+           links=[('Learning from mistakes with Hindsight Experience Replay', 'https://becominghuman.ai/learning-from-mistakes-with-hindsight-experience-replay-547fce2b3305')])
 dqn.connect(dqn_her)
 
 
@@ -502,8 +558,8 @@ reinforce = Node('REINFORCE',
            authors='Ronald J. Williams',
            year=1992, 
            url='https://people.cs.umass.edu/~barto/courses/cs687/williams92simple.pdf',
-           links=['http://www.cs.toronto.edu/~tingwuwang/REINFORCE.pdf', 
-                  'https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/'
+           links=[('LearningReinforcementLearningbyLearningREINFORCE (PDF)', 'http://www.cs.toronto.edu/~tingwuwang/REINFORCE.pdf'), 
+                  ('An introduction to Policy Gradients with Cartpole and Doom', 'https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/')
                   ]
            )
 root_policy_gradient.connect(reinforce)
@@ -538,8 +594,8 @@ ddpg = Node('DDPG',
            authors='Timothy P. Lillicrap, Jonathan J. Hunt, Alexander Pritzel, Nicolas Heess, Tom Erez, Yuval Tassa, David Silver, Daan Wierstra',
            year=2015, 
            url='https://arxiv.org/abs/1509.02971',
-           links=['https://spinningup.openai.com/en/latest/algorithms/ddpg.html',
-                  'https://pemami4911.github.io/blog/2016/08/21/ddpg-rl.html']
+           links=[('Deep Deterministic Policy Gradient - Spinning Up', 'https://spinningup.openai.com/en/latest/algorithms/ddpg.html')
+                  ]
            )
 dpg.connect(ddpg)
 dqn.connect(ddpg, style=WEAK_LINK, label='replay buffer')
@@ -551,8 +607,8 @@ trpo = Node('TRPO',
            authors='John Schulman, Sergey Levine, Philipp Moritz, Michael I. Jordan, Pieter Abbeel',
            year=2015, 
            url='https://arxiv.org/pdf/1502.05477',
-           links=['https://medium.com/@jonathan_hui/rl-trust-region-policy-optimization-trpo-explained-a6ee04eeeee9',
-                  'https://medium.com/@jonathan_hui/rl-trust-region-policy-optimization-trpo-part-2-f51e3b2e373a']
+           links=[('RL — Trust Region Policy Optimization (TRPO) Explained', 'https://medium.com/@jonathan_hui/rl-trust-region-policy-optimization-trpo-explained-a6ee04eeeee9'),
+                  ('RL — Trust Region Policy Optimization (TRPO) Part 2', 'https://medium.com/@jonathan_hui/rl-trust-region-policy-optimization-trpo-part-2-f51e3b2e373a')]
            )
 root_policy_gradient.connect(trpo)
 
@@ -611,9 +667,9 @@ a2c = Node('A2C',
            year=2017, 
            url='https://openai.com/blog/baselines-acktr-a2c/',
            links=[
-               'https://openai.com/blog/baselines-acktr-a2c/',
-               'https://www.freecodecamp.org/news/an-intro-to-advantage-actor-critic-methods-lets-play-sonic-the-hedgehog-86d6240171d/',
-               'https://stable-baselines.readthedocs.io/en/master/modules/a2c.html'
+               ('OpenAI Baselines: ACKTR & A2C', 'https://openai.com/blog/baselines-acktr-a2c/'),
+               ('An intro to Advantage Actor Critic methods: let’s play Sonic the Hedgehog!', 'https://www.freecodecamp.org/news/an-intro-to-advantage-actor-critic-methods-lets-play-sonic-the-hedgehog-86d6240171d/'),
+               ('Stable Baselines: A2C', 'https://stable-baselines.readthedocs.io/en/master/modules/a2c.html')
                ]
            )
 a3c.connect(a2c)
@@ -656,7 +712,7 @@ ppo = Node('PPO',
            url='https://arxiv.org/abs/1707.06347',
            links=['https://spinningup.openai.com/en/latest/algorithms/ppo.html',
                   'https://openai.com/blog/openai-baselines-ppo/'],
-           videos=['https://www.youtube.com/watch?v=5P7I-xPq8u8']
+           videos=[('Policy Gradient methods and Proximal Policy Optimization (PPO): diving into Deep RL!', 'https://www.youtube.com/watch?v=5P7I-xPq8u8')]
            )
 trpo.connect(ppo, style=WEAK_LINK)
 
@@ -692,7 +748,7 @@ sac = Node('SAC',
            year=2018, 
            url='https://arxiv.org/abs/1801.01290',
            links=[('Spinning Up SAC page', 'https://spinningup.openai.com/en/latest/algorithms/sac.html'),
-                  ('Author\s code', 'https://github.com/haarnoja/sac')])
+                  ('(GitHub) SAC code by its author', 'https://github.com/haarnoja/sac')])
 root_policy_gradient.connect(sac)
 ppo.connect(sac, style=INVIS) # just to maintain relative timeline order
 
@@ -703,7 +759,7 @@ td3 = Node('TD3',
            authors='Scott Fujimoto, Herke van Hoof, David Meger',
            year=2018, 
            url='https://arxiv.org/abs/1802.09477',
-           links=['https://spinningup.openai.com/en/latest/algorithms/td3.html'])
+           links=[('Twin Delayed DDPG (Spinning Up)', 'https://spinningup.openai.com/en/latest/algorithms/td3.html')])
 ddpg.connect(td3)
 ddqn.connect(td3, style=WEAK_LINK, label='double Q-learning')
 
@@ -725,6 +781,25 @@ def generate_graph(output, format, use_rank=True):
     graph = Digraph()
     graph.attr(compound='true')
     graph.attr(rankdir=RANKDIR)
+    
+    """
+    ranks = OrderedDict()
+    nodes = rl.collect_nodes()
+    nodes = sorted(nodes, key=lambda n: n.graph_rank)
+    for node in nodes:
+        lst = ranks.get(node.graph_rank, [])
+        lst.append(node)
+        ranks[node.graph_rank] = lst
+    
+    # The timeline graph
+    with graph.subgraph(name='clusterTimeline') as timeline_graph:
+        #timeline_graph.attr(rankdir=RANKDIR)
+        timeline_graph.attr('node', shape='plaintext')
+        years = [k for k in ranks.keys() if k > 1900]
+        for iy in range(len(years)-1):
+            timeline_graph.edge(str(years[iy]), str(years[iy+1]))
+    """
+    
     rl.export_graph(graph, graph)
     graph.render(output, format=format)
 
@@ -734,22 +809,26 @@ def generate_md():
     
     md = """# RL Taxonomy
 
-This is a loose taxonomy of RL algorithms. I'm by no means expert in this area, so please PR to correct things or suggest new stuff.
+This is a loose taxonomy of reinforcement learning algorithms. I'm by no means expert in this area, I'm making this as part of my learning process, so please PR to correct things or suggest new stuff.
 
 """
     md += '#### Table of Contents:<HR>\n\n'
+    md += "[Taxonomy](#taxonomy)<BR>\n"
     for node in nodes:
         if not node.output_md:
             continue
         parents = node.get_parents()
-        md += '  ' * len(parents)
+        if len(parents):
+            md += '  ' * (len(parents)-1)
         if parents:
             md += '- '
         md += f'[{node.title}](#{node.name})\n'
     md += '\n'
 
-    md += """## Taxonomy
-    
+    md += """## <A name="taxonomy"></a>Taxonomy
+
+Solid line indicates some progression from one idea to another. Dashed line indicates a loose connection, which could be as little as mentioning of the idea in the newer paper.
+
 ![RL Taxonomy](rl-taxonomy.gv.svg "RL Taxonomy")\n\n"""
 
     if RANKDIR != 'LR':

@@ -1,42 +1,45 @@
 # RL Taxonomy
 
-This is a loose taxonomy of RL algorithms. I'm by no means expert in this area, so please PR to correct things or suggest new stuff.
+This is a loose taxonomy of reinforcement learning algorithms. I'm by no means expert in this area, I'm making this as part of my learning process, so please PR to correct things or suggest new stuff.
 
 #### Table of Contents:<HR>
 
+[Taxonomy](#taxonomy)<BR>
 [Reinforcement Learning](#ReinforcementLearning)
-  - [Value Gradient](#ValueGradient)
-    - [SARSA](#SARSA)
-    - [Q-learning](#Qlearning)
-    - [DQN](#DQN)
-    - [DRQN](#DRQN)
-    - [DDQN](#DDQN)
-    - [PER](#PER)
-    - [Duelling-DQN](#DuellingDQN)
-    - [QR-DQN](#QRDQN)
-    - [RAINBOW](#RAINBOW)
-    - [DQN+HER](#DQNHER)
-  - [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic)
-    - [REINFORCE](#REINFORCE)
-    - [DPG](#DPG)
-    - [DDPG](#DDPG)
-    - [TRPO](#TRPO)
-    - [GAE](#GAE)
-    - [A3C](#A3C)
-    - [DDPG+HER](#DDPGHER)
-    - [MADDPG](#MADDPG)
-    - [A2C](#A2C)
-    - [ACER](#ACER)
-    - [ACKTR](#ACKTR)
-    - [PPO](#PPO)
-    - [SVPG](#SVPG)
-    - [D4PG](#D4PG)
-    - [SAC](#SAC)
-    - [TD3](#TD3)
-    - [IMPALA](#IMPALA)
+- [Value Gradient](#ValueGradient)
+  - [SARSA](#SARSA)
+  - [Q-learning](#Qlearning)
+  - [DQN](#DQN)
+  - [DRQN](#DRQN)
+  - [DDQN](#DDQN)
+  - [PER](#PER)
+  - [Duelling-DQN](#DuellingDQN)
+  - [QR-DQN](#QRDQN)
+  - [RAINBOW](#RAINBOW)
+  - [DQN+HER](#DQNHER)
+- [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic)
+  - [REINFORCE](#REINFORCE)
+  - [DPG](#DPG)
+  - [DDPG](#DDPG)
+  - [TRPO](#TRPO)
+  - [GAE](#GAE)
+  - [A3C](#A3C)
+  - [DDPG+HER](#DDPGHER)
+  - [MADDPG](#MADDPG)
+  - [A2C](#A2C)
+  - [ACER](#ACER)
+  - [ACKTR](#ACKTR)
+  - [PPO](#PPO)
+  - [SVPG](#SVPG)
+  - [D4PG](#D4PG)
+  - [SAC](#SAC)
+  - [TD3](#TD3)
+  - [IMPALA](#IMPALA)
 
-## Taxonomy
-    
+## <A name="taxonomy"></a>Taxonomy
+
+Solid line indicates some progression from one idea to another. Dashed line indicates a loose connection, which could be as little as mentioning of the idea in the newer paper.
+
 ![RL Taxonomy](rl-taxonomy.gv.svg "RL Taxonomy")
 
 ## <a name="ReinforcementLearning"></a>Reinforcement Learning
@@ -47,9 +50,14 @@ Reinforcement learning (RL) is an area of machine learning concerned with how so
   - [Policy Gradient](#PolicyGradient)
 - Useful links:
   - [A (Long) Peek into Reinforcement Learning](https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html)
-  - [Reinforcement Learning: An Introduction - 2nd Edition (book) - Richard S. Sutton and Andrew G. Barto](http://incompleteideas.net/book/the-book.html)
+  - [(book) Reinforcement Learning: An Introduction - 2nd Edition - Richard S. Sutton and Andrew G. Barto](http://incompleteideas.net/book/the-book.html)
 - Videos:
-  - [All Reinforcement Courses on YouTube](https://www.youtube.com/playlist?list=PLvan4zSb2Rar-jNURaahH81uMyKHkGcHS)
+  - [(playlist ) Introduction to Reinforcement learning with David Silver](https://www.youtube.com/playlist?list=PLqYmG7hTraZBiG_XpjnPrSNw-1XQaM_gB)
+  - [(playlist ) Reinforcement Learning Course | DeepMind & UCL](https://www.youtube.com/playlist?list=PLqYmG7hTraZBKeNJ-JE_eyJHZ7XgBoAyb)
+  - [(playlist ) Reinforcement Learning Tutorials](https://www.youtube.com/playlist?list=PLWzQK00nc192L7UMJyTmLXaHa3KcO0wBT)
+  - [(playlist ) Deep RL Bootcamp 2017](https://www.youtube.com/playlist?list=PLAdk-EyP1ND8MqJEJnSvaoUShrAWYe51U)
+  - [(playlist ) CS885 Reinforcement Learning - Spring 2018 - University of Waterloo](https://www.youtube.com/playlist?list=PLdAoL1zKcqTXFJniO3Tqqn6xMBBL07EDc)
+  - [(playlist ) CS234: Reinforcement Learning | Winter 2019](https://www.youtube.com/playlist?list=PLoROMvodv4rOSOPzutgyCTapiGlY2Nd8u)
 
 ### <a name="ValueGradient"></a>Value Gradient
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Value Gradient](#ValueGradient))
@@ -57,6 +65,7 @@ Reinforcement learning (RL) is an area of machine learning concerned with how so
 The algorithm is learning the value function of each state or state-action. The policy is implicit, usually by just selecting the best value
 
 
+ <a name="ValueGradient"></a>
 #### <a name="SARSA"></a>SARSA
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Value Gradient](#ValueGradient) --> [SARSA](#SARSA))
 
@@ -87,8 +96,8 @@ Q-learning an off-policy TD control method. Unlike SARSA, it doesn't follow the 
 - Related to subsequent idea:
   - [DQN](#DQN)
 - Useful links:
-  - [freecodecamp.org](https://www.freecodecamp.org/news/diving-deeper-into-reinforcement-learning-with-q-learning-c18d0db58efe/)
-  - [medium.com](https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-0-q-learning-with-tables-and-neural-networks-d195264329d0)
+  - [Diving deeper into Reinforcement Learning with Q-Learning](https://www.freecodecamp.org/news/diving-deeper-into-reinforcement-learning-with-q-learning-c18d0db58efe/)
+  - [Simple Reinforcement Learning with Tensorflow Part 0: Q-Learning with Tables and Neural Networks](https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-0-q-learning-with-tables-and-neural-networks-d195264329d0)
 
 #### <a name="DQN"></a>DQN
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Value Gradient](#ValueGradient) --> [DQN](#DQN))
@@ -114,8 +123,8 @@ Deep Q Network. Q-Learning with using deep neural network as value estimator
   - [DDPG](#DDPG) (replay buffer)
   - [ACER](#ACER) (replay buffer, workers)
 - Useful links:
-  - [towardsdatascience.com](https://towardsdatascience.com/deep-q-learning-for-the-cartpole-44d761085c2f)
-  - [freecodecamp.org](https://www.freecodecamp.org/news/an-introduction-to-deep-q-learning-lets-play-doom-54d02d8017d8/)
+  - [(tutorial) Deep Q Learning for the CartPole](https://towardsdatascience.com/deep-q-learning-for-the-cartpole-44d761085c2f)
+  - [An introduction to Deep Q-Learning: let’s play Doom](https://www.freecodecamp.org/news/an-introduction-to-deep-q-learning-lets-play-doom-54d02d8017d8/)
 
 #### <a name="DRQN"></a>DRQN
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Value Gradient](#ValueGradient) --> [DRQN](#DRQN))
@@ -153,7 +162,7 @@ Double DQN adds another neural network, making separate network for policy and t
   - [RAINBOW](#RAINBOW)
   - [TD3](#TD3) (double Q-learning)
 - Useful links:
-  - [towardsdatascience.com](https://towardsdatascience.com/deep-q-learning-for-the-cartpole-44d761085c2f)
+  - [(tutorial) Deep Q Learning for the CartPole](https://towardsdatascience.com/deep-q-learning-for-the-cartpole-44d761085c2f)
 
 #### <a name="PER"></a>PER
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Value Gradient](#ValueGradient) --> [PER](#PER))
@@ -208,7 +217,7 @@ Distributional Reinforcement Learning with Quantile Regression (QR-DQN). In QR-D
 - Related to subsequent idea:
   - [RAINBOW](#RAINBOW)
 - Useful links:
-  - [github.com](https://github.com/senya-ashukha/quantile-regression-dqn-pytorch)
+  - [(GitHub) Quantile Regression DQN](https://github.com/senya-ashukha/quantile-regression-dqn-pytorch)
 
 #### <a name="RAINBOW"></a>RAINBOW
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Value Gradient](#ValueGradient) --> [RAINBOW](#RAINBOW))
@@ -246,7 +255,7 @@ DQN with Hindsight Experience Replay (HER)
 - Related to prior idea:
   - [DQN](#DQN)
 - Useful links:
-  - [becominghuman.ai](https://becominghuman.ai/learning-from-mistakes-with-hindsight-experience-replay-547fce2b3305)
+  - [Learning from mistakes with Hindsight Experience Replay](https://becominghuman.ai/learning-from-mistakes-with-hindsight-experience-replay-547fce2b3305)
 
 ### <a name="PolicyGradientActorCritic"></a>Policy Gradient/Actor-Critic
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic))
@@ -259,6 +268,7 @@ The algorithm works directly to optimize the policy, with or without value funct
   - [Going Deeper Into Reinforcement Learning: Fundamentals of Policy Gradients](https://danieltakeshi.github.io/2017/03/28/going-deeper-into-reinforcement-learning-fundamentals-of-policy-gradients/)
   - [An introduction to Policy Gradients with Cartpole and Doom](https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/)
 
+ <a name="PolicyGradient"></a>
 #### <a name="REINFORCE"></a>REINFORCE
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic) --> [REINFORCE](#REINFORCE))
 
@@ -275,8 +285,8 @@ REINFORCE (Monte-Carlo policy gradient) is a pure policy gradient algorithm that
 - Related to prior idea:
   - [Policy Gradient](#PolicyGradient)
 - Useful links:
-  - [toronto.edu](http://www.cs.toronto.edu/~tingwuwang/REINFORCE.pdf)
-  - [freecodecamp.org](https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/)
+  - [LearningReinforcementLearningbyLearningREINFORCE (PDF)](http://www.cs.toronto.edu/~tingwuwang/REINFORCE.pdf)
+  - [An introduction to Policy Gradients with Cartpole and Doom](https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/)
 
 #### <a name="DPG"></a>DPG
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic) --> [DPG](#DPG))
@@ -319,8 +329,7 @@ Deep Deterministic Policy Gradient (DDPG).
   - [D4PG](#D4PG)
   - [TD3](#TD3)
 - Useful links:
-  - [openai.com](https://spinningup.openai.com/en/latest/algorithms/ddpg.html)
-  - [github.io](https://pemami4911.github.io/blog/2016/08/21/ddpg-rl.html)
+  - [Deep Deterministic Policy Gradient - Spinning Up](https://spinningup.openai.com/en/latest/algorithms/ddpg.html)
 
 #### <a name="TRPO"></a>TRPO
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic) --> [TRPO](#TRPO))
@@ -342,8 +351,8 @@ Trust Region Policy Optimization (TRPO) improves training stability by enforcing
   - [ACER](#ACER) (TRPO technique)
   - [PPO](#PPO)
 - Useful links:
-  - [medium.com](https://medium.com/@jonathan_hui/rl-trust-region-policy-optimization-trpo-explained-a6ee04eeeee9)
-  - [medium.com](https://medium.com/@jonathan_hui/rl-trust-region-policy-optimization-trpo-part-2-f51e3b2e373a)
+  - [RL — Trust Region Policy Optimization (TRPO) Explained](https://medium.com/@jonathan_hui/rl-trust-region-policy-optimization-trpo-explained-a6ee04eeeee9)
+  - [RL — Trust Region Policy Optimization (TRPO) Part 2](https://medium.com/@jonathan_hui/rl-trust-region-policy-optimization-trpo-part-2-f51e3b2e373a)
 
 #### <a name="GAE"></a>GAE
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic) --> [GAE](#GAE))
@@ -442,9 +451,9 @@ A2C is a synchronous, deterministic variant of Asynchronous Advantage Actor Crit
   - [A3C](#A3C)
 - Related to subsequent ideas:
 - Useful links:
-  - [openai.com](https://openai.com/blog/baselines-acktr-a2c/)
-  - [freecodecamp.org](https://www.freecodecamp.org/news/an-intro-to-advantage-actor-critic-methods-lets-play-sonic-the-hedgehog-86d6240171d/)
-  - [readthedocs.io](https://stable-baselines.readthedocs.io/en/master/modules/a2c.html)
+  - [OpenAI Baselines: ACKTR & A2C](https://openai.com/blog/baselines-acktr-a2c/)
+  - [An intro to Advantage Actor Critic methods: let’s play Sonic the Hedgehog!](https://www.freecodecamp.org/news/an-intro-to-advantage-actor-critic-methods-lets-play-sonic-the-hedgehog-86d6240171d/)
+  - [Stable Baselines: A2C](https://stable-baselines.readthedocs.io/en/master/modules/a2c.html)
 
 #### <a name="ACER"></a>ACER
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic) --> [ACER](#ACER))
@@ -502,7 +511,7 @@ Proximal Policy Optimization (PPO) is similar to [TRPO](#TRPO) but uses simpler 
   - [openai.com](https://spinningup.openai.com/en/latest/algorithms/ppo.html)
   - [openai.com](https://openai.com/blog/openai-baselines-ppo/)
 - Videos:
-  - [youtube.com](https://www.youtube.com/watch?v=5P7I-xPq8u8)
+  - [Policy Gradient methods and Proximal Policy Optimization (PPO): diving into Deep RL!](https://www.youtube.com/watch?v=5P7I-xPq8u8)
 
 #### <a name="SVPG"></a>SVPG
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic) --> [SVPG](#SVPG))
@@ -557,7 +566,7 @@ Soft Actor Critic (SAC) is an algorithm that optimizes a stochastic policy in an
   - [Policy Gradient](#PolicyGradient)
 - Useful links:
   - [Spinning Up SAC page](https://spinningup.openai.com/en/latest/algorithms/sac.html)
-  - [Author\s code](https://github.com/haarnoja/sac)
+  - [(GitHub) SAC code by its author](https://github.com/haarnoja/sac)
 
 #### <a name="TD3"></a>TD3
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic) --> [TD3](#TD3))
@@ -577,7 +586,7 @@ Twin Delayed DDPG (TD3). TD3 addresses function approximation error in DDPG by i
   - [DDPG](#DDPG)
   - [DDQN](#DDQN) (double Q-learning)
 - Useful links:
-  - [openai.com](https://spinningup.openai.com/en/latest/algorithms/td3.html)
+  - [Twin Delayed DDPG (Spinning Up)](https://spinningup.openai.com/en/latest/algorithms/td3.html)
 
 #### <a name="IMPALA"></a>IMPALA
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic) --> [IMPALA](#IMPALA))
