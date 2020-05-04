@@ -3,25 +3,29 @@ digraph {
 	rankdir=TB
 	newrank=true
 	subgraph timeline {
-		1989 [fontcolor=darkblue fontname="sans-serif" fontsize=10 group=timeline shape=plaintext]
-		1992 [fontcolor=darkblue fontname="sans-serif" fontsize=10 group=timeline shape=plaintext]
-		1994 [fontcolor=darkblue fontname="sans-serif" fontsize=10 group=timeline shape=plaintext]
-		2013 [fontcolor=darkblue fontname="sans-serif" fontsize=10 group=timeline shape=plaintext]
-		2014 [fontcolor=darkblue fontname="sans-serif" fontsize=10 group=timeline shape=plaintext]
-		2015 [fontcolor=darkblue fontname="sans-serif" fontsize=10 group=timeline shape=plaintext]
-		2016 [fontcolor=darkblue fontname="sans-serif" fontsize=10 group=timeline shape=plaintext]
-		2017 [fontcolor=darkblue fontname="sans-serif" fontsize=10 group=timeline shape=plaintext]
-		2018 [fontcolor=darkblue fontname="sans-serif" fontsize=10 group=timeline shape=plaintext]
-		2019 [fontcolor=darkblue fontname="sans-serif" fontsize=10 group=timeline shape=plaintext]
+		1989 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
+		1992 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
+		1994 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
+		2011 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
+		2013 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
+		2014 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
+		2015 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
+		2016 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
+		2017 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
+		2018 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
+		2019 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
+		2020 [fontcolor=darkblue fontname="sans-serif" fontsize=12 group=timeline shape=plaintext]
 		1989 -> 1992 [color=darkblue]
 		1992 -> 1994 [color=darkblue]
-		1994 -> 2013 [color=darkblue]
+		1994 -> 2011 [color=darkblue]
+		2011 -> 2013 [color=darkblue]
 		2013 -> 2014 [color=darkblue]
 		2014 -> 2015 [color=darkblue]
 		2015 -> 2016 [color=darkblue]
 		2016 -> 2017 [color=darkblue]
 		2017 -> 2018 [color=darkblue]
 		2018 -> 2019 [color=darkblue]
+		2019 -> 2020 [color=darkblue]
 	}
 	"Reinforcement Learning" [label="Reinforcement Learning" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 	"Model Free" -> "Value Gradient" [fontcolor=black fontname="sans-serif" fontsize=10]
@@ -57,6 +61,7 @@ digraph {
 			DQN -> C51 [fontcolor=black fontname="sans-serif" fontsize=10]
 			DQN -> "DQN+HER" [fontcolor=black fontname="sans-serif" fontsize=10]
 			DQN -> IQN [fontcolor=black fontname="sans-serif" fontsize=10]
+			DQN -> R2D2 [fontcolor=black fontname="sans-serif" fontsize=10]
 			DRQN [label=DRQN fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			DDQN [label=DDQN fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			DDQN -> "Duelling-DQN" [fontcolor=black fontname="sans-serif" fontsize=10]
@@ -71,6 +76,11 @@ digraph {
 			RAINBOW [label=RAINBOW fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			"DQN+HER" [label="DQN+HER" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			IQN [label=IQN fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			R2D2 [label=R2D2 fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			R2D2 -> NGU [fontcolor=black fontname="sans-serif" fontsize=10]
+			NGU [label=NGU fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			NGU -> Agent57 [fontcolor=black fontname="sans-serif" fontsize=10]
+			Agent57 [label=Agent57 fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 		}
 		subgraph "clusterPolicy Gradient/Actor-Critic" {
 			label="Policy Gradient/Actor-Critic"
@@ -129,6 +139,7 @@ digraph {
 		fontsize=16
 		fillcolor="#f7fdff" style=filled
 		"Model Based" [label="Model Based" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		"Model Based" -> PILCO [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Model Based" -> I2A [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Model Based" -> MBMF [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Model Based" -> Exit [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
@@ -138,7 +149,10 @@ digraph {
 		"Model Based" -> "ME-TRPO" [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Model Based" -> "MB-MPO" [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Model Based" -> "World Models" [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
+		"Model Based" -> PETS [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Model Based" -> SimPLe [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
+		"Model Based" -> MuZero [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
+		PILCO [label=PILCO fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 		I2A [label=I2A fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 		MBMF [label=MBMF fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 		Exit [label=Exit fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
@@ -148,7 +162,9 @@ digraph {
 		"ME-TRPO" [label="ME-TRPO" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 		"MB-MPO" [label="MB-MPO" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 		"World Models" [label="World Models" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		PETS [label=PETS fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 		SimPLe [label=SimPLe fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		MuZero [label=MuZero fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 	}
 	subgraph "clusterMeta-RL" {
 		label="Meta-RL"
@@ -183,6 +199,11 @@ digraph {
 		rank=same
 		1994
 		SARSA
+	}
+	{
+		rank=same
+		2011
+		PILCO
 	}
 	{
 		rank=same
@@ -246,11 +267,20 @@ digraph {
 		"ME-TRPO"
 		"MB-MPO"
 		"World Models"
+		PETS
 	}
 	{
 		rank=same
 		2019
+		R2D2
 		SimPLe
+		MuZero
+	}
+	{
+		rank=same
+		2020
+		NGU
+		Agent57
 	}
 	{
 		rank=same

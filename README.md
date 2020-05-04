@@ -20,6 +20,9 @@ This is a loose taxonomy of reinforcement learning algorithms. I'm by no means e
     - [RAINBOW](#RAINBOW)
     - [DQN+HER](#DQNHER)
     - [IQN](#IQN)
+    - [R2D2](#R2D2)
+    - [NGU](#NGU)
+    - [Agent57](#Agent57)
   - [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic)
     - [REINFORCE](#REINFORCE)
     - [DPG](#DPG)
@@ -39,6 +42,7 @@ This is a loose taxonomy of reinforcement learning algorithms. I'm by no means e
     - [TD3](#TD3)
     - [IMPALA](#IMPALA)
 - [Model Based](#ModelBased)
+  - [PILCO](#PILCO)
   - [I2A](#I2A)
   - [MBMF](#MBMF)
   - [Exit](#Exit)
@@ -48,7 +52,9 @@ This is a loose taxonomy of reinforcement learning algorithms. I'm by no means e
   - [ME-TRPO](#METRPO)
   - [MB-MPO](#MBMPO)
   - [World Models](#WorldModels)
+  - [PETS](#PETS)
   - [SimPLe](#SimPLe)
+  - [MuZero](#MuZero)
 - [Meta-RL](#MetaRL)
   - [DMRL](#DMRL)
   - [RL^2](#RL2)
@@ -57,7 +63,7 @@ This is a loose taxonomy of reinforcement learning algorithms. I'm by no means e
 
 ## <A name="taxonomy"></a>Taxonomy
 
-Below is the taxonomy of reinforcement learning algorithms. Solid line indicates some progression from one idea to another. Dashed line indicates a loose connection. On the left you can see the timeline of the publication year of the algorithms.
+Below is the taxonomy of reinforcement learning algorithms. Solid line indicates some progression from one idea to another. Dashed line indicates a loose connection. On the left you can see the timeline of the publication year of the algorithms. Open the .SVG file to view the full scale of the graph.
 
 ![RL Taxonomy](rl-taxonomy.gv.svg "RL Taxonomy")
 
@@ -149,6 +155,7 @@ Deep Q Network. Q-Learning with using deep neural network as value estimator
   - [C51](#C51)
   - [DQN+HER](#DQNHER)
   - [IQN](#IQN)
+  - [R2D2](#R2D2)
   - [DDPG](#DDPG) (replay buffer)
   - [ACER](#ACER) (replay buffer)
 - Useful links:
@@ -324,6 +331,60 @@ Implicit Quantile Networks (IQN)
   - [DQN](#DQN)
 - Useful links:
   - [(StackExchange) How does Implicit Quantile-Regression Network (IQN) differ from QR-DQN?](https://datascience.stackexchange.com/questions/40874/how-does-implicit-quantile-regression-network-iqn-differ-from-qr-dqn)
+
+##### <a name="R2D2"></a>R2D2
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Free](#ModelFree) --> [Value Gradient](#ValueGradient) --> [R2D2](#R2D2))
+
+Recurrent Replay Distributed DQN (R2D2). (from the abstract) Building on the recent successes of distributed training of RL agents, in this paper we investigate the training of RNN-based RL agents from distributed prioritized experience replay. We study the effects of parameter lag resulting in representational drift and recurrent state staleness and empirically derive an improved training strategy. Using a single network architecture and fixed set of hyper-parameters, the resulting agent, Recurrent Replay Distributed DQN, quadruples the previous state of the art on Atari-57, and matches the state of the art on DMLab-30. It is the first agent to exceed human-level performance in 52 of the 57 Atari games.
+
+- Paper: https://openreview.net/forum?id=r1lyTjAqYX
+- Authors: Steven Kapturowski, Georg Ostrovski, John Quan, Remi Munos, Will Dabney
+- Year: 2019
+- Flags:
+  - Off-Policy (OFP)
+  - Continuous state space (CS)
+  - Discrete action space (DA)
+  - Replay Buffer (RB)
+- Related to prior idea:
+  - [DQN](#DQN)
+- Related to subsequent idea:
+  - [NGU](#NGU)
+
+##### <a name="NGU"></a>NGU
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Free](#ModelFree) --> [Value Gradient](#ValueGradient) --> [NGU](#NGU))
+
+Never Give Up (NGU). (from the abstract) We propose a reinforcement learning agent to solve hard exploration games by learning a range of directed exploratory policies. We construct an episodic memory-based intrinsic reward using k-nearest neighbors over the agent's recent experience to train the directed exploratory policies, thereby encouraging the agent to repeatedly revisit all states in its environment. A self-supervised inverse dynamics model is used to train the embeddings of the nearest neighbour lookup, biasing the novelty signal towards what the agent can control. We employ the framework of Universal Value Function Approximators (UVFA) to simultaneously learn many directed exploration policies with the same neural network, with different trade-offs between exploration and exploitation. By using the same neural network for different degrees of exploration/exploitation, transfer is demonstrated from predominantly exploratory policies yielding effective exploitative policies. The proposed method can be incorporated to run with modern distributed RL agents that collect large amounts of experience from many actors running in parallel on separate environment instances. Our method doubles the performance of the base agent in all hard exploration in the Atari-57 suite while maintaining a very high score across the remaining games, obtaining a median human normalised score of 1344.0%. Notably, the proposed method is the first algorithm to achieve non-zero rewards (with a mean score of 8,400) in the game of Pitfall! without using demonstrations or hand-crafted features.
+
+- Paper: https://arxiv.org/abs/2002.06038
+- Authors: Adrià Puigdomènech Badia, Pablo Sprechmann, Alex Vitvitskyi, Daniel Guo, Bilal Piot, Steven Kapturowski, Olivier Tieleman, Martín Arjovsky, Alexander Pritzel, Andew Bolt, Charles Blundell
+- Year: 2020
+- Flags:
+  - Off-Policy (OFP)
+  - Continuous state space (CS)
+  - Discrete action space (DA)
+  - Replay Buffer (RB)
+- Related to prior idea:
+  - [R2D2](#R2D2)
+- Related to subsequent idea:
+  - [Agent57](#Agent57)
+
+##### <a name="Agent57"></a>Agent57
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Free](#ModelFree) --> [Value Gradient](#ValueGradient) --> [Agent57](#Agent57))
+
+(from the abstract) Atari games have been a long-standing benchmark in the reinforcement learning (RL) community for the past decade. This benchmark was proposed to test general competency of RL algorithms. Previous work has achieved good average performance by doing outstandingly well on many games of the set, but very poorly in several of the most challenging games. We propose Agent57, the first deep RL agent that outperforms the standard human benchmark on all 57 Atari games. To achieve this result, we train a neural network which parameterizes a family of policies ranging from very exploratory to purely exploitative. We propose an adaptive mechanism to choose which policy to prioritize throughout the training process. Additionally, we utilize a novel parameterization of the architecture that allows for more consistent and stable learning.
+
+- Paper: https://arxiv.org/abs/2003.13350
+- Authors: Adrià Puigdomènech Badia, Bilal Piot, Steven Kapturowski, Pablo Sprechmann, Alex Vitvitskyi, Daniel Guo, Charles Blundell
+- Year: 2020
+- Flags:
+  - Off-Policy (OFP)
+  - Continuous state space (CS)
+  - Discrete action space (DA)
+  - Replay Buffer (RB)
+- Related to prior idea:
+  - [NGU](#NGU)
+- Useful links:
+  - [DeepMind Unveils Agent57, the First AI Agents that Outperforms Human Benchmarks in 57 Atari Games](https://towardsdatascience.com/deepmind-unveils-agent57-the-first-ai-agents-that-outperforms-human-benchmarks-in-57-atari-games-35db4282dab3)
 
 #### <a name="PolicyGradientActorCritic"></a>Policy Gradient/Actor-Critic
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Free](#ModelFree) --> [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic))
@@ -680,6 +741,19 @@ In model-based reinforcement learning, the agent uses the experience to try to m
 
 
  <a name="ModelBased"></a>
+#### <a name="PILCO"></a>PILCO
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Based](#ModelBased) --> [PILCO](#PILCO))
+
+(from the abstract) In this paper, we introduce PILCO, a practical, data-efficient model-based policy search method. PILCO reduces model bias, one of the key problems of model-based reinforcement learning, in a principled way.  By learning  a  probabilistic  dynamics  model  and  explicitly incorporating model uncertainty into long-term  planning,  PILCO can  cope  with very little data and facilitates learning froms cratch in only a few trials.  Policy evaluationis  performed  in  closed  form  using  state-of-the-art approximate inference.  Furthermore, policy  gradients  are  computed  analytically for policy improvement.  We report unprecedented learning efficiency on challenging and high-dimensional control tasks.
+
+- Paper: https://www.ias.informatik.tu-darmstadt.de/uploads/Publications/Deisenroth_ICML_2011.pdf
+- Authors: Marc Peter Deisenroth, Carl Edward Rasmussen
+- Year: 2011
+- Related to prior idea:
+  - [Model Based](#ModelBased)
+- Useful links:
+  - [PILCO website](http://mlg.eng.cam.ac.uk/pilco/)
+
 #### <a name="I2A"></a>I2A
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Based](#ModelBased) --> [I2A](#I2A))
 
@@ -803,6 +877,17 @@ AlphaZero generalises tabula rasa reinforcement learning from games of self-play
   - [Interactive version of the paper](https://worldmodels.github.io/)
   - [The experiment code](https://blog.otoro.net/2018/06/09/world-models-experiments/)
 
+#### <a name="PETS"></a>PETS
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Based](#ModelBased) --> [PETS](#PETS))
+
+(from the abstract) Model-based reinforcement learning (RL) algorithms can attain excellent sample efficiency, but often lag behind the best model-free algorithms in terms of asymptotic performance. This is especially true with high-capacity parametric function approximators, such as deep networks. In this paper, we study how to bridge this gap, by employing uncertainty-aware dynamics models. We propose a new algorithm called probabilistic ensembles with trajectory sampling (PETS) that combines uncertainty-aware deep network dynamics models with sampling-based uncertainty propagation. Our comparison to state-of-the-art model-based and model-free deep RL algorithms shows that our approach matches the asymptotic performance of model-free algorithms on several challenging benchmark tasks, while requiring significantly fewer samples (e.g., 8 and 125 times fewer samples than Soft Actor Critic and Proximal Policy Optimization respectively on the half-cheetah task).
+
+- Paper: https://arxiv.org/abs/1805.12114
+- Authors: Kurtland Chua, Roberto Calandra, Rowan McAllister, Sergey Levine
+- Year: 2018
+- Related to prior idea:
+  - [Model Based](#ModelBased)
+
 #### <a name="SimPLe"></a>SimPLe
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Based](#ModelBased) --> [SimPLe](#SimPLe))
 
@@ -810,6 +895,19 @@ Simulated Policy Learning (SimPLe) is a complete model-based deep RL algorithm b
 
 - Paper: https://arxiv.org/abs/1903.00374
 - Authors: Lukasz Kaiser, Mohammad Babaeizadeh, Piotr Milos, Blazej Osinski, Roy H Campbell, Konrad Czechowski, Dumitru Erhan, Chelsea Finn, Piotr Kozakowski, Sergey Levine, Afroz Mohiuddin, Ryan Sepassi, George Tucker, Henryk Michalewski
+- Year: 2019
+- Flags:
+  - Model is Learnt (ML)
+- Related to prior idea:
+  - [Model Based](#ModelBased)
+
+#### <a name="MuZero"></a>MuZero
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Based](#ModelBased) --> [MuZero](#MuZero))
+
+(from the abstract) Constructing agents with planning capabilities has long been one of the main challenges in the pursuit of artificial intelligence. Tree-based planning methods have enjoyed huge success in challenging domains, such as chess and Go, where a perfect simulator is available. However, in real-world problems the dynamics governing the environment are often complex and unknown. In this work we present the MuZero algorithm which, by combining a tree-based search with a learned model, achieves superhuman performance in a range of challenging and visually complex domains, without any knowledge of their underlying dynamics. MuZero learns a model that, when applied iteratively, predicts the quantities most directly relevant to planning: the reward, the action-selection policy, and the value function. When evaluated on 57 different Atari games - the canonical video game environment for testing AI techniques, in which model-based planning approaches have historically struggled - our new algorithm achieved a new state of the art. When evaluated on Go, chess and shogi, without any knowledge of the game rules, MuZero matched the superhuman performance of the AlphaZero algorithm that was supplied with the game rules. 
+
+- Paper: https://arxiv.org/abs/1911.08265
+- Authors: Julian Schrittwieser, Ioannis Antonoglou, Thomas Hubert, Karen Simonyan, Laurent Sifre, Simon Schmitt, Arthur Guez, Edward Lockhart, Demis Hassabis, Thore Graepel, Timothy Lillicrap, David Silver
 - Year: 2019
 - Flags:
   - Model is Learnt (ML)
