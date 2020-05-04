@@ -16,9 +16,15 @@ WEAK_LINK = 'dashed'
 # This is the style of the edge for such connection. 
 INVIS = "invis"
 
+# Style from rood node
+ROOT_EDGE = "solid"
+
+# Style for ordering edge
+ORDER_EDGE = "invis"
+
 FONT_NAME = "sans-serif"
 NODE_FONT_SIZE = 12
-TIMELINE_COLOR = "blue"
+TIMELINE_COLOR = "darkblue"
 TIMELINE_FONT_SIZE = 10
 EDGE_FONT_COLOR = 'black'
 EDGE_FONT_SIZE = 10
@@ -190,7 +196,9 @@ class NodeBase(ABC):
         if 'shape' not in attrs:
             attrs['shape']='record'
         if 'style' not in attrs:
-            attrs['style']='rounded,bold'
+            attrs['style']='rounded,bold,filled'
+        if 'fillcolor' not in attrs:
+            attrs['fillcolor']='#dae8fc'
         graph.node(self.graph_name, label=f'{{{self.title}}}', **attrs)
         
     def _export_connections(self, graph, cluster):
@@ -298,9 +306,11 @@ class Group(NodeBase):
             with cluster.subgraph(name=self.graph_name) as c:
                 c.attr(label=self.title)
                 c.attr(color='black')
-                c.attr(style='dashed')
+                if 'style' not in self.attrs:
+                    c.attr(style='dashed')
                 c.attr(fontname=FONT_NAME)
                 c.attr(fontsize='16')
+                c.attr(**self.attrs)
                 self._export_node(c)
                 for child in self.nodes:
                     child.export_graph(graph, c)
@@ -350,7 +360,7 @@ class Node(NodeBase):
 #
 rl = Group('Reinforcement Learning', 
            'Reinforcement learning (RL) is an area of machine learning concerned with how software agents ought to take actions in an environment in order to maximize the notion of cumulative reward [from Wikipedia]',
-           None, graph_type="node", 
+           None, graph_type="node", style='rounded,bold,filled', fillcolor='#ffe6cc',
            links=[('A (Long) Peek into Reinforcement Learning', 'https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html'),
                   ('(book) Reinforcement Learning: An Introduction - 2nd Edition - Richard S. Sutton and Andrew G. Barto', 'http://incompleteideas.net/book/the-book.html')
                ],
@@ -362,13 +372,26 @@ rl = Group('Reinforcement Learning',
                    ('(playlist) CS234: Reinforcement Learning | Winter 2019', 'https://www.youtube.com/playlist?list=PLoROMvodv4rOSOPzutgyCTapiGlY2Nd8u'),
                ])
 
+model_free = Group('Model Free', 
+                    'In model free reinforcement learning, the agent directly tries to predict the value/policy without having or trying to model the environment',
+                    rl, style='filled', fillcolor='#f7fdff')
+root_model_free = Node('Model Free', '', model_free, output_md=False, fillcolor='#ffe6cc', weight='10')
+rl.connect(root_model_free)
+
+model_based = Group('Model Based', 
+                    'In model-based reinforcement learning, the agent uses the experience to try to model the environment, and then uses the model to predict the value/policy',
+                    rl, style='filled', fillcolor='#f7fdff') 
+root_model_based = Node('Model Based', '', model_based, output_md=False, fillcolor='#ffe6cc')
+rl.connect(root_model_based)
+
+
 value_gradient = Group('Value Gradient', 
                     'The algorithm is learning the value function of each state or state-action. The policy is implicit, usually by just selecting the best value',
-                    rl)
+                    model_free, style='rounded,dashed,filled', fillcolor='#f1f7fe')
 
 policy_gradient = Group('Policy Gradient/Actor-Critic', 
                      'The algorithm works directly to optimize the policy, with or without value function. If the value function is learned in addition to the policy, we would get Actor-Critic algorithm. Most policy gradient algorithms are Actor-Critic. The *Critic* updates value function parameters *w* and depending on the algorithm it could be action-value ***Q(a|s;w)*** or state-value ***V(s;w)***. The *Actor* updates policy parameters θ, in the direction suggested by the critic, ***π(a|s;θ)***. [from [Lilian Weng\' blog](https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html)]', 
-                     rl,
+                     model_free, style='rounded,dashed,filled', fillcolor='#f1f7fe',
                      links=[
                         ('Policy Gradient Algorithms', 'https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html'),
                         ('RL — Policy Gradient Explained', 'https://medium.com/@jonathan_hui/rl-policy-gradients-explained-9b13b688b146'),
@@ -376,11 +399,11 @@ policy_gradient = Group('Policy Gradient/Actor-Critic',
                         ('An introduction to Policy Gradients with Cartpole and Doom', 'https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/')
                         ])
 
-root_value_gradient = Node('Value Gradient', '', value_gradient, output_md=False, style=INVIS)
-root_policy_gradient = Node('Policy Gradient/Actor-Critic', '', policy_gradient, output_md=False, style=INVIS)
+root_value_gradient = Node('Value Gradient', '', value_gradient, output_md=False, fillcolor='#ffe6cc')
+root_policy_gradient = Node('Policy Gradient/Actor-Critic', '', policy_gradient, output_md=False, fillcolor='#ffe6cc')
 
-rl.connect(root_value_gradient, lhead=value_gradient.graph_name)
-rl.connect(root_policy_gradient, lhead=policy_gradient.graph_name)
+root_model_free.connect(root_value_gradient)
+root_model_free.connect(root_policy_gradient)
  
 
 #
@@ -393,7 +416,7 @@ sarsa = Node('SARSA',
              authors='G. A. Rummery, M. Niranjan',
              year=1994, 
              url='http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.17.2539&rep=rep1&type=pdf')
-root_value_gradient.connect(sarsa, style=INVIS)
+root_value_gradient.connect(sarsa, style=ROOT_EDGE)
 
 qlearning = Node('Q-learning',
            'Q-learning an off-policy TD control method. Unlike SARSA, it doesn\'t follow the policy to find the next action but rather chooses most optimal action in a greedy fashion',
@@ -405,7 +428,7 @@ qlearning = Node('Q-learning',
            links=[('Diving deeper into Reinforcement Learning with Q-Learning', 'https://www.freecodecamp.org/news/diving-deeper-into-reinforcement-learning-with-q-learning-c18d0db58efe/'),
                   ('Simple Reinforcement Learning with Tensorflow Part 0: Q-Learning with Tables and Neural Networks', 'https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-0-q-learning-with-tables-and-neural-networks-d195264329d0')]
            )
-root_value_gradient.connect(qlearning, style=INVIS)
+root_value_gradient.connect(qlearning, style=ROOT_EDGE)
 
 dqn = Node('DQN',
            'Deep Q Network. Q-Learning with using deep neural network as value estimator',
@@ -527,7 +550,7 @@ reinforce = Node('REINFORCE',
                   ('An introduction to Policy Gradients with Cartpole and Doom', 'https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/')
                   ]
            )
-root_policy_gradient.connect(reinforce, style=INVIS)
+root_policy_gradient.connect(reinforce, style=ROOT_EDGE)
 
 """
 vpg = Node('VPG',
@@ -550,7 +573,7 @@ dpg = Node('DPG',
            url='http://proceedings.mlr.press/v32/silver14.pdf',
            links=[]
            )
-root_policy_gradient.connect(dpg, style=INVIS)
+root_policy_gradient.connect(dpg, style=ROOT_EDGE)
 
 ddpg = Node('DDPG',
            'Deep Deterministic Policy Gradient (DDPG).',
@@ -575,7 +598,7 @@ trpo = Node('TRPO',
            links=[('RL — Trust Region Policy Optimization (TRPO) Explained', 'https://medium.com/@jonathan_hui/rl-trust-region-policy-optimization-trpo-explained-a6ee04eeeee9'),
                   ('RL — Trust Region Policy Optimization (TRPO) Part 2', 'https://medium.com/@jonathan_hui/rl-trust-region-policy-optimization-trpo-part-2-f51e3b2e373a')]
            )
-root_policy_gradient.connect(trpo, style=INVIS)
+root_policy_gradient.connect(trpo, style=ROOT_EDGE)
 
 gae = Node('GAE',
            'Generalized Advantage Estimation',
@@ -587,7 +610,7 @@ gae = Node('GAE',
            links=[('Generalized Advantage Estimator Explained','https://notanymike.github.io/GAE/'),
                   ('Notes on the Generalized Advantage Estimation Paper', 'https://danieltakeshi.github.io/2017/04/02/notes-on-the-generalized-advantage-estimation-paper/')]
            )
-root_policy_gradient.connect(gae, style=INVIS)
+root_policy_gradient.connect(gae, style=ROOT_EDGE)
 trpo.connect(gae, style=WEAK_LINK)
 
 a3c = Node('A3C',
@@ -600,7 +623,7 @@ a3c = Node('A3C',
            links=[('Simple Reinforcement Learning with Tensorflow Part 8: Asynchronous Actor-Critic Agents (A3C)', 'https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-8-asynchronous-actor-critic-agents-a3c-c88f72a5e9f2'),
                   ('An implementation of A3C', 'https://github.com/dennybritz/reinforcement-learning/tree/master/PolicyGradient/a3c')]
            )
-root_policy_gradient.connect(a3c, style=INVIS)
+root_policy_gradient.connect(a3c, style=ROOT_EDGE)
 a3c.connect(rainbow, style=WEAK_LINK)
 
 ddpg_her = Node('DDPG+HER',
@@ -652,7 +675,7 @@ acer = Node('ACER',
 a3c.connect(acer)
 dqn.connect(acer, style=WEAK_LINK, label='replay buffer')
 #a2c.connect(acer, style=WEAK_LINK, label='multiple workers')
-a2c.connect(acer, style=INVIS)
+a2c.connect(acer, style=ORDER_EDGE)
 trpo.connect(acer, style=WEAK_LINK, label='TRPO technique')
 
 acktr = Node('ACKTR',
@@ -665,8 +688,8 @@ acktr = Node('ACKTR',
            links=[
                ]
            )
-root_policy_gradient.connect(acktr, style=INVIS)
-a2c.connect(acktr, style=INVIS) # just to maintain relative timeline order
+root_policy_gradient.connect(acktr, style=ROOT_EDGE)
+a2c.connect(acktr, style=ORDER_EDGE) # just to maintain relative timeline order
 
 ppo = Node('PPO',
            'Proximal Policy Optimization (PPO) is similar to [TRPO](#TRPO) but uses simpler mechanism while retaining similar performance.',
@@ -691,8 +714,8 @@ svpg = Node('SVPG',
            links=[('Policy Gradient Algorithms', 'https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html#svpg'),
                   ]
            )
-root_policy_gradient.connect(svpg, style=INVIS)
-a2c.connect(svpg, style=INVIS) # just to maintain relative timeline order
+root_policy_gradient.connect(svpg, style=ROOT_EDGE)
+a2c.connect(svpg, style=ORDER_EDGE) # just to maintain relative timeline order
 
 d4pg = Node('D4PG',
            'Distributed Distributional Deep Deterministic Policy Gradient (D4PG) adopts the very successful distributional perspective on reinforcement learning and adapts it to the continuous control setting. It combines this within a distributed framework. It also combines this technique with a number of additional, simple improvements such as the use of N-step returns and prioritized experience replay [from the paper\'s abstract]',
@@ -714,8 +737,8 @@ sac = Node('SAC',
            url='https://arxiv.org/abs/1801.01290',
            links=[('Spinning Up SAC page', 'https://spinningup.openai.com/en/latest/algorithms/sac.html'),
                   ('(GitHub) SAC code by its author', 'https://github.com/haarnoja/sac')])
-root_policy_gradient.connect(sac, style=INVIS)
-ppo.connect(sac, style=INVIS) # just to maintain relative timeline order
+root_policy_gradient.connect(sac, style=ROOT_EDGE)
+ppo.connect(sac, style=ORDER_EDGE) # just to maintain relative timeline order
 
 td3 = Node('TD3',
            'Twin Delayed DDPG (TD3). TD3 addresses function approximation error in DDPG by introducing twin Q-value approximation network and less frequent updates',
@@ -736,8 +759,32 @@ impala = Node('IMPALA',
            year=2018, 
            url='https://arxiv.org/abs/1802.01561',
            links=[('Policy Gradient Algorithms', 'https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html')])
-root_policy_gradient.connect(impala, style=INVIS)
-a2c.connect(impala, style=INVIS) # just to maintain relative timeline order
+root_policy_gradient.connect(impala, style=ROOT_EDGE)
+a2c.connect(impala, style=ORDER_EDGE) # just to maintain relative timeline order
+
+#
+# MODEL BASED
+#
+mbmf = Node('MBMF',
+             'Neural Network Dynamics for Model-Based Deep Reinforcement Learning with Model-Free Fine-Tuning',
+             model_based,
+             flags=[],
+             authors='Anusha Nagabandi, Gregory Kahn, Ronald S. Fearing, Sergey Levine',
+             year=2017, 
+             url='https://arxiv.org/abs/1708.02596',
+             links=[('Algorithm\'s site', 'https://sites.google.com/view/mbmf'),
+                    ('(GitHub) Code', 'https://github.com/nagaban2/nn_dynamics'),])
+root_model_based.connect(mbmf, style=ROOT_EDGE)
+
+
+simple = Node('SimPLe',
+             'Simulated Policy Learning (SimPLe)',
+             model_based,
+             flags=[],
+             authors='Lukasz Kaiser, Mohammad Babaeizadeh, Piotr Milos, Blazej Osinski, Roy H Campbell, Konrad Czechowski, Dumitru Erhan, Chelsea Finn, Piotr Kozakowski, Sergey Levine, Afroz Mohiuddin, Ryan Sepassi, George Tucker, Henryk Michalewski',
+             year=2019, 
+             url='https://arxiv.org/abs/1903.00374')
+root_model_based.connect(simple, style=ROOT_EDGE)
 
 
 def generate_graph(output, format):
@@ -780,6 +827,11 @@ def generate_graph(output, format):
                 rank_cluster.node(node.graph_name)
 
     # Align value gradient and policy gradient
+    with graph.subgraph() as rank_cluster:
+        rank_cluster.attr(rank='same')
+        rank_cluster.node(root_model_free.graph_name)
+        rank_cluster.node(root_model_based.graph_name)
+
     with graph.subgraph() as rank_cluster:
         rank_cluster.attr(rank='same')
         rank_cluster.node(root_value_gradient.graph_name)
