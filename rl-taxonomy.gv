@@ -129,9 +129,25 @@ digraph {
 		fontsize=16
 		fillcolor="#f7fdff" style=filled
 		"Model Based" [label="{Model Based}" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+		"Model Based" -> I2A [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Model Based" -> MBMF [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
+		"Model Based" -> Exit [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
+		"Model Based" -> AlphaZero [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
+		"Model Based" -> MVE [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
+		"Model Based" -> STEVE [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
+		"Model Based" -> "ME-TRPO" [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
+		"Model Based" -> "MB-MPO" [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
+		"Model Based" -> "World Models" [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Model Based" -> SimPLe [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
+		I2A [label="{I2A}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
 		MBMF [label="{MBMF}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+		Exit [label="{Exit}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+		AlphaZero [label="{AlphaZero}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+		MVE [label="{MVE}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+		STEVE [label="{STEVE}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+		"ME-TRPO" [label="{ME-TRPO}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+		"MB-MPO" [label="{MB-MPO}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+		"World Models" [label="{World Models}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
 		SimPLe [label="{SimPLe}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
 	}
 	"Reinforcement Learning" -> "Model Free" [fontcolor=black fontname="sans-serif" fontsize=10]
@@ -191,7 +207,10 @@ digraph {
 		ACKTR
 		PPO
 		SVPG
+		I2A
 		MBMF
+		Exit
+		AlphaZero
 	}
 	{
 		rank=same
@@ -201,6 +220,11 @@ digraph {
 		SAC
 		TD3
 		IMPALA
+		MVE
+		STEVE
+		"ME-TRPO"
+		"MB-MPO"
+		"World Models"
 	}
 	{
 		rank=same

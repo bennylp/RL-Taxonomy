@@ -39,7 +39,15 @@ This is a loose taxonomy of reinforcement learning algorithms. I'm by no means e
     - [TD3](#TD3)
     - [IMPALA](#IMPALA)
 - [Model Based](#ModelBased)
+  - [I2A](#I2A)
   - [MBMF](#MBMF)
+  - [Exit](#Exit)
+  - [AlphaZero](#AlphaZero)
+  - [MVE](#MVE)
+  - [STEVE](#STEVE)
+  - [ME-TRPO](#METRPO)
+  - [MB-MPO](#MBMPO)
+  - [World Models](#WorldModels)
   - [SimPLe](#SimPLe)
 
 ## <A name="taxonomy"></a>Taxonomy
@@ -666,28 +674,139 @@ In model-based reinforcement learning, the agent uses the experience to try to m
 
 
  <a name="ModelBased"></a>
+#### <a name="I2A"></a>I2A
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Based](#ModelBased) --> [I2A](#I2A))
+
+(from the abstract) We introduce Imagination-Augmented Agents (I2As), a novel architecture for deep reinforcement learning combining model-free and model-based aspects. In contrast to most existing model-based reinforcement learning and planning methods, which prescribe how a model should be used to arrive at a policy, I2As learn to interpret predictions from a learned environment model to construct implicit plans in arbitrary ways, by using the predictions as additional context in deep policy networks. I2As show improved data efficiency, performance, and robustness to model misspecification compared to several baselines.
+
+- Paper: https://arxiv.org/abs/1707.06203
+- Authors: Théophane Weber, Sébastien Racanière, David P. Reichert, Lars Buesing, Arthur Guez, Danilo Jimenez Rezende, Adria Puigdomènech Badia, Oriol Vinyals, Nicolas Heess, Yujia Li, Razvan Pascanu, Peter Battaglia, Demis Hassabis, David Silver, Daan Wierstra
+- Year: 2017
+- Flags:
+  - Model is Learnt (ML)
+- Related to prior idea:
+  - [Model Based](#ModelBased)
+
 #### <a name="MBMF"></a>MBMF
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Based](#ModelBased) --> [MBMF](#MBMF))
 
-Neural Network Dynamics for Model-Based Deep Reinforcement Learning with Model-Free Fine-Tuning
+(from the abstract) Neural Network Dynamics for Model-Based Deep Reinforcement Learning with Model-Free Fine-Tuning. We demonstrate that medium-sized neural network models can in fact be combined with model predictive control (MPC) to achieve excellent sample complexity in a model-based reinforcement learning algorithm, producing stable and plausible gaits to accomplish various complex locomotion tasks. We also propose using deep neural network dynamics models to initialize a model-free learner, in order to combine the sample efficiency of model-based approaches with the high task-specific performance of model-free methods. We empirically demonstrate on MuJoCo locomotion tasks that our pure model-based approach trained on just random action data can follow arbitrary trajectories with excellent sample efficiency, and that our hybrid algorithm can accelerate model-free learning on high-speed benchmark tasks, achieving sample efficiency gains of 3-5x on swimmer, cheetah, hopper, and ant agents.
 
 - Paper: https://arxiv.org/abs/1708.02596
 - Authors: Anusha Nagabandi, Gregory Kahn, Ronald S. Fearing, Sergey Levine
 - Year: 2017
+- Flags:
+  - Model is Learnt (ML)
 - Related to prior idea:
   - [Model Based](#ModelBased)
 - Useful links:
   - [Algorithm's site](https://sites.google.com/view/mbmf)
   - [(GitHub) Code](https://github.com/nagaban2/nn_dynamics)
 
+#### <a name="Exit"></a>Exit
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Based](#ModelBased) --> [Exit](#Exit))
+
+Expert Iteration (ExIt) is a novel reinforcement learning algorithm which decomposes the problem into separate planning and generalisation tasks. Planning new policies is performed by tree search, while a deep neural network generalises those plans. Subsequently, tree search is improved by using the neural network policy to guide search, increasing the strength of new plans. In contrast, standard deep Reinforcement Learning algorithms rely on a neural network not only to generalise plans, but to discover them too. We show that ExIt outperforms REINFORCE for training a neural network to play the board game Hex, and our final tree search agent, trained tabula rasa, defeats MoHex 1.0, the most recent Olympiad Champion player to be publicly released. (from the abstract)
+
+- Paper: https://arxiv.org/abs/1705.08439
+- Authors: Thomas Anthony, Zheng Tian, David Barber
+- Year: 2017
+- Flags:
+  - Model is Given (MG)
+- Related to prior idea:
+  - [Model Based](#ModelBased)
+
+#### <a name="AlphaZero"></a>AlphaZero
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Based](#ModelBased) --> [AlphaZero](#AlphaZero))
+
+AlphaZero generalises tabula rasa reinforcement learning from games of self-play approach. Starting from random play, and given no domain knowledge except the game rules, AlphaZero achieved within 24 hours a superhuman level of play in the games of chess and shogi (Japanese chess) as well as Go, and convincingly defeated a world-champion program in each case. (from the abstract)
+
+- Paper: https://arxiv.org/abs/1712.01815
+- Authors: David Silver, Thomas Hubert, Julian Schrittwieser, Ioannis Antonoglou, Matthew Lai, Arthur Guez, Marc Lanctot, Laurent Sifre, Dharshan Kumaran, Thore Graepel, Timothy Lillicrap, Karen Simonyan, Demis Hassabis
+- Year: 2017
+- Flags:
+  - Model is Given (MG)
+- Related to prior idea:
+  - [Model Based](#ModelBased)
+
+#### <a name="MVE"></a>MVE
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Based](#ModelBased) --> [MVE](#MVE))
+
+(from the abstract) Recent model-free reinforcement learning algorithms have proposed incorporating learned dynamics models as a source of additional data with the intention of reducing sample complexity. Such methods hold the promise of incorporating imagined data coupled with a notion of model uncertainty to accelerate the learning of continuous control tasks. Unfortunately, they rely on heuristics that limit usage of the dynamics model. We present model-based value expansion, which controls for uncertainty in the model by only allowing imagination to fixed depth. By enabling wider use of learned dynamics models within a model-free reinforcement learning algorithm, we improve value estimation, which, in turn, reduces the sample complexity of learning.
+
+- Paper: https://arxiv.org/abs/1803.00101
+- Authors: Vladimir Feinberg, Alvin Wan, Ion Stoica, Michael I. Jordan, Joseph E. Gonzalez, Sergey Levine
+- Year: 2018
+- Flags:
+  - Model is Learnt (ML)
+- Related to prior idea:
+  - [Model Based](#ModelBased)
+
+#### <a name="STEVE"></a>STEVE
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Based](#ModelBased) --> [STEVE](#STEVE))
+
+(from the abstract) Integrating model-free and model-based approaches in reinforcement learning has the potential to achieve the high performance of model-free algorithms with low sample complexity. However, this is difficult because an imperfect dynamics model can degrade the performance of the learning algorithm, and in sufficiently complex environments, the dynamics model will almost always be imperfect. As a result, a key challenge is to combine model-based approaches with model-free learning in such a way that errors in the model do not degrade performance. We propose stochastic ensemble value expansion (STEVE), a novel model-based technique that addresses this issue. By dynamically interpolating between model rollouts of various horizon lengths for each individual example, STEVE ensures that the model is only utilized when doing so does not introduce significant errors. Our approach outperforms model-free baselines on challenging continuous control benchmarks with an order-of-magnitude increase in sample efficiency, and in contrast to previous model-based approaches, performance does not degrade in complex environments.
+
+- Paper: https://arxiv.org/abs/1807.01675
+- Authors: Jacob Buckman, Danijar Hafner, George Tucker, Eugene Brevdo, Honglak Lee
+- Year: 2018
+- Flags:
+  - Model is Learnt (ML)
+- Related to prior idea:
+  - [Model Based](#ModelBased)
+
+#### <a name="METRPO"></a>ME-TRPO
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Based](#ModelBased) --> [ME-TRPO](#METRPO))
+
+(from the abstract) Model-free reinforcement learning (RL) methods are succeeding in a growing number of tasks, aided by recent advances in deep learning. However, they tend to suffer from high sample complexity, which hinders their use in real-world domains. Alternatively, model-based reinforcement learning promises to reduce sample complexity, but tends to require careful tuning and to date have succeeded mainly in restrictive domains where simple models are sufficient for learning. In this paper, we analyze the behavior of vanilla model-based reinforcement learning methods when deep neural networks are used to learn both the model and the policy, and show that the learned policy tends to exploit regions where insufficient data is available for the model to be learned, causing instability in training. To overcome this issue, we propose to use an ensemble of models to maintain the model uncertainty and regularize the learning process. We further show that the use of likelihood ratio derivatives yields much more stable learning than backpropagation through time. Altogether, our approach Model-Ensemble Trust-Region Policy Optimization (ME-TRPO) significantly reduces the sample complexity compared to model-free deep RL methods on challenging continuous control benchmark tasks.
+
+- Paper: https://arxiv.org/abs/1802.10592
+- Authors: Thanard Kurutach, Ignasi Clavera, Yan Duan, Aviv Tamar, Pieter Abbeel
+- Year: 2018
+- Flags:
+  - Model is Learnt (ML)
+- Related to prior idea:
+  - [Model Based](#ModelBased)
+
+#### <a name="MBMPO"></a>MB-MPO
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Based](#ModelBased) --> [MB-MPO](#MBMPO))
+
+(from the abstract) Model-based reinforcement learning approaches carry the promise of being data efficient. However, due to challenges in learning dynamics models that sufficiently match the real-world dynamics, they struggle to achieve the same asymptotic performance as model-free methods. We propose Model-Based Meta-Policy-Optimization (MB-MPO), an approach that foregoes the strong reliance on accurate learned dynamics models. Using an ensemble of learned dynamic models, MB-MPO meta-learns a policy that can quickly adapt to any model in the ensemble with one policy gradient step. This steers the meta-policy towards internalizing consistent dynamics predictions among the ensemble while shifting the burden of behaving optimally w.r.t. the model discrepancies towards the adaptation step. Our experiments show that MB-MPO is more robust to model imperfections than previous model-based approaches. Finally, we demonstrate that our approach is able to match the asymptotic performance of model-free methods while requiring significantly less experience. 
+
+- Paper: https://arxiv.org/abs/1809.05214
+- Authors: Ignasi Clavera, Jonas Rothfuss, John Schulman, Yasuhiro Fujita, Tamim Asfour, Pieter Abbeel
+- Year: 2018
+- Flags:
+  - Model is Learnt (ML)
+- Related to prior idea:
+  - [Model Based](#ModelBased)
+
+#### <a name="WorldModels"></a>World Models
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Based](#ModelBased) --> [World Models](#WorldModels))
+
+(from the abstract) A generative recurrent neural network is quickly trained in an unsupervised manner to model popular reinforcement learning environments through compressed spatio-temporal representations. The world model's extracted features are fed into compact and simple policies trained by evolution, achieving state of the art results in various environments. We also train our agent entirely inside of an environment generated by its own internal world model, and transfer this policy back into the actual environment.
+
+- Paper: https://arxiv.org/abs/1809.01999
+- Authors: David Ha, Jürgen Schmidhuber
+- Year: 2018
+- Flags:
+  - Model is Learnt (ML)
+- Related to prior idea:
+  - [Model Based](#ModelBased)
+- Useful links:
+  - [Interactive version of the paper](https://worldmodels.github.io/)
+  - [The experiment code](https://blog.otoro.net/2018/06/09/world-models-experiments/)
+
 #### <a name="SimPLe"></a>SimPLe
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Based](#ModelBased) --> [SimPLe](#SimPLe))
 
-Simulated Policy Learning (SimPLe)
+Simulated Policy Learning (SimPLe) is a complete model-based deep RL algorithm based on video prediction models and present a comparison of several model architectures, including a novel architecture that yields the best results in our setting. Our experiments evaluate SimPLe on a range of Atari games in low data regime of 100k interactions between the agent and the environment, which corresponds to two hours of real-time play. In most games SimPLe outperforms state-of-the-art model-free algorithms, in some games by over an order of magnitude. (from the abstract)
 
 - Paper: https://arxiv.org/abs/1903.00374
 - Authors: Lukasz Kaiser, Mohammad Babaeizadeh, Piotr Milos, Blazej Osinski, Roy H Campbell, Konrad Czechowski, Dumitru Erhan, Chelsea Finn, Piotr Kozakowski, Sergey Levine, Afroz Mohiuddin, Ryan Sepassi, George Tucker, Henryk Michalewski
 - Year: 2019
+- Flags:
+  - Model is Learnt (ML)
 - Related to prior idea:
   - [Model Based](#ModelBased)
 

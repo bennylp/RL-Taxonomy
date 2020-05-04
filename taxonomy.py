@@ -13,7 +13,7 @@ RANKDIR = "TB"  # LR or TB
 WEAK_LINK = 'dashed'
 
 # Sometimes we add connection between nodes just to maintain ordering.
-# This is the style of the edge for such connection. 
+# This is the style of the edge for such connection.
 INVIS = "invis"
 
 # Style from rood node
@@ -39,11 +39,11 @@ class Flag(Enum):
     """
     These are various flags that can be attributed to an algorithm
     """
-    
-    #MF = "Model-Free" # is the default for all algorithms
+
+    # MF = "Model-Free" # is the default for all algorithms
     MB = "Model-Based"
     MC = "Monte Carlo"
-    #TD = "Temporal Difference" # is the default for all algorithms
+    # TD = "Temporal Difference" # is the default for all algorithms
     # Policy:
     ONP = "On-Policy"
     OFP = "Off-Policy"
@@ -62,6 +62,8 @@ class Flag(Enum):
     RB = "Replay Buffer"
     RNN = "Recurrent Neural Network"
     DI = "Distributional"
+    MG = "Model is Given"  # model-based flag
+    ML = "Model is Learnt"  # model based flag
 
 
 def url2md(url):
@@ -78,18 +80,18 @@ def url2md(url):
         return f'[{name}]({url})'
     else:
         return f'[{url[0]}]({url[1]})'
-    
+
 
 class Edge:
     """
     An Edge is a connection between Nodes/Groups
     """
-    
+
     def __init__(self, dest, **attrs):
         self.dest = dest
-        #self.label = label # to prevent label from being displayed in graph
+        # self.label = label # to prevent label from being displayed in graph
         self.attrs = attrs
-        
+
     @property
     def label(self):
         return self.attrs.get('label', '')
@@ -97,12 +99,13 @@ class Edge:
     @property
     def invisible(self):
         return self.attrs.get('style', '') == INVIS
-    
+
 
 class NodeBase(ABC):
     """
     Base class for Nodes and Groups.
     """
+
     def __init__(self, title, description, group, flags=[], authors=None, year=None, url=None,
                  videos=[], links=[], graph_type="node", output_md=True, **attrs):
         assert graph_type in ['node', 'cluster', 'node']
@@ -125,7 +128,7 @@ class NodeBase(ABC):
 
     def __str__(self):
         return self.title
-    
+
     @property
     def name(self):
         """
@@ -139,22 +142,22 @@ class NodeBase(ABC):
         Identification of this node in the graph. If type is cluster, the name needs to be
         prefixed with "cluster" (graphviz convention)
         """
-        return ('cluster' + self.title) if self.graph_type=='cluster' else self.title
-        
+        return ('cluster' + self.title) if self.graph_type == 'cluster' else self.title
+
     @property
     def graph_rank(self):
         """
         The rank of this node in the graph/cluster.
         """
         return self.year or 0
-        
+
     def connect(self, other_node, **attrs):
         """
         Add connection from this node to other node. attrs are edge attributes.
         """
-        self.out_edges.append( Edge(other_node, **attrs) )
-        other_node.in_edges.append( Edge(self, **attrs) )
-        
+        self.out_edges.append(Edge(other_node, **attrs))
+        other_node.in_edges.append(Edge(self, **attrs))
+
     def get_parents(self):
         """
         Get list of parents from root up to immediate parent.
@@ -170,7 +173,7 @@ class NodeBase(ABC):
     @abstractmethod
     def collect_nodes(self):
         pass
-    
+
     @abstractmethod
     def export_node(self, graph):
         pass
@@ -186,7 +189,7 @@ class NodeBase(ABC):
     @abstractmethod
     def export_md(self):
         pass
-            
+
     def _export_node(self, graph):
         if self.graph_type != "node":
             return
@@ -194,33 +197,33 @@ class NodeBase(ABC):
         attrs['fontname'] = FONT_NAME
         attrs['fontsize'] = str(NODE_FONT_SIZE)
         if 'shape' not in attrs:
-            attrs['shape']='record'
+            attrs['shape'] = 'record'
         if 'style' not in attrs:
-            attrs['style']='rounded,bold,filled'
+            attrs['style'] = 'rounded,bold,filled'
         if 'fillcolor' not in attrs:
-            attrs['fillcolor']='#dae8fc'
+            attrs['fillcolor'] = '#dae8fc'
         graph.node(self.graph_name, label=f'{{{self.title}}}', **attrs)
-        
+
     def _export_connections(self, graph, cluster):
         for edge in self.out_edges:
             attrs = copy.copy(edge.attrs)
             attrs['fontcolor'] = EDGE_FONT_COLOR
             attrs['fontsize'] = str(EDGE_FONT_SIZE)
             attrs['fontname'] = FONT_NAME
-            if attrs.get('style', '')==WEAK_LINK:
+            if attrs.get('style', '') == WEAK_LINK:
                 attrs['color'] = 'darkgray'
                 attrs['fontcolor'] = 'darkgray'
             if edge.dest.group == self.group:
                 cluster.edge(self.graph_name, edge.dest.graph_name, **attrs)
             else:
                 graph.edge(self.graph_name, edge.dest.graph_name, **attrs)
-        
+
     def _export_md(self):
         if not self.output_md:
             return f' <a name="{self.name}"></a>\n'
         parents = self.get_parents()
-        md = ('#' * min(len(parents)+2,5)) + f' <a name="{self.name}"></a>{self.title}\n'
- 
+        md = ('#' * min(len(parents) + 2, 5)) + f' <a name="{self.name}"></a>{self.title}\n'
+
         if parents:
             paths = parents + [self]
             md += f'(Path: '
@@ -260,7 +263,7 @@ class NodeBase(ABC):
         if self.videos:
             md += '- Videos:\n' + '\n'.join([f'  - {url2md(l)}' for l in self.videos]) + '\n'
         md += '\n'
-        
+
         return md
 
 
@@ -268,31 +271,31 @@ class Group(NodeBase):
     """
     Group is a "container" for other nodes.
     """
-    
+
     def __init__(self, title, description, group, flags=[], authors=None, year=None, url=None,
-                 videos=[], links=[], graph_type="cluster", output_md=True,  
+                 videos=[], links=[], graph_type="cluster", output_md=True,
                  **attrs):
         super().__init__(title, description, group, flags=flags, authors=authors, year=year, url=url,
                  videos=videos, links=links, graph_type=graph_type, output_md=output_md, **attrs)
         self.nodes = []
-        
+
     def collect_nodes(self):
         nodes = [self]
         for node in self.nodes:
             nodes += node.collect_nodes()
         return nodes
-        
+
     def export_node(self, graph):
         self._export_node(graph)
         for child in self.nodes:
             child.export_node(graph)
-            
+
     def export_connections(self, graph, cluster):
         if self.graph_type == "cluster":
             with cluster.subgraph(name=self.graph_name) as c:
                 c.attr(label=self.title)
                 c.attr(color='black')
-                #c.node_attr['style'] = 'filled'
+                # c.node_attr['style'] = 'filled'
                 for child in self.nodes:
                     child.export_connections(graph, c)
         else:
@@ -300,7 +303,7 @@ class Group(NodeBase):
                 child.export_connections(graph, cluster)
 
         self._export_connections(graph, cluster)
-    
+
     def export_graph(self, graph, cluster):
         if self.graph_type == "cluster":
             with cluster.subgraph(name=self.graph_name) as c:
@@ -325,22 +328,22 @@ class Group(NodeBase):
         for child in self.nodes:
             md += child.export_md()
         return md
-    
+
 
 class Node(NodeBase):
     """
     A Node represents an algorithm. The relevant properties can be initialized from
     the constructor.
     """
-    
+
     def __init__(self, title, description, group, flags=[], authors=None, year=None, url=None,
                  videos=[], links=[], graph_type="node", output_md=True, **attrs):
         super().__init__(title, description, group, flags=flags, authors=authors, year=year, url=url,
                  videos=videos, links=links, graph_type=graph_type, output_md=output_md, **attrs)
-    
+
     def collect_nodes(self):
         return [self]
-        
+
     def export_node(self, graph):
         self._export_node(graph)
 
@@ -350,7 +353,7 @@ class Node(NodeBase):
     def export_graph(self, graph, cluster):
         self._export_node(cluster)
         self._export_connections(graph, cluster)
-        
+
     def export_md(self):
         return self._export_md()
 
@@ -358,7 +361,7 @@ class Node(NodeBase):
 #
 # The nodes. Note: Within their group, keep nodes relatively sorted by their publication year
 #
-rl = Group('Reinforcement Learning', 
+rl = Group('Reinforcement Learning',
            'Reinforcement learning (RL) is an area of machine learning concerned with how software agents ought to take actions in an environment in order to maximize the notion of cumulative reward [from Wikipedia]',
            None, graph_type="node", style='rounded,bold,filled', fillcolor='#ffe6cc',
            links=[('A (Long) Peek into Reinforcement Learning', 'https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html'),
@@ -372,25 +375,24 @@ rl = Group('Reinforcement Learning',
                    ('(playlist) CS234: Reinforcement Learning | Winter 2019', 'https://www.youtube.com/playlist?list=PLoROMvodv4rOSOPzutgyCTapiGlY2Nd8u'),
                ])
 
-model_free = Group('Model Free', 
+model_free = Group('Model Free',
                     'In model free reinforcement learning, the agent directly tries to predict the value/policy without having or trying to model the environment',
                     rl, style='filled', fillcolor='#f7fdff')
 root_model_free = Node('Model Free', '', model_free, output_md=False, fillcolor='#ffe6cc', weight='10')
 rl.connect(root_model_free)
 
-model_based = Group('Model Based', 
+model_based = Group('Model Based',
                     'In model-based reinforcement learning, the agent uses the experience to try to model the environment, and then uses the model to predict the value/policy',
-                    rl, style='filled', fillcolor='#f7fdff') 
+                    rl, style='filled', fillcolor='#f7fdff')
 root_model_based = Node('Model Based', '', model_based, output_md=False, fillcolor='#ffe6cc')
 rl.connect(root_model_based)
 
-
-value_gradient = Group('Value Gradient', 
+value_gradient = Group('Value Gradient',
                     'The algorithm is learning the value function of each state or state-action. The policy is implicit, usually by just selecting the best value',
                     model_free, style='rounded,dashed,filled', fillcolor='#f1f7fe')
 
-policy_gradient = Group('Policy Gradient/Actor-Critic', 
-                     'The algorithm works directly to optimize the policy, with or without value function. If the value function is learned in addition to the policy, we would get Actor-Critic algorithm. Most policy gradient algorithms are Actor-Critic. The *Critic* updates value function parameters *w* and depending on the algorithm it could be action-value ***Q(a|s;w)*** or state-value ***V(s;w)***. The *Actor* updates policy parameters θ, in the direction suggested by the critic, ***π(a|s;θ)***. [from [Lilian Weng\' blog](https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html)]', 
+policy_gradient = Group('Policy Gradient/Actor-Critic',
+                     'The algorithm works directly to optimize the policy, with or without value function. If the value function is learned in addition to the policy, we would get Actor-Critic algorithm. Most policy gradient algorithms are Actor-Critic. The *Critic* updates value function parameters *w* and depending on the algorithm it could be action-value ***Q(a|s;w)*** or state-value ***V(s;w)***. The *Actor* updates policy parameters θ, in the direction suggested by the critic, ***π(a|s;θ)***. [from [Lilian Weng\' blog](https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html)]',
                      model_free, style='rounded,dashed,filled', fillcolor='#f1f7fe',
                      links=[
                         ('Policy Gradient Algorithms', 'https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html'),
@@ -404,7 +406,6 @@ root_policy_gradient = Node('Policy Gradient/Actor-Critic', '', policy_gradient,
 
 root_model_free.connect(root_value_gradient)
 root_model_free.connect(root_policy_gradient)
- 
 
 #
 # VALUE GRADIENT
@@ -414,7 +415,7 @@ sarsa = Node('SARSA',
              value_gradient,
              flags=[Flag.ONP, Flag.DA],
              authors='G. A. Rummery, M. Niranjan',
-             year=1994, 
+             year=1994,
              url='http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.17.2539&rep=rep1&type=pdf')
 root_value_gradient.connect(sarsa, style=ROOT_EDGE)
 
@@ -423,7 +424,7 @@ qlearning = Node('Q-learning',
            value_gradient,
            flags=[Flag.OFP, Flag.DA],
            authors='Chris Watkins',
-           year=1989, 
+           year=1989,
            url='http://www.cs.rhul.ac.uk/~chrisw/new_thesis.pdf',
            links=[('Diving deeper into Reinforcement Learning with Q-Learning', 'https://www.freecodecamp.org/news/diving-deeper-into-reinforcement-learning-with-q-learning-c18d0db58efe/'),
                   ('Simple Reinforcement Learning with Tensorflow Part 0: Q-Learning with Tables and Neural Networks', 'https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-0-q-learning-with-tables-and-neural-networks-d195264329d0')]
@@ -435,7 +436,7 @@ dqn = Node('DQN',
            value_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.RB],
            authors='Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Alex Graves, Ioannis Antonoglou, Daan Wierstra, Martin Riedmiller',
-           year=2013, 
+           year=2013,
            url='https://arxiv.org/abs/1312.5602',
            links=[('(tutorial) Deep Q Learning for the CartPole', 'https://towardsdatascience.com/deep-q-learning-for-the-cartpole-44d761085c2f'),
                   ('An introduction to Deep Q-Learning: let’s play Doom', 'https://www.freecodecamp.org/news/an-introduction-to-deep-q-learning-lets-play-doom-54d02d8017d8/')])
@@ -446,7 +447,7 @@ drqn = Node('DRQN',
            value_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.RB, Flag.RNN],
            authors='Matthew Hausknecht, Peter Stone',
-           year=2015, 
+           year=2015,
            url='https://arxiv.org/abs/1507.06527',
            links=[])
 dqn.connect(drqn)
@@ -466,7 +467,7 @@ dqn_per = Node('PER',
            value_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.RB],
            authors='Tom Schaul, John Quan, Ioannis Antonoglou, David Silver',
-           year=2015, 
+           year=2015,
            url='https://arxiv.org/abs/1511.05952',
            links=[])
 dqn.connect(dqn_per)
@@ -476,7 +477,7 @@ duel_dqn = Node('Duelling-DQN',
                 value_gradient,
                 flags=[Flag.OFP, Flag.CS, Flag.DA],
                 authors='Ziyu Wang, Tom Schaul, Matteo Hessel, Hado van Hasselt, Marc Lanctot, Nando de Freitas',
-                year=2016, 
+                year=2016,
                 url='https://arxiv.org/abs/1511.06581')
 ddqn.connect(duel_dqn)
 
@@ -485,7 +486,7 @@ qr_dqn = Node('QR-DQN',
            value_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.RB, Flag.DI],
            authors='Will Dabney, Mark Rowland, Marc G. Bellemare, Rémi Munos',
-           year=2017, 
+           year=2017,
            url='https://arxiv.org/abs/1710.10044',
            links=[('(GitHub) Quantile Regression DQN', 'https://github.com/senya-ashukha/quantile-regression-dqn-pytorch')])
 dqn.connect(qr_dqn)
@@ -495,18 +496,18 @@ c51 = Node('C51',
            value_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.RB, Flag.DI],
            authors='Marc G. Bellemare, Will Dabney, Rémi Munos',
-           year=2017, 
+           year=2017,
            url='https://arxiv.org/abs/1707.06887',
            links=[('Distributional Bellman and the C51 Algorithm', 'https://flyyufelix.github.io/2017/10/24/distributional-bellman.html')])
 dqn.connect(c51)
-#dqn_per.connecT(c51, syle=INVIS)
+# dqn_per.connecT(c51, syle=INVIS)
 
 rainbow = Node('RAINBOW',
            'Examines six extensions to the DQN algorithm and empirically studies their combination',
            value_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.RB],
            authors='Matteo Hessel, Joseph Modayil, Hado van Hasselt, Tom Schaul, Georg Ostrovski, Will Dabney, Dan Horgan, Bilal Piot, Mohammad Azar, David Silver',
-           year=2017, 
+           year=2017,
            url='https://arxiv.org/abs/1710.02298',
            links=[])
 ddqn.connect(rainbow, style=WEAK_LINK)
@@ -519,7 +520,7 @@ dqn_her = Node('DQN+HER',
            value_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.RB],
            authors='Marcin Andrychowicz, Filip Wolski, Alex Ray, Jonas Schneider, Rachel Fong, Peter Welinder, Bob McGrew, Josh Tobin, Pieter Abbeel, Wojciech Zaremba',
-           year=2017, 
+           year=2017,
            url='https://arxiv.org/abs/1707.01495',
            links=[('Learning from mistakes with Hindsight Experience Replay', 'https://becominghuman.ai/learning-from-mistakes-with-hindsight-experience-replay-547fce2b3305')])
 dqn.connect(dqn_her)
@@ -529,12 +530,11 @@ iqn = Node('IQN',
            value_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.RB, Flag.DI],
            authors='Will Dabney, Georg Ostrovski, David Silver, Rémi Munos',
-           year=2018, 
+           year=2018,
            url='https://arxiv.org/abs/1806.06923',
            links=[('(StackExchange) How does Implicit Quantile-Regression Network (IQN) differ from QR-DQN?', 'https://datascience.stackexchange.com/questions/40874/how-does-implicit-quantile-regression-network-iqn-differ-from-qr-dqn')])
 dqn.connect(iqn)
-#dqn_per.connecT(c51, syle=INVIS)
-
+# dqn_per.connecT(c51, syle=INVIS)
 
 #
 # POLICY GRADIENT / ACTOR-CRITIC
@@ -544,9 +544,9 @@ reinforce = Node('REINFORCE',
            policy_gradient,
            flags=[Flag.MC, Flag.ONP, Flag.CS, Flag.DA],
            authors='Ronald J. Williams',
-           year=1992, 
+           year=1992,
            url='https://people.cs.umass.edu/~barto/courses/cs687/williams92simple.pdf',
-           links=[('LearningReinforcementLearningbyLearningREINFORCE (PDF)', 'http://www.cs.toronto.edu/~tingwuwang/REINFORCE.pdf'), 
+           links=[('LearningReinforcementLearningbyLearningREINFORCE (PDF)', 'http://www.cs.toronto.edu/~tingwuwang/REINFORCE.pdf'),
                   ('An introduction to Policy Gradients with Cartpole and Doom', 'https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/')
                   ]
            )
@@ -569,7 +569,7 @@ dpg = Node('DPG',
            policy_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.CA, Flag.DP],
            authors='David Silver, Guy Lever, Nicolas Heess, Thomas Degris, Daan Wierstra, Martin Riedmiller',
-           year=2014, 
+           year=2014,
            url='http://proceedings.mlr.press/v32/silver14.pdf',
            links=[]
            )
@@ -580,7 +580,7 @@ ddpg = Node('DDPG',
            policy_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.CA, Flag.DP, Flag.RB],
            authors='Timothy P. Lillicrap, Jonathan J. Hunt, Alexander Pritzel, Nicolas Heess, Tom Erez, Yuval Tassa, David Silver, Daan Wierstra',
-           year=2015, 
+           year=2015,
            url='https://arxiv.org/abs/1509.02971',
            links=[('Deep Deterministic Policy Gradient - Spinning Up', 'https://spinningup.openai.com/en/latest/algorithms/ddpg.html')
                   ]
@@ -593,7 +593,7 @@ trpo = Node('TRPO',
            policy_gradient,
            flags=[Flag.ONP, Flag.CS, Flag.CA, Flag.ADV],
            authors='John Schulman, Sergey Levine, Philipp Moritz, Michael I. Jordan, Pieter Abbeel',
-           year=2015, 
+           year=2015,
            url='https://arxiv.org/pdf/1502.05477',
            links=[('RL — Trust Region Policy Optimization (TRPO) Explained', 'https://medium.com/@jonathan_hui/rl-trust-region-policy-optimization-trpo-explained-a6ee04eeeee9'),
                   ('RL — Trust Region Policy Optimization (TRPO) Part 2', 'https://medium.com/@jonathan_hui/rl-trust-region-policy-optimization-trpo-part-2-f51e3b2e373a')]
@@ -605,9 +605,9 @@ gae = Node('GAE',
            policy_gradient,
            flags=[Flag.ONP, Flag.CS, Flag.CA],
            authors='John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, Pieter Abbeel',
-           year=2015, 
+           year=2015,
            url='https://arxiv.org/abs/1506.02438',
-           links=[('Generalized Advantage Estimator Explained','https://notanymike.github.io/GAE/'),
+           links=[('Generalized Advantage Estimator Explained', 'https://notanymike.github.io/GAE/'),
                   ('Notes on the Generalized Advantage Estimation Paper', 'https://danieltakeshi.github.io/2017/04/02/notes-on-the-generalized-advantage-estimation-paper/')]
            )
 root_policy_gradient.connect(gae, style=ROOT_EDGE)
@@ -618,7 +618,7 @@ a3c = Node('A3C',
            policy_gradient,
            flags=[Flag.ONP, Flag.CS, Flag.CA, Flag.ADV, Flag.SP],
            authors='Volodymyr Mnih, Adrià Puigdomènech Badia, Mehdi Mirza, Alex Graves, Timothy P. Lillicrap, Tim Harley, David Silver, Koray Kavukcuoglu',
-           year=2016, 
+           year=2016,
            url='https://arxiv.org/abs/1602.01783',
            links=[('Simple Reinforcement Learning with Tensorflow Part 8: Asynchronous Actor-Critic Agents (A3C)', 'https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-8-asynchronous-actor-critic-agents-a3c-c88f72a5e9f2'),
                   ('An implementation of A3C', 'https://github.com/dennybritz/reinforcement-learning/tree/master/PolicyGradient/a3c')]
@@ -631,7 +631,7 @@ ddpg_her = Node('DDPG+HER',
            policy_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.DP, Flag.RB],
            authors='Marcin Andrychowicz, Filip Wolski, Alex Ray, Jonas Schneider, Rachel Fong, Peter Welinder, Bob McGrew, Josh Tobin, Pieter Abbeel, Wojciech Zaremba',
-           year=2017, 
+           year=2017,
            url='https://arxiv.org/abs/1707.01495',
            links=['https://becominghuman.ai/learning-from-mistakes-with-hindsight-experience-replay-547fce2b3305'])
 ddpg.connect(ddpg_her, style=WEAK_LINK)
@@ -641,7 +641,7 @@ maddpg = Node('MADDPG',
            policy_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.CA, Flag.DP, Flag.RB],
            authors='Ryan Lowe, Yi Wu, Aviv Tamar, Jean Harb, Pieter Abbeel, Igor Mordatch',
-           year=2017, 
+           year=2017,
            url='https://arxiv.org/abs/1706.02275',
            links=[]
            )
@@ -652,7 +652,7 @@ a2c = Node('A2C',
            policy_gradient,
            flags=[Flag.ONP, Flag.CS, Flag.CA, Flag.ADV, Flag.SP],
            authors='OpenAI',
-           year=2017, 
+           year=2017,
            url='https://openai.com/blog/baselines-acktr-a2c/',
            links=[
                ('OpenAI Baselines: ACKTR & A2C', 'https://openai.com/blog/baselines-acktr-a2c/'),
@@ -667,14 +667,14 @@ acer = Node('ACER',
            policy_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.CA, Flag.ADV, Flag.RB],
            authors='Ziyu Wang, Victor Bapst, Nicolas Heess, Volodymyr Mnih, Remi Munos, Koray Kavukcuoglu, Nando de Freitas',
-           year=2017, 
+           year=2017,
            url='https://arxiv.org/abs/1611.01224',
            links=[
                ]
            )
 a3c.connect(acer)
 dqn.connect(acer, style=WEAK_LINK, label='replay buffer')
-#a2c.connect(acer, style=WEAK_LINK, label='multiple workers')
+# a2c.connect(acer, style=WEAK_LINK, label='multiple workers')
 a2c.connect(acer, style=ORDER_EDGE)
 trpo.connect(acer, style=WEAK_LINK, label='TRPO technique')
 
@@ -683,20 +683,20 @@ acktr = Node('ACKTR',
            policy_gradient,
            flags=[Flag.ONP, Flag.CS, Flag.CA, Flag.ADV],
            authors='Yuhuai Wu, Elman Mansimov, Shun Liao, Roger Grosse, Jimmy Ba',
-           year=2017, 
+           year=2017,
            url='https://arxiv.org/abs/1708.05144',
            links=[
                ]
            )
 root_policy_gradient.connect(acktr, style=ROOT_EDGE)
-a2c.connect(acktr, style=ORDER_EDGE) # just to maintain relative timeline order
+a2c.connect(acktr, style=ORDER_EDGE)  # just to maintain relative timeline order
 
 ppo = Node('PPO',
            'Proximal Policy Optimization (PPO) is similar to [TRPO](#TRPO) but uses simpler mechanism while retaining similar performance.',
            policy_gradient,
            flags=[Flag.ONP, Flag.CS, Flag.DA, Flag.CA, Flag.ADV],
            authors='John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, Oleg Klimov',
-           year=2017, 
+           year=2017,
            url='https://arxiv.org/abs/1707.06347',
            links=['https://spinningup.openai.com/en/latest/algorithms/ppo.html',
                   'https://openai.com/blog/openai-baselines-ppo/'],
@@ -709,20 +709,20 @@ svpg = Node('SVPG',
            policy_gradient,
            flags=[Flag.ONP, Flag.CS, Flag.DA, Flag.CA],
            authors='Yang Liu, Prajit Ramachandran, Qiang Liu, Jian Peng',
-           year=2017, 
+           year=2017,
            url='https://arxiv.org/abs/1704.02399',
            links=[('Policy Gradient Algorithms', 'https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html#svpg'),
                   ]
            )
 root_policy_gradient.connect(svpg, style=ROOT_EDGE)
-a2c.connect(svpg, style=ORDER_EDGE) # just to maintain relative timeline order
+a2c.connect(svpg, style=ORDER_EDGE)  # just to maintain relative timeline order
 
 d4pg = Node('D4PG',
            'Distributed Distributional Deep Deterministic Policy Gradient (D4PG) adopts the very successful distributional perspective on reinforcement learning and adapts it to the continuous control setting. It combines this within a distributed framework. It also combines this technique with a number of additional, simple improvements such as the use of N-step returns and prioritized experience replay [from the paper\'s abstract]',
            policy_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.CA, Flag.DP, Flag.RB],
            authors='Gabriel Barth-Maron, Matthew W. Hoffman, David Budden, Will Dabney, Dan Horgan, Dhruva TB, Alistair Muldal, Nicolas Heess, Timothy Lillicrap',
-           year=2018, 
+           year=2018,
            url='https://arxiv.org/abs/1804.08617',
            links=[]
            )
@@ -733,19 +733,19 @@ sac = Node('SAC',
            policy_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.CA, Flag.CA, Flag.SP],
            authors='Tuomas Haarnoja, Aurick Zhou, Pieter Abbeel, Sergey Levine',
-           year=2018, 
+           year=2018,
            url='https://arxiv.org/abs/1801.01290',
            links=[('Spinning Up SAC page', 'https://spinningup.openai.com/en/latest/algorithms/sac.html'),
                   ('(GitHub) SAC code by its author', 'https://github.com/haarnoja/sac')])
 root_policy_gradient.connect(sac, style=ROOT_EDGE)
-ppo.connect(sac, style=ORDER_EDGE) # just to maintain relative timeline order
+ppo.connect(sac, style=ORDER_EDGE)  # just to maintain relative timeline order
 
 td3 = Node('TD3',
            'Twin Delayed DDPG (TD3). TD3 addresses function approximation error in DDPG by introducing twin Q-value approximation network and less frequent updates',
            policy_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.DP, Flag.RB],
            authors='Scott Fujimoto, Herke van Hoof, David Meger',
-           year=2018, 
+           year=2018,
            url='https://arxiv.org/abs/1802.09477',
            links=[('Twin Delayed DDPG (Spinning Up)', 'https://spinningup.openai.com/en/latest/algorithms/td3.html')])
 ddpg.connect(td3)
@@ -756,33 +756,113 @@ impala = Node('IMPALA',
            policy_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.CA],
            authors='Lasse Espeholt, Hubert Soyer, Remi Munos, Karen Simonyan, Volodymir Mnih, Tom Ward, Yotam Doron, Vlad Firoiu, Tim Harley, Iain Dunning, Shane Legg, Koray Kavukcuoglu',
-           year=2018, 
+           year=2018,
            url='https://arxiv.org/abs/1802.01561',
            links=[('Policy Gradient Algorithms', 'https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html')])
 root_policy_gradient.connect(impala, style=ROOT_EDGE)
-a2c.connect(impala, style=ORDER_EDGE) # just to maintain relative timeline order
+a2c.connect(impala, style=ORDER_EDGE)  # just to maintain relative timeline order
 
 #
 # MODEL BASED
 #
-mbmf = Node('MBMF',
-             'Neural Network Dynamics for Model-Based Deep Reinforcement Learning with Model-Free Fine-Tuning',
+i2a = Node('I2A',
+            '(from the abstract) We introduce Imagination-Augmented Agents (I2As), a novel architecture for deep reinforcement learning combining model-free and model-based aspects. In contrast to most existing model-based reinforcement learning and planning methods, which prescribe how a model should be used to arrive at a policy, I2As learn to interpret predictions from a learned environment model to construct implicit plans in arbitrary ways, by using the predictions as additional context in deep policy networks. I2As show improved data efficiency, performance, and robustness to model misspecification compared to several baselines.',
              model_based,
-             flags=[],
+             flags=[Flag.ML],
+             authors='Théophane Weber, Sébastien Racanière, David P. Reichert, Lars Buesing, Arthur Guez, Danilo Jimenez Rezende, Adria Puigdomènech Badia, Oriol Vinyals, Nicolas Heess, Yujia Li, Razvan Pascanu, Peter Battaglia, Demis Hassabis, David Silver, Daan Wierstra',
+             year=2017,
+             url='https://arxiv.org/abs/1707.06203',
+             links=[])
+root_model_based.connect(i2a, style=ROOT_EDGE)
+
+mbmf = Node('MBMF',
+            '(from the abstract) Neural Network Dynamics for Model-Based Deep Reinforcement Learning with Model-Free Fine-Tuning. We demonstrate that medium-sized neural network models can in fact be combined with model predictive control (MPC) to achieve excellent sample complexity in a model-based reinforcement learning algorithm, producing stable and plausible gaits to accomplish various complex locomotion tasks. We also propose using deep neural network dynamics models to initialize a model-free learner, in order to combine the sample efficiency of model-based approaches with the high task-specific performance of model-free methods. We empirically demonstrate on MuJoCo locomotion tasks that our pure model-based approach trained on just random action data can follow arbitrary trajectories with excellent sample efficiency, and that our hybrid algorithm can accelerate model-free learning on high-speed benchmark tasks, achieving sample efficiency gains of 3-5x on swimmer, cheetah, hopper, and ant agents.',
+             model_based,
+             flags=[Flag.ML],
              authors='Anusha Nagabandi, Gregory Kahn, Ronald S. Fearing, Sergey Levine',
-             year=2017, 
+             year=2017,
              url='https://arxiv.org/abs/1708.02596',
              links=[('Algorithm\'s site', 'https://sites.google.com/view/mbmf'),
-                    ('(GitHub) Code', 'https://github.com/nagaban2/nn_dynamics'),])
+                    ('(GitHub) Code', 'https://github.com/nagaban2/nn_dynamics'), ])
 root_model_based.connect(mbmf, style=ROOT_EDGE)
 
+exit_algo = Node('Exit',
+             'Expert Iteration (ExIt) is a novel reinforcement learning algorithm which decomposes the problem into separate planning and generalisation tasks. Planning new policies is performed by tree search, while a deep neural network generalises those plans. Subsequently, tree search is improved by using the neural network policy to guide search, increasing the strength of new plans. In contrast, standard deep Reinforcement Learning algorithms rely on a neural network not only to generalise plans, but to discover them too. We show that ExIt outperforms REINFORCE for training a neural network to play the board game Hex, and our final tree search agent, trained tabula rasa, defeats MoHex 1.0, the most recent Olympiad Champion player to be publicly released. (from the abstract)',
+             model_based,
+             flags=[Flag.MG],
+             authors='Thomas Anthony, Zheng Tian, David Barber',
+             year=2017,
+             url='https://arxiv.org/abs/1705.08439',
+             links=[])
+root_model_based.connect(exit_algo, style=ROOT_EDGE)
+
+alpha_zero = Node('AlphaZero',
+             'AlphaZero generalises tabula rasa reinforcement learning from games of self-play approach. Starting from random play, and given no domain knowledge except the game rules, AlphaZero achieved within 24 hours a superhuman level of play in the games of chess and shogi (Japanese chess) as well as Go, and convincingly defeated a world-champion program in each case. (from the abstract)',
+             model_based,
+             flags=[Flag.MG],
+             authors='David Silver, Thomas Hubert, Julian Schrittwieser, Ioannis Antonoglou, Matthew Lai, Arthur Guez, Marc Lanctot, Laurent Sifre, Dharshan Kumaran, Thore Graepel, Timothy Lillicrap, Karen Simonyan, Demis Hassabis',
+             year=2017,
+             url='https://arxiv.org/abs/1712.01815',
+             links=[])
+root_model_based.connect(alpha_zero, style=ROOT_EDGE)
+
+mve = Node('MVE',
+            '(from the abstract) Recent model-free reinforcement learning algorithms have proposed incorporating learned dynamics models as a source of additional data with the intention of reducing sample complexity. Such methods hold the promise of incorporating imagined data coupled with a notion of model uncertainty to accelerate the learning of continuous control tasks. Unfortunately, they rely on heuristics that limit usage of the dynamics model. We present model-based value expansion, which controls for uncertainty in the model by only allowing imagination to fixed depth. By enabling wider use of learned dynamics models within a model-free reinforcement learning algorithm, we improve value estimation, which, in turn, reduces the sample complexity of learning.',
+             model_based,
+             flags=[Flag.ML],
+             authors='Vladimir Feinberg, Alvin Wan, Ion Stoica, Michael I. Jordan, Joseph E. Gonzalez, Sergey Levine',
+             year=2018,
+             url='https://arxiv.org/abs/1803.00101',
+             links=[])
+root_model_based.connect(mve, style=ROOT_EDGE)
+
+steve = Node('STEVE',
+            '(from the abstract) Integrating model-free and model-based approaches in reinforcement learning has the potential to achieve the high performance of model-free algorithms with low sample complexity. However, this is difficult because an imperfect dynamics model can degrade the performance of the learning algorithm, and in sufficiently complex environments, the dynamics model will almost always be imperfect. As a result, a key challenge is to combine model-based approaches with model-free learning in such a way that errors in the model do not degrade performance. We propose stochastic ensemble value expansion (STEVE), a novel model-based technique that addresses this issue. By dynamically interpolating between model rollouts of various horizon lengths for each individual example, STEVE ensures that the model is only utilized when doing so does not introduce significant errors. Our approach outperforms model-free baselines on challenging continuous control benchmarks with an order-of-magnitude increase in sample efficiency, and in contrast to previous model-based approaches, performance does not degrade in complex environments.',
+             model_based,
+             flags=[Flag.ML],
+             authors='Jacob Buckman, Danijar Hafner, George Tucker, Eugene Brevdo, Honglak Lee',
+             year=2018,
+             url='https://arxiv.org/abs/1807.01675',
+             links=[])
+root_model_based.connect(steve, style=ROOT_EDGE)
+
+me_trpo = Node('ME-TRPO',
+            '(from the abstract) Model-free reinforcement learning (RL) methods are succeeding in a growing number of tasks, aided by recent advances in deep learning. However, they tend to suffer from high sample complexity, which hinders their use in real-world domains. Alternatively, model-based reinforcement learning promises to reduce sample complexity, but tends to require careful tuning and to date have succeeded mainly in restrictive domains where simple models are sufficient for learning. In this paper, we analyze the behavior of vanilla model-based reinforcement learning methods when deep neural networks are used to learn both the model and the policy, and show that the learned policy tends to exploit regions where insufficient data is available for the model to be learned, causing instability in training. To overcome this issue, we propose to use an ensemble of models to maintain the model uncertainty and regularize the learning process. We further show that the use of likelihood ratio derivatives yields much more stable learning than backpropagation through time. Altogether, our approach Model-Ensemble Trust-Region Policy Optimization (ME-TRPO) significantly reduces the sample complexity compared to model-free deep RL methods on challenging continuous control benchmark tasks.',
+             model_based,
+             flags=[Flag.ML],
+             authors='Thanard Kurutach, Ignasi Clavera, Yan Duan, Aviv Tamar, Pieter Abbeel',
+             year=2018,
+             url='https://arxiv.org/abs/1802.10592',
+             links=[])
+root_model_based.connect(me_trpo, style=ROOT_EDGE)
+
+mb_mpo = Node('MB-MPO',
+            '(from the abstract) Model-based reinforcement learning approaches carry the promise of being data efficient. However, due to challenges in learning dynamics models that sufficiently match the real-world dynamics, they struggle to achieve the same asymptotic performance as model-free methods. We propose Model-Based Meta-Policy-Optimization (MB-MPO), an approach that foregoes the strong reliance on accurate learned dynamics models. Using an ensemble of learned dynamic models, MB-MPO meta-learns a policy that can quickly adapt to any model in the ensemble with one policy gradient step. This steers the meta-policy towards internalizing consistent dynamics predictions among the ensemble while shifting the burden of behaving optimally w.r.t. the model discrepancies towards the adaptation step. Our experiments show that MB-MPO is more robust to model imperfections than previous model-based approaches. Finally, we demonstrate that our approach is able to match the asymptotic performance of model-free methods while requiring significantly less experience. ',
+             model_based,
+             flags=[Flag.ML],
+             authors='Ignasi Clavera, Jonas Rothfuss, John Schulman, Yasuhiro Fujita, Tamim Asfour, Pieter Abbeel',
+             year=2018,
+             url='https://arxiv.org/abs/1809.05214',
+             links=[])
+root_model_based.connect(mb_mpo, style=ROOT_EDGE)
+
+world_models = Node('World Models',
+            '(from the abstract) A generative recurrent neural network is quickly trained in an unsupervised manner to model popular reinforcement learning environments through compressed spatio-temporal representations. The world model\'s extracted features are fed into compact and simple policies trained by evolution, achieving state of the art results in various environments. We also train our agent entirely inside of an environment generated by its own internal world model, and transfer this policy back into the actual environment.',
+             model_based,
+             flags=[Flag.ML],
+             authors='David Ha, Jürgen Schmidhuber',
+             year=2018,
+             url='https://arxiv.org/abs/1809.01999',
+             links=[('Interactive version of the paper', 'https://worldmodels.github.io/'),
+                    ('The experiment code', 'https://blog.otoro.net/2018/06/09/world-models-experiments/')])
+root_model_based.connect(world_models, style=ROOT_EDGE)
 
 simple = Node('SimPLe',
-             'Simulated Policy Learning (SimPLe)',
+             'Simulated Policy Learning (SimPLe) is a complete model-based deep RL algorithm based on video prediction models and present a comparison of several model architectures, including a novel architecture that yields the best results in our setting. Our experiments evaluate SimPLe on a range of Atari games in low data regime of 100k interactions between the agent and the environment, which corresponds to two hours of real-time play. In most games SimPLe outperforms state-of-the-art model-free algorithms, in some games by over an order of magnitude. (from the abstract)',
              model_based,
-             flags=[],
+             flags=[Flag.ML],
              authors='Lukasz Kaiser, Mohammad Babaeizadeh, Piotr Milos, Blazej Osinski, Roy H Campbell, Konrad Czechowski, Dumitru Erhan, Chelsea Finn, Piotr Kozakowski, Sergey Levine, Afroz Mohiuddin, Ryan Sepassi, George Tucker, Henryk Michalewski',
-             year=2019, 
+             year=2019,
              url='https://arxiv.org/abs/1903.00374')
 root_model_based.connect(simple, style=ROOT_EDGE)
 
@@ -803,19 +883,19 @@ def generate_graph(output, format):
         lst = ranks.get(node.graph_rank, [])
         lst.append(node)
         ranks[node.graph_rank] = lst
-    
+
     # The global timeline graph
     with graph.subgraph(name='timeline') as timeline_graph:
         years = [k for k in ranks.keys() if k > 1900]
         for year in years:
             timeline_graph.node(f'{year}', fontcolor=TIMELINE_COLOR, shape='plaintext',
-                                fontname=FONT_NAME, fontsize=str(TIMELINE_FONT_SIZE), 
-                                group=f'timeline') # use same group to make straight nodes
-        for iy in range(len(years)-1):
-            timeline_graph.edge(str(years[iy]), str(years[iy+1]), color=TIMELINE_COLOR)
+                                fontname=FONT_NAME, fontsize=str(TIMELINE_FONT_SIZE),
+                                group=f'timeline')  # use same group to make straight nodes
+        for iy in range(len(years) - 1):
+            timeline_graph.edge(str(years[iy]), str(years[iy + 1]), color=TIMELINE_COLOR)
 
     rl.export_graph(graph, graph)
-    
+
     # Create cluster to align nodes in the same year
     for rank, members in ranks.items():
         if rank < 1900:
@@ -836,13 +916,13 @@ def generate_graph(output, format):
         rank_cluster.attr(rank='same')
         rank_cluster.node(root_value_gradient.graph_name)
         rank_cluster.node(root_policy_gradient.graph_name)
-            
+
     graph.render(output, format=format)
 
 
 def generate_md():
     nodes = rl.collect_nodes()
-    
+
     md = """# RL Taxonomy
 
 This is a loose taxonomy of reinforcement learning algorithms. I'm by no means expert in this area, I'm making this as part of my learning process. Note that there are a lot more algorithms than listed here, and often I don't even know how to categorize them. In any case, please PR to correct things or suggest new stuff.
@@ -855,7 +935,7 @@ This is a loose taxonomy of reinforcement learning algorithms. I'm by no means e
             continue
         parents = node.get_parents()
         if len(parents):
-            md += '  ' * (len(parents)-1)
+            md += '  ' * (len(parents) - 1)
         if parents:
             md += '- '
         md += f'[{node.title}](#{node.name})\n'
@@ -876,13 +956,13 @@ Sources:
 - [Key Papers in Deep RL](https://spinningup.openai.com/en/latest/spinningup/keypapers.html)
 
 """
-        
+
     md += '\n(This document is autogenerated)\n'
     return md
 
 
 if __name__ == '__main__':
-    generate_graph('rl-taxonomy.gv', 'svg')
-    
     with open('README.md', 'w', encoding="utf-8") as f:
         f.write(generate_md())
+
+    generate_graph('rl-taxonomy.gv', 'svg')
