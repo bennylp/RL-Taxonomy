@@ -7,7 +7,6 @@ import re
 import sys
 
 # "Orientation" of the graph: left-right or top-bottom.
-# If top-bottom, the flags will be shown
 RANKDIR = "TB"  # LR or TB
 
 # Edge style for weak connection between nodes
@@ -21,7 +20,7 @@ FONT_NAME = "sans-serif"
 NODE_FONT_SIZE = 12
 TIMELINE_COLOR = "blue"
 TIMELINE_FONT_SIZE = 10
-EDGE_FONT_COLOR = "darkgray"
+EDGE_FONT_COLOR = 'black'
 EDGE_FONT_SIZE = 10
 
 # Useful graphviz links:
@@ -185,43 +184,24 @@ class NodeBase(ABC):
     def _export_node(self, graph):
         if self.graph_type != "node":
             return
-        if True or RANKDIR=="LR":
-            # For left to right rank
-            attrs = copy.copy(self.attrs)
-            attrs['fontname'] = FONT_NAME
-            attrs['fontsize'] = str(NODE_FONT_SIZE)
-            if 'shape' not in attrs:
-                attrs['shape']='record'
-            if 'style' not in attrs:
-                attrs['style']='rounded'
-            graph.node(self.graph_name, label=f'{{{self.title}}}', **attrs)
-        else:
-            # For top down rank
-            fields = []
-            if self.year:
-                fields.append(str(self.year))
-            if self.flags:
-                fields += [f.name for f in self.flags]
-            label = self.title
-            if fields:
-                label += f'|{{{"|".join(fields)}}}'
-            attrs = copy.copy(self.attrs)
-            attrs['fontname'] = FONT_NAME
-            attrs['fontsize'] = str(NODE_FONT_SIZE)
-            if 'shape' not in attrs:
-                attrs['shape']='record'
-            if 'style' not in attrs:
-                attrs['style']='rounded'
-            graph.node(self.graph_name, label=f'{{{label}}}', **attrs)
+        attrs = copy.copy(self.attrs)
+        attrs['fontname'] = FONT_NAME
+        attrs['fontsize'] = str(NODE_FONT_SIZE)
+        if 'shape' not in attrs:
+            attrs['shape']='record'
+        if 'style' not in attrs:
+            attrs['style']='rounded,bold'
+        graph.node(self.graph_name, label=f'{{{self.title}}}', **attrs)
         
     def _export_connections(self, graph, cluster):
         for edge in self.out_edges:
             attrs = copy.copy(edge.attrs)
+            attrs['fontcolor'] = EDGE_FONT_COLOR
+            attrs['fontsize'] = str(EDGE_FONT_SIZE)
+            attrs['fontname'] = FONT_NAME
             if attrs.get('style', '')==WEAK_LINK:
                 attrs['color'] = 'darkgray'
-                attrs['fontcolor'] = EDGE_FONT_COLOR
-                attrs['fontsize'] = str(EDGE_FONT_SIZE)
-                attrs['fontname'] = FONT_NAME
+                attrs['fontcolor'] = 'darkgray'
             if edge.dest.group == self.group:
                 cluster.edge(self.graph_name, edge.dest.graph_name, **attrs)
             else:
@@ -413,7 +393,7 @@ sarsa = Node('SARSA',
              authors='G. A. Rummery, M. Niranjan',
              year=1994, 
              url='http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.17.2539&rep=rep1&type=pdf')
-#root_value_gradient.connect(sarsa, style=INVIS)
+root_value_gradient.connect(sarsa, style=INVIS)
 
 qlearning = Node('Q-learning',
            'Q-learning an off-policy TD control method. Unlike SARSA, it doesn\'t follow the policy to find the next action but rather chooses most optimal action in a greedy fashion',
@@ -547,7 +527,7 @@ reinforce = Node('REINFORCE',
                   ('An introduction to Policy Gradients with Cartpole and Doom', 'https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/')
                   ]
            )
-#root_policy_gradient.connect(reinforce, style=INVIS)
+root_policy_gradient.connect(reinforce, style=INVIS)
 
 """
 vpg = Node('VPG',
@@ -570,7 +550,7 @@ dpg = Node('DPG',
            url='http://proceedings.mlr.press/v32/silver14.pdf',
            links=[]
            )
-#root_policy_gradient.connect(dpg, style=INVIS)
+root_policy_gradient.connect(dpg, style=INVIS)
 
 ddpg = Node('DDPG',
            'Deep Deterministic Policy Gradient (DDPG).',
@@ -595,7 +575,7 @@ trpo = Node('TRPO',
            links=[('RL — Trust Region Policy Optimization (TRPO) Explained', 'https://medium.com/@jonathan_hui/rl-trust-region-policy-optimization-trpo-explained-a6ee04eeeee9'),
                   ('RL — Trust Region Policy Optimization (TRPO) Part 2', 'https://medium.com/@jonathan_hui/rl-trust-region-policy-optimization-trpo-part-2-f51e3b2e373a')]
            )
-#root_policy_gradient.connect(trpo, style=INVIS)
+root_policy_gradient.connect(trpo, style=INVIS)
 
 gae = Node('GAE',
            'Generalized Advantage Estimation',
@@ -607,7 +587,7 @@ gae = Node('GAE',
            links=[('Generalized Advantage Estimator Explained','https://notanymike.github.io/GAE/'),
                   ('Notes on the Generalized Advantage Estimation Paper', 'https://danieltakeshi.github.io/2017/04/02/notes-on-the-generalized-advantage-estimation-paper/')]
            )
-#root_policy_gradient.connect(gae, style=INVIS)
+root_policy_gradient.connect(gae, style=INVIS)
 trpo.connect(gae, style=WEAK_LINK)
 
 a3c = Node('A3C',
@@ -620,7 +600,7 @@ a3c = Node('A3C',
            links=[('Simple Reinforcement Learning with Tensorflow Part 8: Asynchronous Actor-Critic Agents (A3C)', 'https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-8-asynchronous-actor-critic-agents-a3c-c88f72a5e9f2'),
                   ('An implementation of A3C', 'https://github.com/dennybritz/reinforcement-learning/tree/master/PolicyGradient/a3c')]
            )
-#root_policy_gradient.connect(a3c, style=INVIS)
+root_policy_gradient.connect(a3c, style=INVIS)
 a3c.connect(rainbow, style=WEAK_LINK)
 
 ddpg_her = Node('DDPG+HER',
@@ -670,7 +650,7 @@ acer = Node('ACER',
                ]
            )
 a3c.connect(acer)
-dqn.connect(acer, style=WEAK_LINK, label='replay buffer, workers')
+dqn.connect(acer, style=WEAK_LINK, label='replay buffer')
 #a2c.connect(acer, style=WEAK_LINK, label='multiple workers')
 a2c.connect(acer, style=INVIS)
 trpo.connect(acer, style=WEAK_LINK, label='TRPO technique')
@@ -685,7 +665,7 @@ acktr = Node('ACKTR',
            links=[
                ]
            )
-#root_policy_gradient.connect(acktr, style=INVIS)
+root_policy_gradient.connect(acktr, style=INVIS)
 a2c.connect(acktr, style=INVIS) # just to maintain relative timeline order
 
 ppo = Node('PPO',
@@ -711,7 +691,7 @@ svpg = Node('SVPG',
            links=[('Policy Gradient Algorithms', 'https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html#svpg'),
                   ]
            )
-#root_policy_gradient.connect(svpg, style=INVIS)
+root_policy_gradient.connect(svpg, style=INVIS)
 a2c.connect(svpg, style=INVIS) # just to maintain relative timeline order
 
 d4pg = Node('D4PG',
@@ -734,7 +714,7 @@ sac = Node('SAC',
            url='https://arxiv.org/abs/1801.01290',
            links=[('Spinning Up SAC page', 'https://spinningup.openai.com/en/latest/algorithms/sac.html'),
                   ('(GitHub) SAC code by its author', 'https://github.com/haarnoja/sac')])
-#root_policy_gradient.connect(sac, style=INVIS)
+root_policy_gradient.connect(sac, style=INVIS)
 ppo.connect(sac, style=INVIS) # just to maintain relative timeline order
 
 td3 = Node('TD3',
@@ -756,7 +736,7 @@ impala = Node('IMPALA',
            year=2018, 
            url='https://arxiv.org/abs/1802.01561',
            links=[('Policy Gradient Algorithms', 'https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html')])
-#root_policy_gradient.connect(impala, style=INVIS)
+root_policy_gradient.connect(impala, style=INVIS)
 a2c.connect(impala, style=INVIS) # just to maintain relative timeline order
 
 
@@ -813,7 +793,7 @@ def generate_md():
     
     md = """# RL Taxonomy
 
-This is a loose taxonomy of reinforcement learning algorithms. I'm by no means expert in this area, I'm making this as part of my learning process. Note that there are a lot more algorithms than the ones listed here, and often I don't even know how to categorize them. In any case, please PR to correct things or suggest new stuff.
+This is a loose taxonomy of reinforcement learning algorithms. I'm by no means expert in this area, I'm making this as part of my learning process. Note that there are a lot more algorithms than listed here, and often I don't even know how to categorize them. In any case, please PR to correct things or suggest new stuff.
 
 """
     md += '#### Table of Contents:<HR>\n\n'
@@ -831,7 +811,7 @@ This is a loose taxonomy of reinforcement learning algorithms. I'm by no means e
 
     md += """## <A name="taxonomy"></a>Taxonomy
 
-Solid line indicates some progression from one idea to another. Dashed line indicates a loose connection, which could be as little as mentioning of the idea in the newer paper.
+Solid line indicates some progression from one idea to another. Dashed line indicates a loose connection.
 
 ![RL Taxonomy](rl-taxonomy.gv.svg "RL Taxonomy")\n\n"""
 

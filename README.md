@@ -1,6 +1,6 @@
 # RL Taxonomy
 
-This is a loose taxonomy of reinforcement learning algorithms. I'm by no means expert in this area, I'm making this as part of my learning process. Note that there are a lot more algorithms than the ones listed here, and often I don't even know how to categorize them. In any case, please PR to correct things or suggest new stuff.
+This is a loose taxonomy of reinforcement learning algorithms. I'm by no means expert in this area, I'm making this as part of my learning process. Note that there are a lot more algorithms than listed here, and often I don't even know how to categorize them. In any case, please PR to correct things or suggest new stuff.
 
 #### Table of Contents:<HR>
 
@@ -40,7 +40,7 @@ This is a loose taxonomy of reinforcement learning algorithms. I'm by no means e
 
 ## <A name="taxonomy"></a>Taxonomy
 
-Solid line indicates some progression from one idea to another. Dashed line indicates a loose connection, which could be as little as mentioning of the idea in the newer paper.
+Solid line indicates some progression from one idea to another. Dashed line indicates a loose connection.
 
 ![RL Taxonomy](rl-taxonomy.gv.svg "RL Taxonomy")
 
@@ -79,6 +79,7 @@ SARSA (State-Action-Reward-State-Action) is an on-policy TD control method
 - Flags:
   - On-Policy (ONP)
   - Discrete action space (DA)
+- Related to prior idea:
 
 #### <a name="Qlearning"></a>Q-learning
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Value Gradient](#ValueGradient) --> [Q-learning](#Qlearning))
@@ -122,7 +123,7 @@ Deep Q Network. Q-Learning with using deep neural network as value estimator
   - [DQN+HER](#DQNHER)
   - [IQN](#IQN)
   - [DDPG](#DDPG) (replay buffer)
-  - [ACER](#ACER) (replay buffer, workers)
+  - [ACER](#ACER) (replay buffer)
 - Useful links:
   - [(tutorial) Deep Q Learning for the CartPole](https://towardsdatascience.com/deep-q-learning-for-the-cartpole-44d761085c2f)
   - [An introduction to Deep Q-Learning: let’s play Doom](https://www.freecodecamp.org/news/an-introduction-to-deep-q-learning-lets-play-doom-54d02d8017d8/)
@@ -322,6 +323,7 @@ REINFORCE (Monte-Carlo policy gradient) is a pure policy gradient algorithm that
   - On-Policy (ONP)
   - Continuous state space (CS)
   - Discrete action space (DA)
+- Related to prior idea:
 - Useful links:
   - [LearningReinforcementLearningbyLearningREINFORCE (PDF)](http://www.cs.toronto.edu/~tingwuwang/REINFORCE.pdf)
   - [An introduction to Policy Gradients with Cartpole and Doom](https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/)
@@ -339,6 +341,7 @@ Deterministic Policy Gradient. Abstract: In this paper we consider deterministic
   - Continuous state space (CS)
   - Continuous action space (CA)
   - Deterministic Policy (DP)
+- Related to prior idea:
 - Related to subsequent idea:
   - [DDPG](#DDPG)
 
@@ -380,6 +383,7 @@ Trust Region Policy Optimization (TRPO) improves training stability by enforcing
   - Continuous state space (CS)
   - Continuous action space (CA)
   - Advantage (ADV)
+- Related to prior idea:
 - Related to subsequent ideas:
   - [GAE](#GAE)
   - [ACER](#ACER) (TRPO technique)
@@ -400,7 +404,7 @@ Generalized Advantage Estimation
   - On-Policy (ONP)
   - Continuous state space (CS)
   - Continuous action space (CA)
-- Related to prior idea:
+- Related to prior ideas:
   - [TRPO](#TRPO)
 - Useful links:
   - [Generalized Advantage Estimator Explained](https://notanymike.github.io/GAE/)
@@ -420,6 +424,7 @@ Asynchronous Advantage Actor-Critic (A3C) is a classic policy gradient method wi
   - Continuous action space (CA)
   - Advantage (ADV)
   - Stochastic Policy (SP)
+- Related to prior idea:
 - Related to subsequent ideas:
   - [RAINBOW](#RAINBOW)
   - [A2C](#A2C)
@@ -502,7 +507,7 @@ Actor-Critic with Experience Replay (ACER) combines several ideas of previous al
   - Replay Buffer (RB)
 - Related to prior ideas:
   - [A3C](#A3C)
-  - [DQN](#DQN) (replay buffer, workers)
+  - [DQN](#DQN) (replay buffer)
   - [TRPO](#TRPO) (TRPO technique)
 
 #### <a name="ACKTR"></a>ACKTR
@@ -518,7 +523,7 @@ Actor Critic using Kronecker-Factored Trust Region (ACKTR) is applying trust reg
   - Continuous state space (CS)
   - Continuous action space (CA)
   - Advantage (ADV)
-- Related to prior idea:
+- Related to prior ideas:
 
 #### <a name="PPO"></a>PPO
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic) --> [PPO](#PPO))
@@ -556,7 +561,7 @@ Stein Variational Policy Gradient (SVPG)
   - Continuous state space (CS)
   - Discrete action space (DA)
   - Continuous action space (CA)
-- Related to prior idea:
+- Related to prior ideas:
 - Useful links:
   - [Policy Gradient Algorithms](https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html#svpg)
 
@@ -591,7 +596,7 @@ Soft Actor Critic (SAC) is an algorithm that optimizes a stochastic policy in an
   - Continuous action space (CA)
   - Continuous action space (CA)
   - Stochastic Policy (SP)
-- Related to prior idea:
+- Related to prior ideas:
 - Useful links:
   - [Spinning Up SAC page](https://spinningup.openai.com/en/latest/algorithms/sac.html)
   - [(GitHub) SAC code by its author](https://github.com/haarnoja/sac)
@@ -628,7 +633,7 @@ Importance Weighted Actor-Learner Architecture (IMPALA)
   - Off-Policy (OFP)
   - Continuous state space (CS)
   - Continuous action space (CA)
-- Related to prior idea:
+- Related to prior ideas:
 - Useful links:
   - [Policy Gradient Algorithms](https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html)
 
