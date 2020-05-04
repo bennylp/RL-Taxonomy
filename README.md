@@ -15,6 +15,7 @@ This is a loose taxonomy of reinforcement learning algorithms. I'm by no means e
   - [PER](#PER)
   - [Duelling-DQN](#DuellingDQN)
   - [QR-DQN](#QRDQN)
+  - [C51](#C51)
   - [RAINBOW](#RAINBOW)
   - [DQN+HER](#DQNHER)
 - [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic)
@@ -46,8 +47,8 @@ Solid line indicates some progression from one idea to another. Dashed line indi
 Reinforcement learning (RL) is an area of machine learning concerned with how software agents ought to take actions in an environment in order to maximize the notion of cumulative reward [from Wikipedia]
 
 - Related to subsequent ideas:
-  - [Value Gradient](#ValueGradient)
-  - [Policy Gradient](#PolicyGradient)
+  - [vg](#vg)
+  - [pg](#pg)
 - Useful links:
   - [A (Long) Peek into Reinforcement Learning](https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html)
   - [(book) Reinforcement Learning: An Introduction - 2nd Edition - Richard S. Sutton and Andrew G. Barto](http://incompleteideas.net/book/the-book.html)
@@ -65,7 +66,7 @@ Reinforcement learning (RL) is an area of machine learning concerned with how so
 The algorithm is learning the value function of each state or state-action. The policy is implicit, usually by just selecting the best value
 
 
- <a name="ValueGradient"></a>
+ <a name="vg"></a>
 #### <a name="SARSA"></a>SARSA
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Value Gradient](#ValueGradient) --> [SARSA](#SARSA))
 
@@ -78,7 +79,6 @@ SARSA (State-Action-Reward-State-Action) is an on-policy TD control method
   - On-Policy (ONP)
   - Discrete action space (DA)
 - Related to prior idea:
-  - [Value Gradient](#ValueGradient)
 
 #### <a name="Qlearning"></a>Q-learning
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Value Gradient](#ValueGradient) --> [Q-learning](#Qlearning))
@@ -92,7 +92,6 @@ Q-learning an off-policy TD control method. Unlike SARSA, it doesn't follow the 
   - Off-Policy (OFP)
   - Discrete action space (DA)
 - Related to prior idea:
-  - [Value Gradient](#ValueGradient)
 - Related to subsequent idea:
   - [DQN](#DQN)
 - Useful links:
@@ -219,6 +218,23 @@ Distributional Reinforcement Learning with Quantile Regression (QR-DQN). In QR-D
 - Useful links:
   - [(GitHub) Quantile Regression DQN](https://github.com/senya-ashukha/quantile-regression-dqn-pytorch)
 
+#### <a name="C51"></a>C51
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Value Gradient](#ValueGradient) --> [C51](#C51))
+
+C51 Algorithm. The core idea of Distributional Bellman is to ask the following questions. If we can model the Distribution of the total future rewards, why restrict ourselves to the expected value (i.e. Q function)? There are several benefits to learning an approximate distribution rather than its approximate expectation. [[source: flyyufelix's blog](https://flyyufelix.github.io/2017/10/24/distributional-bellman.html)]
+
+- Paper: https://arxiv.org/abs/1707.06887
+- Authors: Marc G. Bellemare, Will Dabney, Rémi Munos
+- Year: 2017
+- Flags:
+  - Off-Policy (OFP)
+  - Continuous state space (CS)
+  - Discrete action space (DA)
+  - Replay Buffer (RB)
+- Related to prior idea:
+- Useful links:
+  - [Distributional Bellman and the C51 Algorithm](https://flyyufelix.github.io/2017/10/24/distributional-bellman.html)
+
 #### <a name="RAINBOW"></a>RAINBOW
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Value Gradient](#ValueGradient) --> [RAINBOW](#RAINBOW))
 
@@ -268,7 +284,7 @@ The algorithm works directly to optimize the policy, with or without value funct
   - [Going Deeper Into Reinforcement Learning: Fundamentals of Policy Gradients](https://danieltakeshi.github.io/2017/03/28/going-deeper-into-reinforcement-learning-fundamentals-of-policy-gradients/)
   - [An introduction to Policy Gradients with Cartpole and Doom](https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/)
 
- <a name="PolicyGradient"></a>
+ <a name="pg"></a>
 #### <a name="REINFORCE"></a>REINFORCE
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic) --> [REINFORCE](#REINFORCE))
 
@@ -283,7 +299,6 @@ REINFORCE (Monte-Carlo policy gradient) is a pure policy gradient algorithm that
   - Continuous state space (CS)
   - Discrete action space (DA)
 - Related to prior idea:
-  - [Policy Gradient](#PolicyGradient)
 - Useful links:
   - [LearningReinforcementLearningbyLearningREINFORCE (PDF)](http://www.cs.toronto.edu/~tingwuwang/REINFORCE.pdf)
   - [An introduction to Policy Gradients with Cartpole and Doom](https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/)
@@ -302,7 +317,6 @@ Deterministic Policy Gradient. Abstract: In this paper we consider deterministic
   - Continuous action space (CA)
   - Deterministic Policy (DP)
 - Related to prior idea:
-  - [Policy Gradient](#PolicyGradient)
 - Related to subsequent idea:
   - [DDPG](#DDPG)
 
@@ -345,7 +359,6 @@ Trust Region Policy Optimization (TRPO) improves training stability by enforcing
   - Continuous action space (CA)
   - Advantage (ADV)
 - Related to prior idea:
-  - [Policy Gradient](#PolicyGradient)
 - Related to subsequent ideas:
   - [GAE](#GAE)
   - [ACER](#ACER) (TRPO technique)
@@ -367,7 +380,6 @@ Generalized Advantage Estimation
   - Continuous state space (CS)
   - Continuous action space (CA)
 - Related to prior ideas:
-  - [Policy Gradient](#PolicyGradient)
   - [TRPO](#TRPO)
 - Useful links:
   - [Generalized Advantage Estimator Explained](https://notanymike.github.io/GAE/)
@@ -388,7 +400,6 @@ Asynchronous Advantage Actor-Critic (A3C) is a classic policy gradient method wi
   - Advantage (ADV)
   - Stochastic Policy (SP)
 - Related to prior idea:
-  - [Policy Gradient](#PolicyGradient)
 - Related to subsequent ideas:
   - [RAINBOW](#RAINBOW)
   - [A2C](#A2C)
@@ -488,7 +499,6 @@ Actor Critic using Kronecker-Factored Trust Region (ACKTR) is applying trust reg
   - Continuous action space (CA)
   - Advantage (ADV)
 - Related to prior ideas:
-  - [Policy Gradient](#PolicyGradient)
 
 #### <a name="PPO"></a>PPO
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Policy Gradient/Actor-Critic](#PolicyGradientActorCritic) --> [PPO](#PPO))
@@ -527,7 +537,6 @@ Stein Variational Policy Gradient (SVPG)
   - Discrete action space (DA)
   - Continuous action space (CA)
 - Related to prior ideas:
-  - [Policy Gradient](#PolicyGradient)
 - Useful links:
   - [Policy Gradient Algorithms](https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html#svpg)
 
@@ -563,7 +572,6 @@ Soft Actor Critic (SAC) is an algorithm that optimizes a stochastic policy in an
   - Continuous action space (CA)
   - Stochastic Policy (SP)
 - Related to prior ideas:
-  - [Policy Gradient](#PolicyGradient)
 - Useful links:
   - [Spinning Up SAC page](https://spinningup.openai.com/en/latest/algorithms/sac.html)
   - [(GitHub) SAC code by its author](https://github.com/haarnoja/sac)
@@ -601,9 +609,14 @@ Importance Weighted Actor-Learner Architecture (IMPALA)
   - Continuous state space (CS)
   - Continuous action space (CA)
 - Related to prior ideas:
-  - [Policy Gradient](#PolicyGradient)
 - Useful links:
   - [Policy Gradient Algorithms](https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html)
 
 <HR>
+    
+Sources:
+- [Policy Gradient Algorithms](https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html)
+- [Key Papers in Deep RL](https://spinningup.openai.com/en/latest/spinningup/keypapers.html)
+
+
 (This document is autogenerated)

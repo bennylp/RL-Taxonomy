@@ -19,6 +19,10 @@ INVIS = "invis"
 
 USE_TIMELINE = True
 FONT_NAME = "arial"
+NODE_FONT_SIZE = 12
+TIMELINE_FONT_SIZE = 10
+EDGE_FONT_COLOR = "darkgray"
+EDGE_FONT_SIZE = 10
 
 # Useful graphviz links:
 # - https://graphviz.readthedocs.io/en/stable/index.html
@@ -185,6 +189,7 @@ class NodeBase(ABC):
             # For left to right rank
             attrs = copy.copy(self.attrs)
             attrs['fontname'] = FONT_NAME
+            attrs['fontsize'] = str(NODE_FONT_SIZE)
             if 'shape' not in attrs:
                 attrs['shape']='record'
             if 'style' not in attrs:
@@ -206,6 +211,7 @@ class NodeBase(ABC):
                 label += f'|{{{"|".join(fields)}}}'
             attrs = copy.copy(self.attrs)
             attrs['fontname'] = FONT_NAME
+            attrs['fontsize'] = str(NODE_FONT_SIZE)
             if 'shape' not in attrs:
                 attrs['shape']='record'
             if 'style' not in attrs:
@@ -217,7 +223,8 @@ class NodeBase(ABC):
             attrs = copy.copy(edge.attrs)
             if attrs.get('style', '')==WEAK_LINK:
                 attrs['color'] = 'darkgray'
-                attrs['fontsize'] = '8'
+                attrs['fontcolor'] = EDGE_FONT_COLOR
+                attrs['fontsize'] = str(EDGE_FONT_SIZE)
                 attrs['fontname'] = FONT_NAME
             if edge.dest.group == self.group:
                 cluster.edge(self.graph_name, edge.dest.graph_name, **attrs)
@@ -279,11 +286,13 @@ class Group(NodeBase):
     """
     
     def __init__(self, title, description, group, flags=[], authors=None, year=None, url=None,
-                 videos=[], links=[], graph_type="cluster", timeline=False, output_md=True, **attrs):
+                 videos=[], links=[], graph_type="cluster", timeline=False, output_md=True, same_rank=False, 
+                 **attrs):
         super().__init__(title, description, group, flags=flags, authors=authors, year=year, url=url,
                  videos=videos, links=links, graph_type=graph_type, output_md=output_md, **attrs)
         self.nodes = []
         self.timeline = timeline
+        self.same_rank = same_rank
         
     def collect_nodes(self):
         nodes = [self]
@@ -320,15 +329,6 @@ class Group(NodeBase):
             lst.append(node)
             ranks[node.graph_rank] = lst
 
-        # The timeline graph
-        with cluster.subgraph(name='clusterTimeline' + self.title) as timeline_graph:
-            #timeline_graph.attr(rankdir=RANKDIR)
-            timeline_graph.attr('node', shape='plaintext')
-            years = [k for k in ranks.keys() if k > 1900]
-            for iy in range(len(years)-1):
-                timeline_graph.edge(f'{self.title}{years[iy]}', f'{self.title}{years[iy+1]}',
-                                    color='darkgray')
-
         # The nodes
         for rank, lst in ranks.items():
             if not rank:
@@ -339,11 +339,19 @@ class Group(NodeBase):
                     rank_graph.attr(rank='same')
                     if rank > 1900:
                         rank_graph.node(f'{self.title}{rank}', label=str(rank), fontcolor='darkgray',
-                                        fontname=FONT_NAME)
+                                        fontname=FONT_NAME, fontsize=str(TIMELINE_FONT_SIZE), 
+                                        shape='plaintext', group=f'timeline{self.title}')
 
                     for node in lst:
                         node._export_node(rank_graph)
                         node._export_connections(graph, cluster)
+
+        # The timeline graph
+        with cluster.subgraph(name='clusterTimeline' + self.title) as timeline_graph:
+            years = [k for k in ranks.keys() if k > 1900]
+            for iy in range(len(years)-1):
+                timeline_graph.edge(f'{self.title}{years[iy]}', f'{self.title}{years[iy+1]}',
+                                    color='darkgray')
 
             
     def export_graph(self, graph, cluster):
@@ -354,7 +362,8 @@ class Group(NodeBase):
                 c.attr(style='dashed')
                 c.attr(fontname=FONT_NAME)
                 c.attr(fontsize='16')
-                
+                if self.same_rank:
+                    c.attr(rank='same')
                 if self.timeline:
                     self._export_graph_with_timeline(graph, c)
                 else:
@@ -407,7 +416,7 @@ class Node(NodeBase):
 #
 rl = Group('Reinforcement Learning', 
            'Reinforcement learning (RL) is an area of machine learning concerned with how software agents ought to take actions in an environment in order to maximize the notion of cumulative reward [from Wikipedia]',
-           None, graph_type="node",
+           None, graph_type="node", same_rank=True,
            links=[('A (Long) Peek into Reinforcement Learning', 'https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html'),
                   ('(book) Reinforcement Learning: An Introduction - 2nd Edition - Richard S. Sutton and Andrew G. Barto', 'http://incompleteideas.net/book/the-book.html')
                ],
@@ -433,8 +442,8 @@ policy_gradient = Group('Policy Gradient/Actor-Critic',
                         ('An introduction to Policy Gradients with Cartpole and Doom', 'https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/')
                         ])
 
-root_value_gradient = Node('Value Gradient', '', value_gradient, output_md=False)
-root_policy_gradient = Node('Policy Gradient', '', policy_gradient, output_md=False)
+root_value_gradient = Node('vg', '', value_gradient, output_md=False, style=INVIS)
+root_policy_gradient = Node('pg', '', policy_gradient, output_md=False, style=INVIS)
 
 rl.connect(root_value_gradient, lhead=value_gradient.graph_name)
 rl.connect(root_policy_gradient, lhead=policy_gradient.graph_name)
@@ -450,7 +459,7 @@ sarsa = Node('SARSA',
              authors='G. A. Rummery, M. Niranjan',
              year=1994, 
              url='http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.17.2539&rep=rep1&type=pdf')
-root_value_gradient.connect(sarsa)
+root_value_gradient.connect(sarsa, style=INVIS)
 
 qlearning = Node('Q-learning',
            'Q-learning an off-policy TD control method. Unlike SARSA, it doesn\'t follow the policy to find the next action but rather chooses most optimal action in a greedy fashion',
@@ -462,7 +471,7 @@ qlearning = Node('Q-learning',
            links=[('Diving deeper into Reinforcement Learning with Q-Learning', 'https://www.freecodecamp.org/news/diving-deeper-into-reinforcement-learning-with-q-learning-c18d0db58efe/'),
                   ('Simple Reinforcement Learning with Tensorflow Part 0: Q-Learning with Tables and Neural Networks', 'https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-0-q-learning-with-tables-and-neural-networks-d195264329d0')]
            )
-root_value_gradient.connect(qlearning)
+root_value_gradient.connect(qlearning, style=INVIS)
 
 dqn = Node('DQN',
            'Deep Q Network. Q-Learning with using deep neural network as value estimator',
@@ -524,6 +533,17 @@ qr_dqn = Node('QR-DQN',
            links=[('(GitHub) Quantile Regression DQN', 'https://github.com/senya-ashukha/quantile-regression-dqn-pytorch')])
 dqn.connect(qr_dqn)
 
+c51 = Node('C51',
+           'C51 Algorithm. The core idea of Distributional Bellman is to ask the following questions. If we can model the Distribution of the total future rewards, why restrict ourselves to the expected value (i.e. Q function)? There are several benefits to learning an approximate distribution rather than its approximate expectation. [[source: flyyufelix\'s blog](https://flyyufelix.github.io/2017/10/24/distributional-bellman.html)]',
+           value_gradient,
+           flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.RB],
+           authors='Marc G. Bellemare, Will Dabney, Rémi Munos',
+           year=2017, 
+           url='https://arxiv.org/abs/1707.06887',
+           links=[('Distributional Bellman and the C51 Algorithm', 'https://flyyufelix.github.io/2017/10/24/distributional-bellman.html')])
+root_value_gradient.connect(c51, style=INVIS)
+#dqn_per.connecT(c51, syle=INVIS)
+
 rainbow = Node('RAINBOW',
            'Examines six extensions to the DQN algorithm and empirically studies their combination',
            value_gradient,
@@ -562,7 +582,7 @@ reinforce = Node('REINFORCE',
                   ('An introduction to Policy Gradients with Cartpole and Doom', 'https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/')
                   ]
            )
-root_policy_gradient.connect(reinforce)
+root_policy_gradient.connect(reinforce, style=INVIS)
 
 """
 vpg = Node('VPG',
@@ -585,7 +605,7 @@ dpg = Node('DPG',
            url='http://proceedings.mlr.press/v32/silver14.pdf',
            links=[]
            )
-root_policy_gradient.connect(dpg)
+root_policy_gradient.connect(dpg, style=INVIS)
 
 ddpg = Node('DDPG',
            'Deep Deterministic Policy Gradient (DDPG).',
@@ -598,7 +618,7 @@ ddpg = Node('DDPG',
                   ]
            )
 dpg.connect(ddpg)
-dqn.connect(ddpg, style=WEAK_LINK, label='replay buffer')
+dqn.connect(ddpg, style=WEAK_LINK, label='replay buffer', constraint="false")
 
 trpo = Node('TRPO',
            'Trust Region Policy Optimization (TRPO) improves training stability by enforcing a KL divergence constraint to avoid parameter updates that change the policy too much at one step.',
@@ -610,7 +630,7 @@ trpo = Node('TRPO',
            links=[('RL — Trust Region Policy Optimization (TRPO) Explained', 'https://medium.com/@jonathan_hui/rl-trust-region-policy-optimization-trpo-explained-a6ee04eeeee9'),
                   ('RL — Trust Region Policy Optimization (TRPO) Part 2', 'https://medium.com/@jonathan_hui/rl-trust-region-policy-optimization-trpo-part-2-f51e3b2e373a')]
            )
-root_policy_gradient.connect(trpo)
+root_policy_gradient.connect(trpo, style=INVIS)
 
 gae = Node('GAE',
            'Generalized Advantage Estimation',
@@ -622,7 +642,7 @@ gae = Node('GAE',
            links=[('Generalized Advantage Estimator Explained','https://notanymike.github.io/GAE/'),
                   ('Notes on the Generalized Advantage Estimation Paper', 'https://danieltakeshi.github.io/2017/04/02/notes-on-the-generalized-advantage-estimation-paper/')]
            )
-root_policy_gradient.connect(gae)
+root_policy_gradient.connect(gae, style=INVIS)
 trpo.connect(gae, style=WEAK_LINK)
 
 a3c = Node('A3C',
@@ -635,7 +655,7 @@ a3c = Node('A3C',
            links=[('Simple Reinforcement Learning with Tensorflow Part 8: Asynchronous Actor-Critic Agents (A3C)', 'https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-8-asynchronous-actor-critic-agents-a3c-c88f72a5e9f2'),
                   ('An implementation of A3C', 'https://github.com/dennybritz/reinforcement-learning/tree/master/PolicyGradient/a3c')]
            )
-root_policy_gradient.connect(a3c)
+root_policy_gradient.connect(a3c, style=INVIS)
 a3c.connect(rainbow, style=WEAK_LINK)
 
 ddpg_her = Node('DDPG+HER',
@@ -700,7 +720,7 @@ acktr = Node('ACKTR',
            links=[
                ]
            )
-root_policy_gradient.connect(acktr)
+root_policy_gradient.connect(acktr, style=INVIS)
 a2c.connect(acktr, style=INVIS) # just to maintain relative timeline order
 
 ppo = Node('PPO',
@@ -726,7 +746,7 @@ svpg = Node('SVPG',
            links=[('Policy Gradient Algorithms', 'https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html#svpg'),
                   ]
            )
-root_policy_gradient.connect(svpg)
+root_policy_gradient.connect(svpg, style=INVIS)
 a2c.connect(svpg, style=INVIS) # just to maintain relative timeline order
 
 d4pg = Node('D4PG',
@@ -749,7 +769,7 @@ sac = Node('SAC',
            url='https://arxiv.org/abs/1801.01290',
            links=[('Spinning Up SAC page', 'https://spinningup.openai.com/en/latest/algorithms/sac.html'),
                   ('(GitHub) SAC code by its author', 'https://github.com/haarnoja/sac')])
-root_policy_gradient.connect(sac)
+root_policy_gradient.connect(sac, style=INVIS)
 ppo.connect(sac, style=INVIS) # just to maintain relative timeline order
 
 td3 = Node('TD3',
@@ -771,7 +791,7 @@ impala = Node('IMPALA',
            year=2018, 
            url='https://arxiv.org/abs/1802.01561',
            links=[('Policy Gradient Algorithms', 'https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html')])
-root_policy_gradient.connect(impala)
+root_policy_gradient.connect(impala, style=INVIS)
 a2c.connect(impala, style=INVIS) # just to maintain relative timeline order
 
 
@@ -781,6 +801,7 @@ def generate_graph(output, format, use_rank=True):
     graph = Digraph()
     graph.attr(compound='true')
     graph.attr(rankdir=RANKDIR)
+    graph.attr(rank='same') 
     
     """
     ranks = OrderedDict()
@@ -838,8 +859,16 @@ Solid line indicates some progression from one idea to another. Dashed line indi
         md += '\n'
 
     md += rl.export_md()
+
+    md += """<HR>
     
-    md += '<HR>\n(This document is autogenerated)\n'
+Sources:
+- [Policy Gradient Algorithms](https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html)
+- [Key Papers in Deep RL](https://spinningup.openai.com/en/latest/spinningup/keypapers.html)
+
+"""
+        
+    md += '\n(This document is autogenerated)\n'
     return md
 
 
