@@ -197,12 +197,12 @@ class NodeBase(ABC):
         attrs['fontname'] = FONT_NAME
         attrs['fontsize'] = str(NODE_FONT_SIZE)
         if 'shape' not in attrs:
-            attrs['shape'] = 'record'
+            attrs['shape'] = 'box'
         if 'style' not in attrs:
             attrs['style'] = 'rounded,bold,filled'
         if 'fillcolor' not in attrs:
             attrs['fillcolor'] = '#dae8fc'
-        graph.node(self.graph_name, label=f'{{{self.title}}}', **attrs)
+        graph.node(self.graph_name, label=f'{self.title}', **attrs)
 
     def _export_connections(self, graph, cluster):
         for edge in self.out_edges:
@@ -386,6 +386,14 @@ model_based = Group('Model Based',
                     rl, style='filled', fillcolor='#f7fdff')
 root_model_based = Node('Model Based', '', model_based, output_md=False, fillcolor='#ffe6cc')
 rl.connect(root_model_based)
+
+meta_rl = Group('Meta-RL',
+                'In meta reinforcement learning, the agent is trained over distribution of tasks, and with the knowledge it tries to solve new unseen but related task.',
+                rl, style='filled', fillcolor='#f7fdff',
+                links=[('Meta Reinforcement Learning', 'https://lilianweng.github.io/lil-log/2019/06/23/meta-reinforcement-learning.html')
+                       ])
+root_meta_rl = Node('Meta-RL', '', meta_rl, output_md=False, fillcolor='#ffe6cc')
+rl.connect(root_meta_rl)
 
 value_gradient = Group('Value Gradient',
                     'The algorithm is learning the value function of each state or state-action. The policy is implicit, usually by just selecting the best value',
@@ -866,6 +874,52 @@ simple = Node('SimPLe',
              url='https://arxiv.org/abs/1903.00374')
 root_model_based.connect(simple, style=ROOT_EDGE)
 
+#
+# META-RL
+#
+dmrl = Node('DMRL',
+            'Deep Meta RL. (from the abstract) In recent years deep reinforcement learning (RL) systems have attained superhuman performance in a number of challenging task domains. However, a major limitation of such applications is their demand for massive amounts of training data. A critical present objective is thus to develop deep RL methods that can adapt rapidly to new tasks. In the present work we introduce a novel approach to this challenge, which we refer to as deep meta-reinforcement learning. Previous work has shown that recurrent networks can support meta-learning in a fully supervised context. We extend this approach to the RL setting. What emerges is a system that is trained using one RL algorithm, but whose recurrent dynamics implement a second, quite separate RL procedure. This second, learned RL algorithm can differ from the original one in arbitrary ways. Importantly, because it is learned, it is configured to exploit structure in the training domain. We unpack these points in a series of seven proof-of-concept experiments, each of which examines a key aspect of deep meta-RL. We consider prospects for extending and scaling up the approach, and also point out some potentially important implications for neuroscience. ',
+             meta_rl,
+             flags=[],
+             authors='Jane X Wang, Zeb Kurth-Nelson, Dhruva Tirumala, Hubert Soyer, Joel Z Leibo, Remi Munos, Charles Blundell, Dharshan Kumaran, Matt Botvinick',
+             year=2016,
+             url='https://arxiv.org/abs/1611.05763',
+             links=[])
+root_meta_rl.connect(dmrl, style=ROOT_EDGE)
+
+rl2 = Node('RL^2',
+            '(from the abstract) Deep reinforcement learning (deep RL) has been successful in learning sophisticated behaviors automatically; however, the learning process requires a huge number of trials. In contrast, animals can learn new tasks in just a few trials, benefiting from their prior knowledge about the world. This paper seeks to bridge this gap. Rather than designing a "fast" reinforcement learning algorithm, we propose to represent it as a recurrent neural network (RNN) and learn it from data. In our proposed method, RL<sup>2</sup>, the algorithm is encoded in the weights of the RNN, which are learned slowly through a general-purpose ("slow") RL algorithm. The RNN receives all information a typical RL algorithm would receive, including observations, actions, rewards, and termination flags; and it retains its state across episodes in a given Markov Decision Process (MDP). The activations of the RNN store the state of the "fast" RL algorithm on the current (previously unseen) MDP. We evaluate RL<sup>2</sup> experimentally on both small-scale and large-scale problems. On the small-scale side, we train it to solve randomly generated multi-arm bandit problems and finite MDPs. After RL<sup>2</sup> is trained, its performance on new MDPs is close to human-designed algorithms with optimality guarantees. On the large-scale side, we test RL<sup>2</sup> on a vision-based navigation task and show that it scales up to high-dimensional problems.',
+             meta_rl,
+             flags=[],
+             authors='Yan Duan, John Schulman, Xi Chen, Peter L. Bartlett, Ilya Sutskever, Pieter Abbeel',
+             year=2016,
+             url='https://arxiv.org/abs/1611.02779',
+             links=[])
+root_meta_rl.connect(rl2, style=ROOT_EDGE)
+
+maml = Node('MAML',
+            '(from the abstract) We propose an algorithm for meta-learning that is model-agnostic, in the sense that it is compatible with any model trained with gradient descent and applicable to a variety of different learning problems, including classification, regression, and reinforcement learning. The goal of meta-learning is to train a model on a variety of learning tasks, such that it can solve new learning tasks using only a small number of training samples. In our approach, the parameters of the model are explicitly trained such that a small number of gradient steps with a small amount of training data from a new task will produce good generalization performance on that task. In effect, our method trains the model to be easy to fine-tune. We demonstrate that this approach leads to state-of-the-art performance on two few-shot image classification benchmarks, produces good results on few-shot regression, and accelerates fine-tuning for policy gradient reinforcement learning with neural network policies.',
+             meta_rl,
+             flags=[],
+             authors='Chelsea Finn, Pieter Abbeel, Sergey Levine',
+             year=2017,
+             url='https://arxiv.org/abs/1703.03400',
+             links=[('Learning to Learn', 'https://bair.berkeley.edu/blog/2017/07/18/learning-to-learn/'),
+                    ('(GitHub) Code for MAML', 'https://github.com/cbfinn/maml')],
+             )
+root_meta_rl.connect(maml, style=ROOT_EDGE)
+
+snail = Node('SNAIL',
+            '(from the abstract) Deep neural networks excel in regimes with large amounts of data, but tend to struggle when data is scarce or when they need to adapt quickly to changes in the task. In response, recent work in meta-learning proposes training a meta-learner on a distribution of similar tasks, in the hopes of generalization to novel but related tasks by learning a high-level strategy that captures the essence of the problem it is asked to solve. However, many recent meta-learning approaches are extensively hand-designed, either using architectures specialized to a particular application, or hard-coding algorithmic components that constrain how the meta-learner solves the task. We propose a class of simple and generic meta-learner architectures that use a novel combination of temporal convolutions and soft attention; the former to aggregate information from past experience and the latter to pinpoint specific pieces of information. In the most extensive set of meta-learning experiments to date, we evaluate the resulting Simple Neural AttentIve Learner (or SNAIL) on several heavily-benchmarked tasks. On all tasks, in both supervised and reinforcement learning, SNAIL attains state-of-the-art performance by significant margins.',
+             meta_rl,
+             flags=[],
+             authors='Nikhil Mishra, Mostafa Rohaninejad, Xi Chen, Pieter Abbeel',
+             year=2017,
+             url='https://arxiv.org/abs/1707.03141',
+             links=[('A Simple Neural Attentive Meta-Learner — SNAIL', 'https://medium.com/towards-artificial-intelligence/a-simple-neural-attentive-meta-learner-snail-1e6b1d487623')],
+             )
+root_meta_rl.connect(snail, style=ROOT_EDGE)
+
 
 def generate_graph(output, format):
     from graphviz import Digraph, Source
@@ -911,6 +965,7 @@ def generate_graph(output, format):
         rank_cluster.attr(rank='same')
         rank_cluster.node(root_model_free.graph_name)
         rank_cluster.node(root_model_based.graph_name)
+        rank_cluster.node(root_meta_rl.graph_name)
 
     with graph.subgraph() as rank_cluster:
         rank_cluster.attr(rank='same')
@@ -943,7 +998,7 @@ This is a loose taxonomy of reinforcement learning algorithms. I'm by no means e
 
     md += """## <A name="taxonomy"></a>Taxonomy
 
-Solid line indicates some progression from one idea to another. Dashed line indicates a loose connection.
+Below is the taxonomy of reinforcement learning algorithms. Solid line indicates some progression from one idea to another. Dashed line indicates a loose connection. On the left you can see the timeline of the publication year of the algorithms.
 
 ![RL Taxonomy](rl-taxonomy.gv.svg "RL Taxonomy")\n\n"""
 

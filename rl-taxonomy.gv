@@ -23,7 +23,7 @@ digraph {
 		2017 -> 2018 [color=darkblue]
 		2018 -> 2019 [color=darkblue]
 	}
-	"Reinforcement Learning" [label="{Reinforcement Learning}" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+	"Reinforcement Learning" [label="Reinforcement Learning" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 	"Model Free" -> "Value Gradient" [fontcolor=black fontname="sans-serif" fontsize=10]
 	"Model Free" -> "Policy Gradient/Actor-Critic" [fontcolor=black fontname="sans-serif" fontsize=10]
 	DQN -> DDPG [label="replay buffer" color=darkgray constraint=false fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
@@ -36,20 +36,20 @@ digraph {
 		fontname="sans-serif"
 		fontsize=16
 		fillcolor="#f7fdff" style=filled
-		"Model Free" [label="{Model Free}" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled" weight=10]
+		"Model Free" [label="Model Free" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" weight=10]
 		subgraph "clusterValue Gradient" {
 			label="Value Gradient"
 			color=black
 			fontname="sans-serif"
 			fontsize=16
 			fillcolor="#f1f7fe" style="rounded,dashed,filled"
-			"Value Gradient" [label="{Value Gradient}" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+			"Value Gradient" [label="Value Gradient" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			"Value Gradient" -> SARSA [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 			"Value Gradient" -> "Q-learning" [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
-			SARSA [label="{SARSA}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-			"Q-learning" [label="{Q-learning}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+			SARSA [label=SARSA fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			"Q-learning" [label="Q-learning" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			"Q-learning" -> DQN [fontcolor=black fontname="sans-serif" fontsize=10]
-			DQN [label="{DQN}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+			DQN [label=DQN fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			DQN -> DRQN [fontcolor=black fontname="sans-serif" fontsize=10]
 			DQN -> DDQN [fontcolor=black fontname="sans-serif" fontsize=10]
 			DQN -> PER [fontcolor=black fontname="sans-serif" fontsize=10]
@@ -57,20 +57,20 @@ digraph {
 			DQN -> C51 [fontcolor=black fontname="sans-serif" fontsize=10]
 			DQN -> "DQN+HER" [fontcolor=black fontname="sans-serif" fontsize=10]
 			DQN -> IQN [fontcolor=black fontname="sans-serif" fontsize=10]
-			DRQN [label="{DRQN}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-			DDQN [label="{DDQN}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+			DRQN [label=DRQN fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			DDQN [label=DDQN fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			DDQN -> "Duelling-DQN" [fontcolor=black fontname="sans-serif" fontsize=10]
 			DDQN -> RAINBOW [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
-			PER [label="{PER}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+			PER [label=PER fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			PER -> RAINBOW [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
-			"Duelling-DQN" [label="{Duelling-DQN}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+			"Duelling-DQN" [label="Duelling-DQN" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			"Duelling-DQN" -> RAINBOW [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
-			"QR-DQN" [label="{QR-DQN}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+			"QR-DQN" [label="QR-DQN" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			"QR-DQN" -> RAINBOW [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
-			C51 [label="{C51}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-			RAINBOW [label="{RAINBOW}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-			"DQN+HER" [label="{DQN+HER}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-			IQN [label="{IQN}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+			C51 [label=C51 fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			RAINBOW [label=RAINBOW fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			"DQN+HER" [label="DQN+HER" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			IQN [label=IQN fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 		}
 		subgraph "clusterPolicy Gradient/Actor-Critic" {
 			label="Policy Gradient/Actor-Critic"
@@ -78,7 +78,7 @@ digraph {
 			fontname="sans-serif"
 			fontsize=16
 			fillcolor="#f1f7fe" style="rounded,dashed,filled"
-			"Policy Gradient/Actor-Critic" [label="{Policy Gradient/Actor-Critic}" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+			"Policy Gradient/Actor-Critic" [label="Policy Gradient/Actor-Critic" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			"Policy Gradient/Actor-Critic" -> REINFORCE [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 			"Policy Gradient/Actor-Critic" -> DPG [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 			"Policy Gradient/Actor-Critic" -> TRPO [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
@@ -88,38 +88,38 @@ digraph {
 			"Policy Gradient/Actor-Critic" -> SVPG [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 			"Policy Gradient/Actor-Critic" -> SAC [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 			"Policy Gradient/Actor-Critic" -> IMPALA [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
-			REINFORCE [label="{REINFORCE}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-			DPG [label="{DPG}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+			REINFORCE [label=REINFORCE fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			DPG [label=DPG fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			DPG -> DDPG [fontcolor=black fontname="sans-serif" fontsize=10]
-			DDPG [label="{DDPG}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+			DDPG [label=DDPG fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			DDPG -> "DDPG+HER" [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
 			DDPG -> MADDPG [fontcolor=black fontname="sans-serif" fontsize=10]
 			DDPG -> D4PG [fontcolor=black fontname="sans-serif" fontsize=10]
 			DDPG -> TD3 [fontcolor=black fontname="sans-serif" fontsize=10]
-			TRPO [label="{TRPO}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+			TRPO [label=TRPO fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			TRPO -> GAE [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
 			TRPO -> ACER [label="TRPO technique" color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
 			TRPO -> PPO [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
-			GAE [label="{GAE}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-			A3C [label="{A3C}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+			GAE [label=GAE fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			A3C [label=A3C fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			A3C -> A2C [fontcolor=black fontname="sans-serif" fontsize=10]
 			A3C -> ACER [fontcolor=black fontname="sans-serif" fontsize=10]
-			"DDPG+HER" [label="{DDPG+HER}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-			MADDPG [label="{MADDPG}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-			A2C [label="{A2C}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+			"DDPG+HER" [label="DDPG+HER" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			MADDPG [label=MADDPG fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			A2C [label=A2C fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			A2C -> ACER [fontcolor=black fontname="sans-serif" fontsize=10 style=invis]
 			A2C -> ACKTR [fontcolor=black fontname="sans-serif" fontsize=10 style=invis]
 			A2C -> SVPG [fontcolor=black fontname="sans-serif" fontsize=10 style=invis]
 			A2C -> IMPALA [fontcolor=black fontname="sans-serif" fontsize=10 style=invis]
-			ACER [label="{ACER}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-			ACKTR [label="{ACKTR}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-			PPO [label="{PPO}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+			ACER [label=ACER fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			ACKTR [label=ACKTR fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			PPO [label=PPO fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 			PPO -> SAC [fontcolor=black fontname="sans-serif" fontsize=10 style=invis]
-			SVPG [label="{SVPG}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-			D4PG [label="{D4PG}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-			SAC [label="{SAC}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-			TD3 [label="{TD3}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-			IMPALA [label="{IMPALA}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+			SVPG [label=SVPG fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			D4PG [label=D4PG fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			SAC [label=SAC fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			TD3 [label=TD3 fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			IMPALA [label=IMPALA fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 		}
 	}
 	subgraph "clusterModel Based" {
@@ -128,7 +128,7 @@ digraph {
 		fontname="sans-serif"
 		fontsize=16
 		fillcolor="#f7fdff" style=filled
-		"Model Based" [label="{Model Based}" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+		"Model Based" [label="Model Based" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 		"Model Based" -> I2A [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Model Based" -> MBMF [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Model Based" -> Exit [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
@@ -139,19 +139,36 @@ digraph {
 		"Model Based" -> "MB-MPO" [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Model Based" -> "World Models" [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Model Based" -> SimPLe [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
-		I2A [label="{I2A}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-		MBMF [label="{MBMF}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-		Exit [label="{Exit}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-		AlphaZero [label="{AlphaZero}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-		MVE [label="{MVE}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-		STEVE [label="{STEVE}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-		"ME-TRPO" [label="{ME-TRPO}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-		"MB-MPO" [label="{MB-MPO}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-		"World Models" [label="{World Models}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
-		SimPLe [label="{SimPLe}" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=record style="rounded,bold,filled"]
+		I2A [label=I2A fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		MBMF [label=MBMF fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		Exit [label=Exit fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		AlphaZero [label=AlphaZero fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		MVE [label=MVE fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		STEVE [label=STEVE fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		"ME-TRPO" [label="ME-TRPO" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		"MB-MPO" [label="MB-MPO" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		"World Models" [label="World Models" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		SimPLe [label=SimPLe fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+	}
+	subgraph "clusterMeta-RL" {
+		label="Meta-RL"
+		color=black
+		fontname="sans-serif"
+		fontsize=16
+		fillcolor="#f7fdff" style=filled
+		"Meta-RL" [label="Meta-RL" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		"Meta-RL" -> DMRL [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
+		"Meta-RL" -> "RL^2" [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
+		"Meta-RL" -> MAML [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
+		"Meta-RL" -> SNAIL [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
+		DMRL [label=DMRL fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		"RL^2" [label="RL^2" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		MAML [label=MAML fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		SNAIL [label=SNAIL fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 	}
 	"Reinforcement Learning" -> "Model Free" [fontcolor=black fontname="sans-serif" fontsize=10]
 	"Reinforcement Learning" -> "Model Based" [fontcolor=black fontname="sans-serif" fontsize=10]
+	"Reinforcement Learning" -> "Meta-RL" [fontcolor=black fontname="sans-serif" fontsize=10]
 	{
 		rank=same
 		1989
@@ -192,6 +209,8 @@ digraph {
 		2016
 		"Duelling-DQN"
 		A3C
+		DMRL
+		"RL^2"
 	}
 	{
 		rank=same
@@ -211,6 +230,8 @@ digraph {
 		MBMF
 		Exit
 		AlphaZero
+		MAML
+		SNAIL
 	}
 	{
 		rank=same
@@ -235,6 +256,7 @@ digraph {
 		rank=same
 		"Model Free"
 		"Model Based"
+		"Meta-RL"
 	}
 	{
 		rank=same
