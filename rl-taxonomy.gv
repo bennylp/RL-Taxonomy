@@ -1,83 +1,71 @@
 digraph {
 	compound=true
-	rankdir=LR
-	rank=same
-	"Reinforcement Learning" [label="{Reinforcement Learning}" fontname=arial fontsize=12 shape=record style=rounded]
-	DQN -> DDPG [label="replay buffer" color=darkgray constraint=false fontcolor=darkgray fontname=arial fontsize=10 style=dashed]
-	DQN -> ACER [label="replay buffer, workers" color=darkgray fontcolor=darkgray fontname=arial fontsize=10 style=dashed]
-	DDQN -> TD3 [label="double Q-learning" color=darkgray fontcolor=darkgray fontname=arial fontsize=10 style=dashed]
+	rankdir=TB
+	newrank=true
+	subgraph timeline {
+		1989 [fontcolor=blue fontname="sans-serif" fontsize=10 group=timeline shape=plaintext]
+		1992 [fontcolor=blue fontname="sans-serif" fontsize=10 group=timeline shape=plaintext]
+		1994 [fontcolor=blue fontname="sans-serif" fontsize=10 group=timeline shape=plaintext]
+		2013 [fontcolor=blue fontname="sans-serif" fontsize=10 group=timeline shape=plaintext]
+		2014 [fontcolor=blue fontname="sans-serif" fontsize=10 group=timeline shape=plaintext]
+		2015 [fontcolor=blue fontname="sans-serif" fontsize=10 group=timeline shape=plaintext]
+		2016 [fontcolor=blue fontname="sans-serif" fontsize=10 group=timeline shape=plaintext]
+		2017 [fontcolor=blue fontname="sans-serif" fontsize=10 group=timeline shape=plaintext]
+		2018 [fontcolor=blue fontname="sans-serif" fontsize=10 group=timeline shape=plaintext]
+		1989 -> 1992 [color=blue]
+		1992 -> 1994 [color=blue]
+		1994 -> 2013 [color=blue]
+		2013 -> 2014 [color=blue]
+		2014 -> 2015 [color=blue]
+		2015 -> 2016 [color=blue]
+		2016 -> 2017 [color=blue]
+		2017 -> 2018 [color=blue]
+	}
+	"Reinforcement Learning" [label="{Reinforcement Learning}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+	DQN -> DDPG [label="replay buffer" color=darkgray constraint=false fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
+	DQN -> ACER [label="replay buffer, workers" color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
+	DDQN -> TD3 [label="double Q-learning" color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
 	subgraph "clusterValue Gradient" {
 		label="Value Gradient"
 		color=black
 		style=dashed
-		fontname=arial
+		fontname="sans-serif"
 		fontsize=16
-		vg [label="{vg}" fontname=arial fontsize=12 shape=record style=invis]
+		vg [label="{vg}" fontname="sans-serif" fontsize=12 shape=record style=invis]
 		vg -> SARSA [style=invis]
 		vg -> "Q-learning" [style=invis]
 		vg -> C51 [style=invis]
+		SARSA [label="{SARSA}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+		"Q-learning" [label="{Q-learning}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
 		"Q-learning" -> DQN
-		{
-			rank=same
-			"Value Gradient1989" [label=1989 fontcolor=darkgray fontname=arial fontsize=10 group="timelineValue Gradient" shape=plaintext]
-			"Q-learning" [label="{Q-learning}" fontname=arial fontsize=12 shape=record style=rounded]
-		}
-		{
-			rank=same
-			"Value Gradient1994" [label=1994 fontcolor=darkgray fontname=arial fontsize=10 group="timelineValue Gradient" shape=plaintext]
-			SARSA [label="{SARSA}" fontname=arial fontsize=12 shape=record style=rounded]
-		}
+		DQN [label="{DQN}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
 		DQN -> DRQN
 		DQN -> DDQN
 		DQN -> PER
 		DQN -> "QR-DQN"
 		DQN -> "DQN+HER"
-		{
-			rank=same
-			"Value Gradient2013" [label=2013 fontcolor=darkgray fontname=arial fontsize=10 group="timelineValue Gradient" shape=plaintext]
-			DQN [label="{DQN}" fontname=arial fontsize=12 shape=record style=rounded]
-		}
+		DRQN [label="{DRQN}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+		DDQN [label="{DDQN}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
 		DDQN -> "Duelling-DQN"
-		DDQN -> RAINBOW [color=darkgray fontcolor=darkgray fontname=arial fontsize=10 style=dashed]
-		PER -> RAINBOW [color=darkgray fontcolor=darkgray fontname=arial fontsize=10 style=dashed]
-		{
-			rank=same
-			"Value Gradient2015" [label=2015 fontcolor=darkgray fontname=arial fontsize=10 group="timelineValue Gradient" shape=plaintext]
-			DRQN [label="{DRQN}" fontname=arial fontsize=12 shape=record style=rounded]
-			DDQN [label="{DDQN}" fontname=arial fontsize=12 shape=record style=rounded]
-			PER [label="{PER}" fontname=arial fontsize=12 shape=record style=rounded]
-		}
-		"Duelling-DQN" -> RAINBOW [color=darkgray fontcolor=darkgray fontname=arial fontsize=10 style=dashed]
-		{
-			rank=same
-			"Value Gradient2016" [label=2016 fontcolor=darkgray fontname=arial fontsize=10 group="timelineValue Gradient" shape=plaintext]
-			"Duelling-DQN" [label="{Duelling-DQN}" fontname=arial fontsize=12 shape=record style=rounded]
-		}
-		"QR-DQN" -> RAINBOW [color=darkgray fontcolor=darkgray fontname=arial fontsize=10 style=dashed]
-		{
-			rank=same
-			"Value Gradient2017" [label=2017 fontcolor=darkgray fontname=arial fontsize=10 group="timelineValue Gradient" shape=plaintext]
-			"QR-DQN" [label="{QR-DQN}" fontname=arial fontsize=12 shape=record style=rounded]
-			C51 [label="{C51}" fontname=arial fontsize=12 shape=record style=rounded]
-			RAINBOW [label="{RAINBOW}" fontname=arial fontsize=12 shape=record style=rounded]
-			"DQN+HER" [label="{DQN+HER}" fontname=arial fontsize=12 shape=record style=rounded]
-		}
-		subgraph "clusterTimelineValue Gradient" {
-			"Value Gradient1989" -> "Value Gradient1994" [color=darkgray]
-			"Value Gradient1994" -> "Value Gradient2013" [color=darkgray]
-			"Value Gradient2013" -> "Value Gradient2015" [color=darkgray]
-			"Value Gradient2015" -> "Value Gradient2016" [color=darkgray]
-			"Value Gradient2016" -> "Value Gradient2017" [color=darkgray]
-		}
+		DDQN -> RAINBOW [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
+		PER [label="{PER}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+		PER -> RAINBOW [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
+		"Duelling-DQN" [label="{Duelling-DQN}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+		"Duelling-DQN" -> RAINBOW [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
+		"QR-DQN" [label="{QR-DQN}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+		"QR-DQN" -> RAINBOW [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
+		C51 [label="{C51}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+		RAINBOW [label="{RAINBOW}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+		"DQN+HER" [label="{DQN+HER}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
 	}
-	A3C -> RAINBOW [color=darkgray fontcolor=darkgray fontname=arial fontsize=10 style=dashed]
+	A3C -> RAINBOW [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
 	subgraph "clusterPolicy Gradient/Actor-Critic" {
 		label="Policy Gradient/Actor-Critic"
 		color=black
 		style=dashed
-		fontname=arial
+		fontname="sans-serif"
 		fontsize=16
-		pg [label="{pg}" fontname=arial fontsize=12 shape=record style=invis]
+		pg [label="{pg}" fontname="sans-serif" fontsize=12 shape=record style=invis]
 		pg -> REINFORCE [style=invis]
 		pg -> DPG [style=invis]
 		pg -> TRPO [style=invis]
@@ -87,70 +75,108 @@ digraph {
 		pg -> SVPG [style=invis]
 		pg -> SAC [style=invis]
 		pg -> IMPALA [style=invis]
-		{
-			rank=same
-			"Policy Gradient/Actor-Critic1992" [label=1992 fontcolor=darkgray fontname=arial fontsize=10 group="timelinePolicy Gradient/Actor-Critic" shape=plaintext]
-			REINFORCE [label="{REINFORCE}" fontname=arial fontsize=12 shape=record style=rounded]
-		}
+		REINFORCE [label="{REINFORCE}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+		DPG [label="{DPG}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
 		DPG -> DDPG
-		{
-			rank=same
-			"Policy Gradient/Actor-Critic2014" [label=2014 fontcolor=darkgray fontname=arial fontsize=10 group="timelinePolicy Gradient/Actor-Critic" shape=plaintext]
-			DPG [label="{DPG}" fontname=arial fontsize=12 shape=record style=rounded]
-		}
-		DDPG -> "DDPG+HER" [color=darkgray fontcolor=darkgray fontname=arial fontsize=10 style=dashed]
+		DDPG [label="{DDPG}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+		DDPG -> "DDPG+HER" [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
 		DDPG -> MADDPG
 		DDPG -> D4PG
 		DDPG -> TD3
-		TRPO -> GAE [color=darkgray fontcolor=darkgray fontname=arial fontsize=10 style=dashed]
-		TRPO -> ACER [label="TRPO technique" color=darkgray fontcolor=darkgray fontname=arial fontsize=10 style=dashed]
-		TRPO -> PPO [color=darkgray fontcolor=darkgray fontname=arial fontsize=10 style=dashed]
-		{
-			rank=same
-			"Policy Gradient/Actor-Critic2015" [label=2015 fontcolor=darkgray fontname=arial fontsize=10 group="timelinePolicy Gradient/Actor-Critic" shape=plaintext]
-			DDPG [label="{DDPG}" fontname=arial fontsize=12 shape=record style=rounded]
-			TRPO [label="{TRPO}" fontname=arial fontsize=12 shape=record style=rounded]
-			GAE [label="{GAE}" fontname=arial fontsize=12 shape=record style=rounded]
-		}
+		TRPO [label="{TRPO}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+		TRPO -> GAE [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
+		TRPO -> ACER [label="TRPO technique" color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
+		TRPO -> PPO [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
+		GAE [label="{GAE}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+		A3C [label="{A3C}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
 		A3C -> A2C
 		A3C -> ACER
-		{
-			rank=same
-			"Policy Gradient/Actor-Critic2016" [label=2016 fontcolor=darkgray fontname=arial fontsize=10 group="timelinePolicy Gradient/Actor-Critic" shape=plaintext]
-			A3C [label="{A3C}" fontname=arial fontsize=12 shape=record style=rounded]
-		}
+		"DDPG+HER" [label="{DDPG+HER}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+		MADDPG [label="{MADDPG}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+		A2C [label="{A2C}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
 		A2C -> ACER [style=invis]
 		A2C -> ACKTR [style=invis]
 		A2C -> SVPG [style=invis]
 		A2C -> IMPALA [style=invis]
+		ACER [label="{ACER}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+		ACKTR [label="{ACKTR}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+		PPO [label="{PPO}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
 		PPO -> SAC [style=invis]
-		{
-			rank=same
-			"Policy Gradient/Actor-Critic2017" [label=2017 fontcolor=darkgray fontname=arial fontsize=10 group="timelinePolicy Gradient/Actor-Critic" shape=plaintext]
-			"DDPG+HER" [label="{DDPG+HER}" fontname=arial fontsize=12 shape=record style=rounded]
-			MADDPG [label="{MADDPG}" fontname=arial fontsize=12 shape=record style=rounded]
-			A2C [label="{A2C}" fontname=arial fontsize=12 shape=record style=rounded]
-			ACER [label="{ACER}" fontname=arial fontsize=12 shape=record style=rounded]
-			ACKTR [label="{ACKTR}" fontname=arial fontsize=12 shape=record style=rounded]
-			PPO [label="{PPO}" fontname=arial fontsize=12 shape=record style=rounded]
-			SVPG [label="{SVPG}" fontname=arial fontsize=12 shape=record style=rounded]
-		}
-		{
-			rank=same
-			"Policy Gradient/Actor-Critic2018" [label=2018 fontcolor=darkgray fontname=arial fontsize=10 group="timelinePolicy Gradient/Actor-Critic" shape=plaintext]
-			D4PG [label="{D4PG}" fontname=arial fontsize=12 shape=record style=rounded]
-			SAC [label="{SAC}" fontname=arial fontsize=12 shape=record style=rounded]
-			TD3 [label="{TD3}" fontname=arial fontsize=12 shape=record style=rounded]
-			IMPALA [label="{IMPALA}" fontname=arial fontsize=12 shape=record style=rounded]
-		}
-		subgraph "clusterTimelinePolicy Gradient/Actor-Critic" {
-			"Policy Gradient/Actor-Critic1992" -> "Policy Gradient/Actor-Critic2014" [color=darkgray]
-			"Policy Gradient/Actor-Critic2014" -> "Policy Gradient/Actor-Critic2015" [color=darkgray]
-			"Policy Gradient/Actor-Critic2015" -> "Policy Gradient/Actor-Critic2016" [color=darkgray]
-			"Policy Gradient/Actor-Critic2016" -> "Policy Gradient/Actor-Critic2017" [color=darkgray]
-			"Policy Gradient/Actor-Critic2017" -> "Policy Gradient/Actor-Critic2018" [color=darkgray]
-		}
+		SVPG [label="{SVPG}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+		D4PG [label="{D4PG}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+		SAC [label="{SAC}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+		TD3 [label="{TD3}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
+		IMPALA [label="{IMPALA}" fontname="sans-serif" fontsize=12 shape=record style=rounded]
 	}
 	"Reinforcement Learning" -> vg [lhead="clusterValue Gradient"]
 	"Reinforcement Learning" -> pg [lhead="clusterPolicy Gradient/Actor-Critic"]
+	{
+		rank=same
+		1989
+		"Q-learning"
+	}
+	{
+		rank=same
+		1992
+		REINFORCE
+	}
+	{
+		rank=same
+		1994
+		SARSA
+	}
+	{
+		rank=same
+		2013
+		DQN
+	}
+	{
+		rank=same
+		2014
+		DPG
+	}
+	{
+		rank=same
+		2015
+		DRQN
+		DDQN
+		PER
+		DDPG
+		TRPO
+		GAE
+	}
+	{
+		rank=same
+		2016
+		"Duelling-DQN"
+		A3C
+	}
+	{
+		rank=same
+		2017
+		"QR-DQN"
+		C51
+		RAINBOW
+		"DQN+HER"
+		"DDPG+HER"
+		MADDPG
+		A2C
+		ACER
+		ACKTR
+		PPO
+		SVPG
+	}
+	{
+		rank=same
+		2018
+		D4PG
+		SAC
+		TD3
+		IMPALA
+	}
+	{
+		rank=same
+		vg
+		pg
+	}
 }

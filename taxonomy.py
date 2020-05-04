@@ -8,7 +8,7 @@ import sys
 
 # "Orientation" of the graph: left-right or top-bottom.
 # If top-bottom, the flags will be shown
-RANKDIR = "LR"  # LR or TB
+RANKDIR = "TB"  # LR or TB
 
 # Edge style for weak connection between nodes
 WEAK_LINK = 'dashed'
@@ -17,9 +17,9 @@ WEAK_LINK = 'dashed'
 # This is the style of the edge for such connection. 
 INVIS = "invis"
 
-USE_TIMELINE = True
-FONT_NAME = "arial"
+FONT_NAME = "sans-serif"
 NODE_FONT_SIZE = 12
+TIMELINE_COLOR = "blue"
 TIMELINE_FONT_SIZE = 10
 EDGE_FONT_COLOR = "darkgray"
 EDGE_FONT_SIZE = 10
@@ -185,7 +185,7 @@ class NodeBase(ABC):
     def _export_node(self, graph):
         if self.graph_type != "node":
             return
-        if RANKDIR=="LR":
+        if True or RANKDIR=="LR":
             # For left to right rank
             attrs = copy.copy(self.attrs)
             attrs['fontname'] = FONT_NAME
@@ -194,11 +194,7 @@ class NodeBase(ABC):
                 attrs['shape']='record'
             if 'style' not in attrs:
                 attrs['style']='rounded'
-            if not USE_TIMELINE:
-                year = f'|{self.year}' if self.year else ''
-            else:
-                year = ''
-            graph.node(self.graph_name, label=f'{{{self.title}{year}}}', **attrs)
+            graph.node(self.graph_name, label=f'{{{self.title}}}', **attrs)
         else:
             # For top down rank
             fields = []
@@ -286,13 +282,11 @@ class Group(NodeBase):
     """
     
     def __init__(self, title, description, group, flags=[], authors=None, year=None, url=None,
-                 videos=[], links=[], graph_type="cluster", timeline=False, output_md=True, same_rank=False, 
+                 videos=[], links=[], graph_type="cluster", output_md=True,  
                  **attrs):
         super().__init__(title, description, group, flags=flags, authors=authors, year=year, url=url,
                  videos=videos, links=links, graph_type=graph_type, output_md=output_md, **attrs)
         self.nodes = []
-        self.timeline = timeline
-        self.same_rank = same_rank
         
     def collect_nodes(self):
         nodes = [self]
@@ -319,41 +313,6 @@ class Group(NodeBase):
 
         self._export_connections(graph, cluster)
     
-    def _export_graph_with_timeline(self, graph, cluster):
-        nodes = copy.copy(self.nodes)
-        nodes = sorted(nodes, key=lambda n: n.graph_rank)
-        
-        ranks = OrderedDict()
-        for node in nodes:
-            lst = ranks.get(node.graph_rank, [])
-            lst.append(node)
-            ranks[node.graph_rank] = lst
-
-        # The nodes
-        for rank, lst in ranks.items():
-            if not rank:
-                for node in lst:
-                    node.export_graph(graph, cluster)
-            else:
-                with cluster.subgraph() as rank_graph:
-                    rank_graph.attr(rank='same')
-                    if rank > 1900:
-                        rank_graph.node(f'{self.title}{rank}', label=str(rank), fontcolor='darkgray',
-                                        fontname=FONT_NAME, fontsize=str(TIMELINE_FONT_SIZE), 
-                                        shape='plaintext', group=f'timeline{self.title}')
-
-                    for node in lst:
-                        node._export_node(rank_graph)
-                        node._export_connections(graph, cluster)
-
-        # The timeline graph
-        with cluster.subgraph(name='clusterTimeline' + self.title) as timeline_graph:
-            years = [k for k in ranks.keys() if k > 1900]
-            for iy in range(len(years)-1):
-                timeline_graph.edge(f'{self.title}{years[iy]}', f'{self.title}{years[iy+1]}',
-                                    color='darkgray')
-
-            
     def export_graph(self, graph, cluster):
         if self.graph_type == "cluster":
             with cluster.subgraph(name=self.graph_name) as c:
@@ -362,14 +321,9 @@ class Group(NodeBase):
                 c.attr(style='dashed')
                 c.attr(fontname=FONT_NAME)
                 c.attr(fontsize='16')
-                if self.same_rank:
-                    c.attr(rank='same')
-                if self.timeline:
-                    self._export_graph_with_timeline(graph, c)
-                else:
-                    self._export_node(c)
-                    for child in self.nodes:
-                        child.export_graph(graph, c)
+                self._export_node(c)
+                for child in self.nodes:
+                    child.export_graph(graph, c)
         else:
             self._export_node(cluster)
             for child in self.nodes:
@@ -416,7 +370,7 @@ class Node(NodeBase):
 #
 rl = Group('Reinforcement Learning', 
            'Reinforcement learning (RL) is an area of machine learning concerned with how software agents ought to take actions in an environment in order to maximize the notion of cumulative reward [from Wikipedia]',
-           None, graph_type="node", same_rank=True,
+           None, graph_type="node", 
            links=[('A (Long) Peek into Reinforcement Learning', 'https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html'),
                   ('(book) Reinforcement Learning: An Introduction - 2nd Edition - Richard S. Sutton and Andrew G. Barto', 'http://incompleteideas.net/book/the-book.html')
                ],
@@ -430,11 +384,11 @@ rl = Group('Reinforcement Learning',
 
 value_gradient = Group('Value Gradient', 
                     'The algorithm is learning the value function of each state or state-action. The policy is implicit, usually by just selecting the best value',
-                    rl, timeline=USE_TIMELINE)
+                    rl)
 
 policy_gradient = Group('Policy Gradient/Actor-Critic', 
                      'The algorithm works directly to optimize the policy, with or without value function. If the value function is learned in addition to the policy, we would get Actor-Critic algorithm. Most policy gradient algorithms are Actor-Critic. The *Critic* updates value function parameters *w* and depending on the algorithm it could be action-value ***Q(a|s;w)*** or state-value ***V(s;w)***. The *Actor* updates policy parameters θ, in the direction suggested by the critic, ***π(a|s;θ)***. [from [Lilian Weng\' blog](https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html)]', 
-                     rl, timeline=USE_TIMELINE,
+                     rl,
                      links=[
                         ('Policy Gradient Algorithms', 'https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html'),
                         ('RL — Policy Gradient Explained', 'https://medium.com/@jonathan_hui/rl-policy-gradients-explained-9b13b688b146'),
@@ -795,15 +749,15 @@ root_policy_gradient.connect(impala, style=INVIS)
 a2c.connect(impala, style=INVIS) # just to maintain relative timeline order
 
 
-def generate_graph(output, format, use_rank=True):
+def generate_graph(output, format):
     from graphviz import Digraph, Source
 
     graph = Digraph()
     graph.attr(compound='true')
     graph.attr(rankdir=RANKDIR)
-    graph.attr(rank='same') 
-    
-    """
+    graph.attr(newrank='true')  # need this to enable rank=same across clusters
+
+    # Timeline
     ranks = OrderedDict()
     nodes = rl.collect_nodes()
     nodes = sorted(nodes, key=lambda n: n.graph_rank)
@@ -812,16 +766,34 @@ def generate_graph(output, format, use_rank=True):
         lst.append(node)
         ranks[node.graph_rank] = lst
     
-    # The timeline graph
-    with graph.subgraph(name='clusterTimeline') as timeline_graph:
-        #timeline_graph.attr(rankdir=RANKDIR)
-        timeline_graph.attr('node', shape='plaintext')
+    # The global timeline graph
+    with graph.subgraph(name='timeline') as timeline_graph:
         years = [k for k in ranks.keys() if k > 1900]
+        for year in years:
+            timeline_graph.node(f'{year}', fontcolor=TIMELINE_COLOR, shape='plaintext',
+                                fontname=FONT_NAME, fontsize=str(TIMELINE_FONT_SIZE), 
+                                group=f'timeline') # use same group to make straight nodes
         for iy in range(len(years)-1):
-            timeline_graph.edge(str(years[iy]), str(years[iy+1]))
-    """
-    
+            timeline_graph.edge(str(years[iy]), str(years[iy+1]), color=TIMELINE_COLOR)
+
     rl.export_graph(graph, graph)
+    
+    # Create cluster to align nodes in the same year
+    for rank, members in ranks.items():
+        if rank < 1900:
+            continue
+        with graph.subgraph() as rank_cluster:
+            rank_cluster.attr(rank='same')
+            rank_cluster.node(f'{rank}')
+            for node in members:
+                rank_cluster.node(node.graph_name)
+
+    # Align value gradient and policy gradient
+    with graph.subgraph() as rank_cluster:
+        rank_cluster.attr(rank='same')
+        rank_cluster.node(root_value_gradient.graph_name)
+        rank_cluster.node(root_policy_gradient.graph_name)
+            
     graph.render(output, format=format)
 
 
@@ -852,12 +824,6 @@ Solid line indicates some progression from one idea to another. Dashed line indi
 
 ![RL Taxonomy](rl-taxonomy.gv.svg "RL Taxonomy")\n\n"""
 
-    if RANKDIR != 'LR':
-        md += 'Note: labels attached to algorithms are:\n'
-        for f in Flag:
-            md += f'- {f.value} ({f.name})\n'
-        md += '\n'
-
     md += rl.export_md()
 
     md += """<HR>
@@ -873,7 +839,7 @@ Sources:
 
 
 if __name__ == '__main__':
-    generate_graph('rl-taxonomy.gv', 'svg', use_rank=False)
+    generate_graph('rl-taxonomy.gv', 'svg')
     
     with open('README.md', 'w', encoding="utf-8") as f:
         f.write(generate_md())
