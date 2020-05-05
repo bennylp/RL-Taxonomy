@@ -11,7 +11,7 @@ import markdown
 
 
 # "Orientation" of the graph: left-right or top-bottom.
-RANKDIR = "TB"  # LR or TB
+RANKDIR = "LR"  # LR or TB
 
 # Edge style for weak connection between nodes
 WEAK_LINK = 'dashed'
@@ -27,9 +27,13 @@ ROOT_EDGE = "solid"
 ORDER_EDGE = "invis"
 
 FONT_NAME = "sans-serif"
+CLUSTER_FONT_NAME = "arial black"
+NODE_FONT_NAME = "helvetica-bold"
 NODE_FONT_SIZE = 12
-TIMELINE_COLOR = "darkblue"
+TIMELINE_FONT_NAME = NODE_FONT_NAME
+TIMELINE_COLOR = "white"
 TIMELINE_FONT_SIZE = 14
+TIMELINE_FILL_COLOR = '#707070'
 EDGE_FONT_COLOR = 'black'
 EDGE_FONT_SIZE = 10
 
@@ -86,6 +90,15 @@ def url2md(url):
         return f'[{url[0]}]({url[1]})'
 
 
+def md2txt(md):
+    html = markdown.markdown(md)
+    cvt = html2text.HTML2Text()
+    cvt.ignore_emphasis = True
+    cvt.ignore_links = True
+    txt = cvt.handle(html)
+    return txt
+            
+                
 class Edge:
     """
     An Edge is a connection between Nodes/Groups
@@ -134,11 +147,16 @@ class NodeBase(ABC):
         return self.title
 
     @property
+    def md_title(self):
+        """Normalized title for markdown"""
+        return self.title.replace('\\n', ' ')
+    
+    @property
     def name(self):
         """
         Suitable name to be used as HTML anchor etc.
         """
-        return re.sub('[^0-9a-zA-Z]+', '', self.title)
+        return re.sub('[^0-9a-zA-Z]+', '', self.md_title)
 
     @property
     def graph_name(self):
@@ -149,11 +167,29 @@ class NodeBase(ABC):
         return ('cluster' + self.title) if self.graph_type == 'cluster' else self.title
 
     @property
+    def tooltip(self):
+        lines = self.description.split('\n')
+        if lines:
+            return md2txt(lines[0]) + (f'({self.year})' if self.year else '')            
+        else:
+            return ''
+        
+    @property
     def graph_rank(self):
         """
         The rank of this node in the graph/cluster.
         """
-        return self.year or 0
+        if self.year:
+            if self.year >= 1980 and self.year < 2000:
+                return '1980-90s'
+            elif self.year >= 2000 and self.year < 2010:
+                return '2000s'
+            elif self.year >= 2010 and self.year <= 2015:
+                return '2010-2015'
+            else:
+                return str(self.year)
+        else:
+            return ''
 
     def connect(self, other_node, **attrs):
         """
@@ -198,8 +234,9 @@ class NodeBase(ABC):
         if self.graph_type != "node":
             return
         attrs = copy.copy(self.attrs)
-        attrs['fontname'] = FONT_NAME
-        attrs['fontsize'] = str(NODE_FONT_SIZE)
+        attrs['fontname'] = NODE_FONT_NAME
+        if 'fontsize' not in attrs:
+            attrs['fontsize'] = str(NODE_FONT_SIZE)
         if 'shape' not in attrs:
             attrs['shape'] = 'box'
         if 'style' not in attrs:
@@ -207,14 +244,12 @@ class NodeBase(ABC):
         if 'fillcolor' not in attrs:
             attrs['fillcolor'] = '#dae8fc'
         if 'tooltip' not in attrs:
-            lines = self.description.split('\n')
-            if lines:
-                html = markdown.markdown(lines[0])
-                cvt = html2text.HTML2Text()
-                cvt.ignore_emphasis = True
-                cvt.ignore_links = True
-                txt = cvt.handle(html)
-                attrs['tooltip'] = txt
+            attrs['tooltip'] = self.tooltip
+        if True:
+            #url = self.url
+            url = f'https://github.com/bennylp/RL-Taxonomy#{self.name}'
+            url = url.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;")
+            attrs['URL'] = url
         graph.node(self.graph_name, label=f'{self.title}', **attrs)
 
     def _export_connections(self, graph, cluster):
@@ -235,12 +270,12 @@ class NodeBase(ABC):
         if not self.output_md:
             return f' <a name="{self.name}"></a>\n'
         parents = self.get_parents()
-        md = ('#' * min(len(parents) + 2, 5)) + f' <a name="{self.name}"></a>{self.title}\n'
+        md = ('#' * min(len(parents) + 2, 5)) + f' <a name="{self.name}"></a>{self.md_title}\n'
 
         if parents:
             paths = parents + [self]
             md += f'(Path: '
-            md += ' --> '.join([f'[{p.title}](#{p.name})' for p in paths]) + ')\n\n'
+            md += ' --> '.join([f'[{p.md_title}](#{p.name})' for p in paths]) + ')\n\n'
         if self.description:
             md += f'{self.description}\n\n'
         if self.url:
@@ -258,7 +293,7 @@ class NodeBase(ABC):
             for e in self.in_edges:
                 if e.invisible:
                     continue
-                md += f'  - [{e.dest.title}](#{e.dest.name})'
+                md += f'  - [{e.dest.md_title}](#{e.dest.name})'
                 if e.label:
                     md += f' ({e.label})'
                 md += '\n'
@@ -267,7 +302,7 @@ class NodeBase(ABC):
             for e in self.out_edges:
                 if e.invisible:
                     continue
-                md += f'  - [{e.dest.title}](#{e.dest.name})'
+                md += f'  - [{e.dest.md_title}](#{e.dest.name})'
                 if e.label:
                     md += f' ({e.label})'
                 md += '\n'
@@ -324,8 +359,9 @@ class Group(NodeBase):
                 c.attr(color='black')
                 if 'style' not in self.attrs:
                     c.attr(style='dashed')
-                c.attr(fontname=FONT_NAME)
+                c.attr(fontname=CLUSTER_FONT_NAME)
                 c.attr(fontsize='16')
+                #c.attr(tooltip=self.tooltip) # probably not. tooltip for large area is confusing
                 c.attr(**self.attrs)
                 self._export_node(c)
                 for child in self.nodes:
@@ -374,9 +410,9 @@ class Node(NodeBase):
 #
 # The nodes. Note: Within their group, keep nodes relatively sorted by their publication year
 #
-rl = Group('Reinforcement Learning',
+rl = Group('Reinforcement\\nLearning',
            'Reinforcement learning (RL) is an area of machine learning concerned with how software agents ought to take actions in an environment in order to maximize the notion of cumulative reward [from [Wikipedia](https://en.wikipedia.org/wiki/Reinforcement_learning)]',
-           None, graph_type="node", style='rounded,bold,filled', fillcolor='#ffe6cc',
+           None, graph_type="node", shape='plaintext', style='', fontsize='18',  
            links=[('A (Long) Peek into Reinforcement Learning', 'https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html'),
                   ('(book) Reinforcement Learning: An Introduction - 2nd Edition - Richard S. Sutton and Andrew G. Barto', 'http://incompleteideas.net/book/the-book.html')
                ],
@@ -390,13 +426,13 @@ rl = Group('Reinforcement Learning',
 
 model_free = Group('Model Free',
                     'In model free reinforcement learning, the agent directly tries to predict the value/policy without having or trying to model the environment',
-                    rl, style='filled', fillcolor='#f7fdff')
+                    rl, style='rounded,filled', fillcolor='#f7fdff')
 root_model_free = Node('Model Free', model_free.description, model_free, output_md=False, fillcolor='#ffe6cc', weight='10')
 rl.connect(root_model_free)
 
 model_based = Group('Model Based',
                     'In model-based reinforcement learning, the agent uses the experience to try to model the environment, and then uses the model to predict the value/policy',
-                    rl, style='filled', fillcolor='#f7fdff',
+                    rl, style='rounded,filled', fillcolor='#dafdda',
                     links=[('Model-Based Reinforcement Learning: Theory and Practice', 'https://bair.berkeley.edu/blog/2019/12/12/mbpo/'),
                         ])
 root_model_based = Node('Model Based', model_based.description, model_based, output_md=False, fillcolor='#ffe6cc')
@@ -404,19 +440,19 @@ rl.connect(root_model_based)
 
 meta_rl = Group('Meta-RL',
                 'In meta reinforcement learning, the agent is trained over distribution of tasks, and with the knowledge it tries to solve new unseen but related task.',
-                rl, style='filled', fillcolor='#f7fdff',
+                rl, style='rounded,filled', fillcolor='#f5f5da',
                 links=[('Meta Reinforcement Learning', 'https://lilianweng.github.io/lil-log/2019/06/23/meta-reinforcement-learning.html')
                        ])
-root_meta_rl = Node('Meta-RL', meta_rl.description, meta_rl, output_md=False, fillcolor='#ffe6cc')
+root_meta_rl = Node('Meta-RL', meta_rl.description, meta_rl, year=2001, output_md=False, fillcolor='#ffe6cc')
 rl.connect(root_meta_rl)
 
 value_gradient = Group('Value Gradient',
                     'The algorithm is learning the value function of each state or state-action. The policy is implicit, usually by just selecting the best value',
-                    model_free, style='rounded,dashed,filled', fillcolor='#f1f7fe')
+                    model_free, style='rounded,dashed,filled', fillcolor='#daf0f6')
 
 policy_gradient = Group('Policy Gradient/Actor-Critic',
                      'The algorithm works directly to optimize the policy, with or without value function. If the value function is learned in addition to the policy, we would get Actor-Critic algorithm. Most policy gradient algorithms are Actor-Critic. The *Critic* updates value function parameters *w* and depending on the algorithm it could be action-value ***Q(a|s;w)*** or state-value ***V(s;w)***. The *Actor* updates policy parameters θ, in the direction suggested by the critic, ***π(a|s;θ)***. [from [Lilian Weng\' blog](https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html)]',
-                     model_free, style='rounded,dashed,filled', fillcolor='#f1f7fe',
+                     model_free, style='rounded,dashed,filled', fillcolor='#daf0f6',
                      links=[
                         ('Policy Gradient Algorithms', 'https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html'),
                         ('RL — Policy Gradient Explained', 'https://medium.com/@jonathan_hui/rl-policy-gradients-explained-9b13b688b146'),
@@ -425,7 +461,7 @@ policy_gradient = Group('Policy Gradient/Actor-Critic',
                         ])
 
 root_value_gradient = Node('Value Gradient', value_gradient.description, value_gradient, output_md=False, fillcolor='#ffe6cc')
-root_policy_gradient = Node('Policy Gradient/Actor-Critic', policy_gradient.description, policy_gradient, output_md=False, fillcolor='#ffe6cc')
+root_policy_gradient = Node('Policy Gradient\\n/Actor-Critic', policy_gradient.description, policy_gradient, output_md=False, fillcolor='#ffe6cc')
 
 root_model_free.connect(root_value_gradient)
 root_model_free.connect(root_policy_gradient)
@@ -701,7 +737,7 @@ a3c = Node('A3C',
                   ('An implementation of A3C', 'https://github.com/dennybritz/reinforcement-learning/tree/master/PolicyGradient/a3c')]
            )
 root_policy_gradient.connect(a3c, style=ROOT_EDGE)
-a3c.connect(rainbow, style=WEAK_LINK)
+a3c.connect(rainbow, style=WEAK_LINK, constraing='false')
 
 ddpg_her = Node('DDPG+HER',
            'Hindsight Experience Replay (HER)',
@@ -854,6 +890,35 @@ a2c.connect(impala, style=ORDER_EDGE)  # just to maintain relative timeline orde
 #
 # MODEL BASED
 #
+dyna_q = Node('Dyna-Q',
+            'Dyna-Q uses the experience drawn from real interaction with the environment to improve the value function/policy (called direct RL, using Q-learning) and the model of the environment (called model learning). The model is then used to create experiences (called planning) to improve the value function/policy.',
+             model_based,
+             flags=[Flag.OFP, Flag.MB],
+             authors='Richard S. Sutton, Andrew G. Barto',
+             year=1990,
+             links=[('(book) Reinforcement Learning: An Introduction - 2nd Edition - Richard S. Sutton and Andrew G. Barto - Section 8.2', 'http://incompleteideas.net/book/the-book.html'),
+                    ])
+root_model_based.connect(dyna_q, style=ROOT_EDGE)
+
+prio_sweep = Node('Prioritized Sweeping',
+            'Prioritized Sweeping/Queue-Dyna is similar to Dyna, and it improves Dyna by updating value based on priority rather than randomly. Values are also associated with state rather than state-action.',
+             model_based,
+             flags=[Flag.MB],
+             authors='Moore, Atkeson, Peng, Williams',
+             year=1993,
+             links=[('(book) Reinforcement Learning: An Introduction - 2nd Edition - Richard S. Sutton and Andrew G. Barto - Section 8.4', 'http://incompleteideas.net/book/the-book.html')])
+dyna_q.connect(prio_sweep, style=ROOT_EDGE)
+
+mcts = Node('MCTS',
+            'Monte Carlo Tree Search (MCTS) selects the next action by performing rollout algorithm, which estimates action values for a given policy by averaging the returns of many simulated trajectories that start with each possible action and then follow the given policy. Unlike Monte Carlo control, the goal of a rollout algorithm is not to estimate a complete optimal action-value function, q-star, or a complete action-value function,q-pi, for a given policy pi. Instead, they produce Monte Carlo estimates of action values only for each current state, and once an action is selected, this estimation will be discarded and fresh calculation will be performed on the next state. MCTS enchances this rollout algorithm by the addition of a means for accumulating value estimates obtained from the Monte Carlo simulations in order to successively direct simulations toward more highly-rewarding trajectories.',
+             model_based,
+             flags=[Flag.MB],
+             authors='Rémi Coulom, L. Kocsis, Cs. Szepesvári',
+             year=2006,
+             links=[('(book) Reinforcement Learning: An Introduction - 2nd Edition - Richard S. Sutton and Andrew G. Barto - Section 8.11', 'http://incompleteideas.net/book/the-book.html'),
+                    ('(Wikipedia) MCTS', 'https://en.wikipedia.org/wiki/Monte_Carlo_tree_search')])
+root_model_based.connect(mcts, style=ROOT_EDGE)
+
 pilco = Node('PILCO',
             '(from the abstract) In this paper, we introduce PILCO, a practical, data-efficient model-based policy search method. PILCO reduces model bias, one of the key problems of model-based reinforcement learning, in a principled way.  By learning  a  probabilistic  dynamics  model  and  explicitly incorporating model uncertainty into long-term  planning,  PILCO can  cope  with very little data and facilitates learning froms cratch in only a few trials.  Policy evaluationis  performed  in  closed  form  using  state-of-the-art approximate inference.  Furthermore, policy  gradients  are  computed  analytically for policy improvement.  We report unprecedented learning efficiency on challenging and high-dimensional control tasks.',
              model_based,
@@ -1070,12 +1135,25 @@ def generate_graph(output, format):
         lst.append(node)
         ranks[node.graph_rank] = lst
 
+    START_TIMELINE = "1950s"
+
     # The global timeline graph
-    with graph.subgraph(name='timeline') as timeline_graph:
-        years = ['Past'] + [k for k in ranks.keys() if k >= 1900]
+    with graph.subgraph(name='clusterTimeline') as timeline_graph:
+        timeline_graph.attr(shape='box')
+        timeline_graph.attr(style='bold,filled')
+        timeline_graph.attr(fillcolor=TIMELINE_FILL_COLOR)
+        timeline_graph.attr(color=TIMELINE_FILL_COLOR)
+        timeline_graph.attr(margin='0')
+        timeline_graph.attr(pad='0')
+        years = [START_TIMELINE] + [k for k in ranks.keys() if k and k >= '1900']
         for year in years:
+            if RANKDIR=='LR':
+                attrs = {'height': '0.2'}
+            else:
+                attrs = {}
             timeline_graph.node(f'{year}', fontcolor=TIMELINE_COLOR, shape='plaintext',
-                                fontname=FONT_NAME, fontsize=str(TIMELINE_FONT_SIZE),
+                                fontname=TIMELINE_FONT_NAME, fontsize=str(TIMELINE_FONT_SIZE),
+                                margin="0", pad="0", **attrs,
                                 group=f'timeline')  # use same group to make straight nodes
         for iy in range(len(years) - 1):
             timeline_graph.edge(str(years[iy]), str(years[iy + 1]), color=TIMELINE_COLOR)
@@ -1084,7 +1162,7 @@ def generate_graph(output, format):
 
     # Create cluster to align nodes in the same year
     for rank, members in ranks.items():
-        if rank < 1900:
+        if not rank or rank < '1900':
             continue
         with graph.subgraph() as rank_cluster:
             rank_cluster.attr(rank='same')
@@ -1095,15 +1173,21 @@ def generate_graph(output, format):
     # Align value gradient and policy gradient
     with graph.subgraph() as rank_cluster:
         rank_cluster.attr(rank='same')
-        rank_cluster.node('Past')
+        rank_cluster.node(START_TIMELINE)
+        rank_cluster.node(rl.graph_name)
+
+    # Align value gradient and policy gradient
+    with graph.subgraph() as rank_cluster:
+        rank_cluster.attr(rank='same')
         rank_cluster.node(root_model_free.graph_name)
         rank_cluster.node(root_model_based.graph_name)
-        rank_cluster.node(root_meta_rl.graph_name)
+        #rank_cluster.node(root_meta_rl.graph_name)
 
     with graph.subgraph() as rank_cluster:
         rank_cluster.attr(rank='same')
         rank_cluster.node(root_value_gradient.graph_name)
         rank_cluster.node(root_policy_gradient.graph_name)
+
 
     graph.render(output, format=format)
 
@@ -1115,6 +1199,7 @@ def generate_md():
 
 This is a loose taxonomy of reinforcement learning algorithms. I'm by no means expert in this area, I'm making this as part of my learning process. Note that there are a lot more algorithms than listed here, and often I don't even know how to categorize them. In any case, please PR to correct things or suggest new stuff.
 
+Note that this file is generated by `taxonomy.py`.
 """
     md += '#### Table of Contents:<HR>\n\n'
     md += "[Taxonomy](#taxonomy)<BR>\n"
@@ -1126,14 +1211,14 @@ This is a loose taxonomy of reinforcement learning algorithms. I'm by no means e
             md += '  ' * (len(parents) - 1)
         if parents:
             md += '- '
-        md += f'[{node.title}](#{node.name})\n'
+        md += f'[{node.md_title}](#{node.name})\n'
     md += '\n'
 
-    md += """## <A name="taxonomy"></a>Taxonomy
+    md += f"""## <A name="taxonomy"></a>Taxonomy
 
-Below is the taxonomy of reinforcement learning algorithms. Solid line indicates some progression from one idea to another. Dashed line indicates a loose connection. On the left you can see the timeline of the publication year of the algorithms. 
+Below is the taxonomy of reinforcement learning algorithms. Solid line indicates some progression from one idea to another. Dashed line indicates a loose connection. On the {"bottom" if RANKDIR=="LR" else "left"} you can see the timeline of the publication year of the algorithms. 
 
-It's recommended to open the .SVG file in a new window. Hovering the mouse over the algorithm will activate tooltip containing the description of the algorithm.
+It's recommended to open the .SVG file in a new window, as hovering the mouse over the algorithm will show tooltip containing the description of the algorithm and clicking the node will open the link to its description.
 
 ![RL Taxonomy](rl-taxonomy.gv.svg "RL Taxonomy")\n\n"""
 
