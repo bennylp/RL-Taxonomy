@@ -158,6 +158,7 @@ digraph {
 		"Model Based" -> "MB-MPO" [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Model Based" -> "World Models" [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Model Based" -> PETS [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
+		"Model Based" -> PlaNet [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Model Based" -> SimPLe [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Model Based" -> MuZero [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		PILCO [label=PILCO fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
@@ -171,6 +172,7 @@ digraph {
 		"MB-MPO" [label="MB-MPO" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 		"World Models" [label="World Models" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 		PETS [label=PETS fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		PlaNet [label=PlaNet fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 		SimPLe [label=SimPLe fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 		MuZero [label=MuZero fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
 	}
@@ -280,6 +282,7 @@ digraph {
 		"MB-MPO"
 		"World Models"
 		PETS
+		PlaNet
 		ProMP
 	}
 	{

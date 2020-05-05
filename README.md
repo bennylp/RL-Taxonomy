@@ -55,6 +55,7 @@ This is a loose taxonomy of reinforcement learning algorithms. I'm by no means e
   - [MB-MPO](#MBMPO)
   - [World Models](#WorldModels)
   - [PETS](#PETS)
+  - [PlaNet](#PlaNet)
   - [SimPLe](#SimPLe)
   - [MuZero](#MuZero)
 - [Meta-RL](#MetaRL)
@@ -786,6 +787,8 @@ Importance Weighted Actor-Learner Architecture (IMPALA)
 
 In model-based reinforcement learning, the agent uses the experience to try to model the environment, and then uses the model to predict the value/policy
 
+- Useful links:
+  - [Model-Based Reinforcement Learning: Theory and Practice](https://bair.berkeley.edu/blog/2019/12/12/mbpo/)
 
  <a name="ModelBased"></a>
 #### <a name="PILCO"></a>PILCO
@@ -931,6 +934,17 @@ AlphaZero generalises tabula rasa reinforcement learning from games of self-play
 
 - Paper: https://arxiv.org/abs/1805.12114
 - Authors: Kurtland Chua, Roberto Calandra, Rowan McAllister, Sergey Levine
+- Year: 2018
+- Related to prior idea:
+  - [Model Based](#ModelBased)
+
+#### <a name="PlaNet"></a>PlaNet
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Based](#ModelBased) --> [PlaNet](#PlaNet))
+
+(from the abstract) We propose the Deep Planning Network (PlaNet), a purely model-based agent that learns the environment dynamics from images and chooses actions through fast online planning in latent space. To achieve high performance, the dynamics model must accurately predict the rewards ahead for multiple time steps. We approach this using a latent dynamics model with both deterministic and stochastic transition components. Moreover, we propose a multi-step variational inference objective that we name latent overshooting. Using only pixel observations, our agent solves continuous control tasks with contact dynamics, partial observability, and sparse rewards, which exceed the difficulty of tasks that were previously solved by planning with learned models. PlaNet uses substantially fewer episodes and reaches final performance close to and sometimes higher than strong model-free algorithms.
+
+- Paper: https://arxiv.org/abs/1811.04551
+- Authors: Danijar Hafner, Timothy Lillicrap, Ian Fischer, Ruben Villegas, David Ha, Honglak Lee, James Davidson
 - Year: 2018
 - Related to prior idea:
   - [Model Based](#ModelBased)

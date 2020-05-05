@@ -383,7 +383,9 @@ rl.connect(root_model_free)
 
 model_based = Group('Model Based',
                     'In model-based reinforcement learning, the agent uses the experience to try to model the environment, and then uses the model to predict the value/policy',
-                    rl, style='filled', fillcolor='#f7fdff')
+                    rl, style='filled', fillcolor='#f7fdff',
+                    links=[('Model-Based Reinforcement Learning: Theory and Practice', 'https://bair.berkeley.edu/blog/2019/12/12/mbpo/'),
+                        ])
 root_model_based = Node('Model Based', '', model_based, output_md=False, fillcolor='#ffe6cc')
 rl.connect(root_model_based)
 
@@ -940,6 +942,16 @@ pets = Node('PETS',
              links=[])
 root_model_based.connect(pets, style=ROOT_EDGE)
 
+planet = Node('PlaNet',
+            '(from the abstract) We propose the Deep Planning Network (PlaNet), a purely model-based agent that learns the environment dynamics from images and chooses actions through fast online planning in latent space. To achieve high performance, the dynamics model must accurately predict the rewards ahead for multiple time steps. We approach this using a latent dynamics model with both deterministic and stochastic transition components. Moreover, we propose a multi-step variational inference objective that we name latent overshooting. Using only pixel observations, our agent solves continuous control tasks with contact dynamics, partial observability, and sparse rewards, which exceed the difficulty of tasks that were previously solved by planning with learned models. PlaNet uses substantially fewer episodes and reaches final performance close to and sometimes higher than strong model-free algorithms.',
+             model_based,
+             flags=[],
+             authors='Danijar Hafner, Timothy Lillicrap, Ian Fischer, Ruben Villegas, David Ha, Honglak Lee, James Davidson',
+             year=2018,
+             url='https://arxiv.org/abs/1811.04551',
+             links=[])
+root_model_based.connect(planet, style=ROOT_EDGE)
+
 simple = Node('SimPLe',
              'Simulated Policy Learning (SimPLe) is a complete model-based deep RL algorithm based on video prediction models and present a comparison of several model architectures, including a novel architecture that yields the best results in our setting. Our experiments evaluate SimPLe on a range of Atari games in low data regime of 100k interactions between the agent and the environment, which corresponds to two hours of real-time play. In most games SimPLe outperforms state-of-the-art model-free algorithms, in some games by over an order of magnitude. (from the abstract)',
              model_based,
@@ -1104,6 +1116,7 @@ Below is the taxonomy of reinforcement learning algorithms. Solid line indicates
     
 Sources:
 - [Policy Gradient Algorithms](https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html)
+- [Kinds of RL Algorithms](https://spinningup.openai.com/en/latest/spinningup/rl_intro2.html)
 - [Key Papers in Deep RL](https://spinningup.openai.com/en/latest/spinningup/keypapers.html)
 
 """
