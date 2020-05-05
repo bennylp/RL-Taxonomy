@@ -10,6 +10,7 @@ This is a loose taxonomy of reinforcement learning algorithms. I'm by no means e
   - [Value Gradient](#ValueGradient)
     - [SARSA](#SARSA)
     - [Q-learning](#Qlearning)
+    - [TD-Gammon](#TDGammon)
     - [DQN](#DQN)
     - [DRQN](#DRQN)
     - [DDQN](#DDQN)
@@ -67,12 +68,14 @@ This is a loose taxonomy of reinforcement learning algorithms. I'm by no means e
 
 ## <A name="taxonomy"></a>Taxonomy
 
-Below is the taxonomy of reinforcement learning algorithms. Solid line indicates some progression from one idea to another. Dashed line indicates a loose connection. On the left you can see the timeline of the publication year of the algorithms. Open the .SVG file to view the full scale of the graph.
+Below is the taxonomy of reinforcement learning algorithms. Solid line indicates some progression from one idea to another. Dashed line indicates a loose connection. On the left you can see the timeline of the publication year of the algorithms. 
+
+It's recommended to open the .SVG file in a new window. Hovering the mouse over the algorithm will activate tooltip containing the description of the algorithm.
 
 ![RL Taxonomy](rl-taxonomy.gv.svg "RL Taxonomy")
 
 ## <a name="ReinforcementLearning"></a>Reinforcement Learning
-Reinforcement learning (RL) is an area of machine learning concerned with how software agents ought to take actions in an environment in order to maximize the notion of cumulative reward [from Wikipedia]
+Reinforcement learning (RL) is an area of machine learning concerned with how software agents ought to take actions in an environment in order to maximize the notion of cumulative reward [from [Wikipedia](https://en.wikipedia.org/wiki/Reinforcement_learning)]
 
 - Related to subsequent ideas:
   - [Model Free](#ModelFree)
@@ -136,10 +139,21 @@ Q-learning an off-policy TD control method. Unlike SARSA, it doesn't follow the 
   - [Diving deeper into Reinforcement Learning with Q-Learning](https://www.freecodecamp.org/news/diving-deeper-into-reinforcement-learning-with-q-learning-c18d0db58efe/)
   - [Simple Reinforcement Learning with Tensorflow Part 0: Q-Learning with Tables and Neural Networks](https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-0-q-learning-with-tables-and-neural-networks-d195264329d0)
 
+##### <a name="TDGammon"></a>TD-Gammon
+(Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Free](#ModelFree) --> [Value Gradient](#ValueGradient) --> [TD-Gammon](#TDGammon))
+
+TD-Gammon is a model-free reinforcement learning algorithm similar to Q-learning, and uses a multi-layer perceptron with one hidden layer as the value function approximator. It learns the game entirely by playing against itself and achieves superhuman level of play.
+
+- Paper: https://dl.acm.org/doi/10.1145/203330.203343
+- Authors: Gerald Tesauro
+- Year: 1995
+- Related to prior idea:
+  - [Value Gradient](#ValueGradient)
+
 ##### <a name="DQN"></a>DQN
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Free](#ModelFree) --> [Value Gradient](#ValueGradient) --> [DQN](#DQN))
 
-Deep Q Network. Q-Learning with using deep neural network as value estimator
+Deep Q Network (DQN) is Q-Learning with deep neural network as state-action value estimator and uses a replay buffer to sample experiences from previous trajectories to make learning more stable.
 
 - Paper: https://arxiv.org/abs/1312.5602
 - Authors: Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Alex Graves, Ioannis Antonoglou, Daan Wierstra, Martin Riedmiller
@@ -283,7 +297,7 @@ C51 Algorithm. The core idea of Distributional Bellman is to ask the following q
 ##### <a name="RAINBOW"></a>RAINBOW
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Free](#ModelFree) --> [Value Gradient](#ValueGradient) --> [RAINBOW](#RAINBOW))
 
-Examines six extensions to the DQN algorithm and empirically studies their combination
+Combines six DQN extensions, namely Double Q-Learning, prioritized replay, dueling networks, multi-step learning, distributional DQN, and noisy DQN into single model to achieve state of the art performance
 
 - Paper: https://arxiv.org/abs/1710.02298
 - Authors: Matteo Hessel, Joseph Modayil, Hado van Hasselt, Tom Schaul, Georg Ostrovski, Will Dabney, Dan Horgan, Bilal Piot, Mohammad Azar, David Silver
@@ -323,7 +337,8 @@ DQN with Hindsight Experience Replay (HER)
 ##### <a name="IQN"></a>IQN
 (Path: [Reinforcement Learning](#ReinforcementLearning) --> [Model Free](#ModelFree) --> [Value Gradient](#ValueGradient) --> [IQN](#IQN))
 
-Implicit Quantile Networks (IQN)
+Implicit Quantile Networks (IQN). From the abstract: In this work, we build on recent advances in distributional reinforcement learning to give a generally applicable, flexible, and state-of-the-art distributional variant of DQN. We achieve this by using quantile regression to approximate the full quantile function for the state-action return distribution. By reparameterizing a distribution over the sample space, this yields an implicitly defined return distribution and gives rise to a large class of risk-sensitive policies. We demonstrate improved performance on the 57 Atari 2600 games in the ALE, and use our algorithm's implicitly defined distributions to study the effects of risk-sensitive policies in Atari games. 
+           
 
 - Paper: https://arxiv.org/abs/1806.06923
 - Authors: Will Dabney, Georg Ostrovski, David Silver, Rémi Munos
@@ -1048,6 +1063,7 @@ ProMP: Proximal Meta-Policy Search (from the abstract) Credit assignment in Meta
     
 Sources:
 - [Policy Gradient Algorithms](https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html)
+- [Kinds of RL Algorithms](https://spinningup.openai.com/en/latest/spinningup/rl_intro2.html)
 - [Key Papers in Deep RL](https://spinningup.openai.com/en/latest/spinningup/keypapers.html)
 
 

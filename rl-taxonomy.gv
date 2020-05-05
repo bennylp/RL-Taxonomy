@@ -7,6 +7,7 @@ digraph {
 		1989 [fontcolor=darkblue fontname="sans-serif" fontsize=14 group=timeline shape=plaintext]
 		1992 [fontcolor=darkblue fontname="sans-serif" fontsize=14 group=timeline shape=plaintext]
 		1994 [fontcolor=darkblue fontname="sans-serif" fontsize=14 group=timeline shape=plaintext]
+		1995 [fontcolor=darkblue fontname="sans-serif" fontsize=14 group=timeline shape=plaintext]
 		2011 [fontcolor=darkblue fontname="sans-serif" fontsize=14 group=timeline shape=plaintext]
 		2013 [fontcolor=darkblue fontname="sans-serif" fontsize=14 group=timeline shape=plaintext]
 		2014 [fontcolor=darkblue fontname="sans-serif" fontsize=14 group=timeline shape=plaintext]
@@ -19,7 +20,8 @@ digraph {
 		Past -> 1989 [color=darkblue]
 		1989 -> 1992 [color=darkblue]
 		1992 -> 1994 [color=darkblue]
-		1994 -> 2011 [color=darkblue]
+		1994 -> 1995 [color=darkblue]
+		1995 -> 2011 [color=darkblue]
 		2011 -> 2013 [color=darkblue]
 		2013 -> 2014 [color=darkblue]
 		2014 -> 2015 [color=darkblue]
@@ -29,7 +31,11 @@ digraph {
 		2018 -> 2019 [color=darkblue]
 		2019 -> 2020 [color=darkblue]
 	}
-	"Reinforcement Learning" [label="Reinforcement Learning" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+	"Reinforcement Learning" [label="Reinforcement Learning" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Reinforcement learning (RL) is an area of machine learning concerned with how
+software agents ought to take actions in an environment in order to maximize
+the notion of cumulative reward [from Wikipedia]
+
+"]
 	"Model Free" -> "Value Gradient" [fontcolor=black fontname="sans-serif" fontsize=10]
 	"Model Free" -> "Policy Gradient/Actor-Critic" [fontcolor=black fontname="sans-serif" fontsize=10]
 	DQN -> DDPG [label="replay buffer" color=darkgray constraint=false fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
@@ -44,20 +50,43 @@ digraph {
 		fontname="sans-serif"
 		fontsize=16
 		fillcolor="#f7fdff" style=filled
-		"Model Free" [label="Model Free" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" weight=10]
+		"Model Free" [label="Model Free" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="In model free reinforcement learning, the agent directly tries to predict the
+value/policy without having or trying to model the environment
+
+" weight=10]
 		subgraph "clusterValue Gradient" {
 			label="Value Gradient"
 			color=black
 			fontname="sans-serif"
 			fontsize=16
 			fillcolor="#f1f7fe" style="rounded,dashed,filled"
-			"Value Gradient" [label="Value Gradient" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			"Value Gradient" [label="Value Gradient" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="The algorithm is learning the value function of each state or state-action.
+The policy is implicit, usually by just selecting the best value
+
+"]
 			"Value Gradient" -> SARSA [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 			"Value Gradient" -> "Q-learning" [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
-			SARSA [label=SARSA fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-			"Q-learning" [label="Q-learning" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			"Value Gradient" -> "TD-Gammon" [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
+			SARSA [label=SARSA fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="SARSA (State-Action-Reward-State-Action) is an on-policy TD control method
+
+"]
+			"Q-learning" [label="Q-learning" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Q-learning an off-policy TD control method. Unlike SARSA, it doesn't follow
+the policy to find the next action but rather chooses most optimal action in a
+greedy fashion
+
+"]
 			"Q-learning" -> DQN [fontcolor=black fontname="sans-serif" fontsize=10]
-			DQN [label=DQN fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			"TD-Gammon" [label="TD-Gammon" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="TD-Gammon is a model-free reinforcement learning algorithm similar to
+Q-learning, and uses a multi-layer perceptron with one hidden layer as the
+value function approximator. It learns the game entirely by playing against
+itself and achieves superhuman level of play.
+
+"]
+			DQN [label=DQN fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Deep Q Network (DQN) is Q-Learning with deep neural network as state-action
+value estimator and uses a replay buffer to sample experiences from previous
+trajectories to make learning more stable.
+
+"]
 			DQN -> DRQN [fontcolor=black fontname="sans-serif" fontsize=10]
 			DQN -> DDQN [fontcolor=black fontname="sans-serif" fontsize=10]
 			DQN -> PER [fontcolor=black fontname="sans-serif" fontsize=10]
@@ -67,26 +96,118 @@ digraph {
 			DQN -> IQN [fontcolor=black fontname="sans-serif" fontsize=10]
 			DQN -> "APE-X DQN" [fontcolor=black fontname="sans-serif" fontsize=10]
 			DQN -> R2D2 [fontcolor=black fontname="sans-serif" fontsize=10]
-			DRQN [label=DRQN fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-			DDQN [label=DDQN fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			DRQN [label=DRQN fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Deep Recurrent Q-Learning. Adding recurrency to a Deep Q-Network (DQN) by
+replacing the first post-convolutional fully-connected layer with a recurrent
+LSTM
+
+"]
+			DDQN [label=DDQN fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Double DQN adds another neural network, making separate network for policy and
+target. The target network is only updated after certain number of
+steps/episodes. This makes the learning more stable.
+
+"]
 			DDQN -> "Duelling-DQN" [fontcolor=black fontname="sans-serif" fontsize=10]
 			DDQN -> RAINBOW [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
-			PER [label=PER fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			PER [label=PER fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Prioritized Experience Replay (PER) improves data efficiency by replaying
+transitions from which there is more to learn more often
+
+"]
 			PER -> RAINBOW [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
-			"Duelling-DQN" [label="Duelling-DQN" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			"Duelling-DQN" [label="Duelling-DQN" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Duelling DQN represents two separate estimators: one for the state value
+function and one for the state-dependent action advantage function. The main
+benefit of this factoring is to generalize learning across actions without
+imposing any change to the underlying reinforcement learning algorithm.
+
+"]
 			"Duelling-DQN" -> RAINBOW [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
-			"QR-DQN" [label="QR-DQN" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			"QR-DQN" [label="QR-DQN" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Distributional Reinforcement Learning with Quantile Regression (QR-DQN). In
+QR-DQN, distribution of values values are used for each state-action pair
+instead of a single mean value
+
+"]
 			"QR-DQN" -> RAINBOW [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
-			C51 [label=C51 fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-			RAINBOW [label=RAINBOW fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-			"DQN+HER" [label="DQN+HER" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-			IQN [label=IQN fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-			"APE-X DQN" [label="APE-X DQN" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-			R2D2 [label=R2D2 fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			C51 [label=C51 fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="C51 Algorithm. The core idea of Distributional Bellman is to ask the following
+questions. If we can model the Distribution of the total future rewards, why
+restrict ourselves to the expected value (i.e. Q function)? There are several
+benefits to learning an approximate distribution rather than its approximate
+expectation. [source: flyyufelix's blog]
+
+"]
+			RAINBOW [label=RAINBOW fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Combines six DQN extensions, namely Double Q-Learning, prioritized replay,
+dueling networks, multi-step learning, distributional DQN, and noisy DQN into
+single model to achieve state of the art performance
+
+"]
+			"DQN+HER" [label="DQN+HER" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="DQN with Hindsight Experience Replay (HER)
+
+"]
+			IQN [label=IQN fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Implicit Quantile Networks (IQN). From the abstract: In this work, we build on
+recent advances in distributional reinforcement learning to give a generally
+applicable, flexible, and state-of-the-art distributional variant of DQN. We
+achieve this by using quantile regression to approximate the full quantile
+function for the state-action return distribution. By reparameterizing a
+distribution over the sample space, this yields an implicitly defined return
+distribution and gives rise to a large class of risk-sensitive policies. We
+demonstrate improved performance on the 57 Atari 2600 games in the ALE, and
+use our algorithm's implicitly defined distributions to study the effects of
+risk-sensitive policies in Atari games.
+
+"]
+			"APE-X DQN" [label="APE-X DQN" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="DQN with Distributed Prioritized Experience Replay
+
+"]
+			R2D2 [label=R2D2 fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Recurrent Replay Distributed DQN (R2D2). (from the abstract) Building on the
+recent successes of distributed training of RL agents, in this paper we
+investigate the training of RNN-based RL agents from distributed prioritized
+experience replay. We study the effects of parameter lag resulting in
+representational drift and recurrent state staleness and empirically derive an
+improved training strategy. Using a single network architecture and fixed set
+of hyper-parameters, the resulting agent, Recurrent Replay Distributed DQN,
+quadruples the previous state of the art on Atari-57, and matches the state of
+the art on DMLab-30. It is the first agent to exceed human-level performance
+in 52 of the 57 Atari games.
+
+"]
 			R2D2 -> NGU [fontcolor=black fontname="sans-serif" fontsize=10]
-			NGU [label=NGU fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			NGU [label=NGU fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Never Give Up (NGU). (from the abstract) We propose a reinforcement learning
+agent to solve hard exploration games by learning a range of directed
+exploratory policies. We construct an episodic memory-based intrinsic reward
+using k-nearest neighbors over the agent's recent experience to train the
+directed exploratory policies, thereby encouraging the agent to repeatedly
+revisit all states in its environment. A self-supervised inverse dynamics
+model is used to train the embeddings of the nearest neighbour lookup, biasing
+the novelty signal towards what the agent can control. We employ the framework
+of Universal Value Function Approximators (UVFA) to simultaneously learn many
+directed exploration policies with the same neural network, with different
+trade-offs between exploration and exploitation. By using the same neural
+network for different degrees of exploration/exploitation, transfer is
+demonstrated from predominantly exploratory policies yielding effective
+exploitative policies. The proposed method can be incorporated to run with
+modern distributed RL agents that collect large amounts of experience from
+many actors running in parallel on separate environment instances. Our method
+doubles the performance of the base agent in all hard exploration in the
+Atari-57 suite while maintaining a very high score across the remaining games,
+obtaining a median human normalised score of 1344.0%. Notably, the proposed
+method is the first algorithm to achieve non-zero rewards (with a mean score
+of 8,400) in the game of Pitfall! without using demonstrations or hand-crafted
+features.
+
+"]
 			NGU -> Agent57 [fontcolor=black fontname="sans-serif" fontsize=10]
-			Agent57 [label=Agent57 fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			Agent57 [label=Agent57 fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="(from the abstract) Atari games have been a long-standing benchmark in the
+reinforcement learning (RL) community for the past decade. This benchmark was
+proposed to test general competency of RL algorithms. Previous work has
+achieved good average performance by doing outstandingly well on many games of
+the set, but very poorly in several of the most challenging games. We propose
+Agent57, the first deep RL agent that outperforms the standard human benchmark
+on all 57 Atari games. To achieve this result, we train a neural network which
+parameterizes a family of policies ranging from very exploratory to purely
+exploitative. We propose an adaptive mechanism to choose which policy to
+prioritize throughout the training process. Additionally, we utilize a novel
+parameterization of the architecture that allows for more consistent and
+stable learning.
+
+"]
 		}
 		subgraph "clusterPolicy Gradient/Actor-Critic" {
 			label="Policy Gradient/Actor-Critic"
@@ -94,7 +215,15 @@ digraph {
 			fontname="sans-serif"
 			fontsize=16
 			fillcolor="#f1f7fe" style="rounded,dashed,filled"
-			"Policy Gradient/Actor-Critic" [label="Policy Gradient/Actor-Critic" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			"Policy Gradient/Actor-Critic" [label="Policy Gradient/Actor-Critic" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="The algorithm works directly to optimize the policy, with or without value
+function. If the value function is learned in addition to the policy, we would
+get Actor-Critic algorithm. Most policy gradient algorithms are Actor-Critic.
+The Critic updates value function parameters w and depending on the algorithm
+it could be action-value Q(a|s;w) or state-value V(s;w). The Actor updates
+policy parameters θ, in the direction suggested by the critic, π(a|s;θ). [from
+Lilian Weng' blog]
+
+"]
 			"Policy Gradient/Actor-Critic" -> REINFORCE [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 			"Policy Gradient/Actor-Critic" -> DPG [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 			"Policy Gradient/Actor-Critic" -> TRPO [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
@@ -104,40 +233,117 @@ digraph {
 			"Policy Gradient/Actor-Critic" -> SVPG [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 			"Policy Gradient/Actor-Critic" -> SAC [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 			"Policy Gradient/Actor-Critic" -> IMPALA [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
-			REINFORCE [label=REINFORCE fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-			DPG [label=DPG fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			REINFORCE [label=REINFORCE fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="REINFORCE (Monte-Carlo policy gradient) is a pure policy gradient algorithm
+that works without a value function. The agent collects a trajectory of one
+episode using its current policy, and uses the returns to update the policy
+parameter
+
+"]
+			DPG [label=DPG fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Deterministic Policy Gradient. Abstract: In this paper we consider
+deterministic policy gradient algorithms for reinforcement learning with
+continuous actions. The deterministic policy gradient has a particularly
+appealing form: it is the expected gradient of the action-value function. This
+simple form means that the deterministic policy gradient can be estimated much
+more efficiently than the usual stochastic policy gradient. To ensure adequate
+exploration, we introduce an off-policy actor-critic algorithm that learns a
+deterministic target policy from an exploratory behaviour policy. We
+demonstrate that deterministic policy gradient algorithms can significantly
+outperform their stochastic counterparts in high-dimensional action spaces.
+
+"]
 			DPG -> DDPG [fontcolor=black fontname="sans-serif" fontsize=10]
-			DDPG [label=DDPG fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			DDPG [label=DDPG fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Deep Deterministic Policy Gradient (DDPG).
+
+"]
 			DDPG -> "DDPG+HER" [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
 			DDPG -> MADDPG [fontcolor=black fontname="sans-serif" fontsize=10]
 			DDPG -> D4PG [fontcolor=black fontname="sans-serif" fontsize=10]
 			DDPG -> "APE-X DDPG" [fontcolor=black fontname="sans-serif" fontsize=10]
 			DDPG -> TD3 [fontcolor=black fontname="sans-serif" fontsize=10]
-			TRPO [label=TRPO fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			TRPO [label=TRPO fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Trust Region Policy Optimization (TRPO) improves training stability by
+enforcing a KL divergence constraint to avoid parameter updates that change
+the policy too much at one step.
+
+"]
 			TRPO -> GAE [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
 			TRPO -> ACER [label="TRPO technique" color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
 			TRPO -> PPO [color=darkgray fontcolor=darkgray fontname="sans-serif" fontsize=10 style=dashed]
-			GAE [label=GAE fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-			A3C [label=A3C fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			GAE [label=GAE fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Generalized Advantage Estimation
+
+"]
+			A3C [label=A3C fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Asynchronous Advantage Actor-Critic (A3C) is a classic policy gradient method
+with the special focus on parallel training. In A3C, the critics learn the
+state-value function, V(s;w), while multiple actors are trained in parallel
+and get synced with global parameters from time to time. Hence, A3C is good
+for parallel training by default, i.e. on one machine with multi-core CPU.
+[from Lilian Weng' blog]
+
+"]
 			A3C -> A2C [fontcolor=black fontname="sans-serif" fontsize=10]
 			A3C -> ACER [fontcolor=black fontname="sans-serif" fontsize=10]
-			"DDPG+HER" [label="DDPG+HER" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-			MADDPG [label=MADDPG fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-			A2C [label=A2C fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			"DDPG+HER" [label="DDPG+HER" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Hindsight Experience Replay (HER)
+
+"]
+			MADDPG [label=MADDPG fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Multi-agent DDPG (MADDPG) extends DDPG to an environment where multiple agents
+are coordinating to complete tasks with only local information. In the
+viewpoint of one agent, the environment is non-stationary as policies of other
+agents are quickly upgraded and remain unknown. MADDPG is an actor-critic
+model redesigned particularly for handling such a changing environment and
+interactions between agents (from Lilian Weng's blog)
+
+"]
+			A2C [label=A2C fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="A2C is a synchronous, deterministic variant of Asynchronous Advantage Actor
+Critic (A3C). It uses multiple workers to avoid the use of a replay buffer.
+
+"]
 			A2C -> ACER [fontcolor=black fontname="sans-serif" fontsize=10 style=invis]
 			A2C -> ACKTR [fontcolor=black fontname="sans-serif" fontsize=10 style=invis]
 			A2C -> SVPG [fontcolor=black fontname="sans-serif" fontsize=10 style=invis]
 			A2C -> IMPALA [fontcolor=black fontname="sans-serif" fontsize=10 style=invis]
-			ACER [label=ACER fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-			ACKTR [label=ACKTR fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-			PPO [label=PPO fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			ACER [label=ACER fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Actor-Critic with Experience Replay (ACER) combines several ideas of previous
+algorithms: it uses multiple workers (as A2C), implements a replay buffer (as
+in DQN), uses Retrace for Q-value estimation, importance sampling and a trust
+region. ACER is A3C's off-policy counterpart. ACER proposes several designs to
+overcome the major obstacle to making A3C off policy, that is how to control
+the stability of the off-policy estimator. (source: Lilian Weng's blog)
+
+"]
+			ACKTR [label=ACKTR fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Actor Critic using Kronecker-Factored Trust Region (ACKTR) is applying trust
+region optimization to deep reinforcement learning using a recently proposed
+Kronecker-factored approximation to the curvature.
+
+"]
+			PPO [label=PPO fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Proximal Policy Optimization (PPO) is similar to TRPO but uses simpler
+mechanism while retaining similar performance.
+
+"]
 			PPO -> SAC [fontcolor=black fontname="sans-serif" fontsize=10 style=invis]
-			SVPG [label=SVPG fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-			D4PG [label=D4PG fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-			"APE-X DDPG" [label="APE-X DDPG" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-			SAC [label=SAC fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-			TD3 [label=TD3 fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-			IMPALA [label=IMPALA fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+			SVPG [label=SVPG fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Stein Variational Policy Gradient (SVPG)
+
+"]
+			D4PG [label=D4PG fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Distributed Distributional Deep Deterministic Policy Gradient (D4PG) adopts
+the very successful distributional perspective on reinforcement learning and
+adapts it to the continuous control setting. It combines this within a
+distributed framework. It also combines this technique with a number of
+additional, simple improvements such as the use of N-step returns and
+prioritized experience replay [from the paper's abstract]
+
+"]
+			"APE-X DDPG" [label="APE-X DDPG" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="DDPG with Distributed Prioritized Experience Replay
+
+"]
+			SAC [label=SAC fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Soft Actor Critic (SAC) is an algorithm that optimizes a stochastic policy in
+an off-policy way, forming a bridge between stochastic policy optimization and
+DDPG-style approaches.
+
+"]
+			TD3 [label=TD3 fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Twin Delayed DDPG (TD3). TD3 addresses function approximation error in DDPG by
+introducing twin Q-value approximation network and less frequent updates
+
+"]
+			IMPALA [label=IMPALA fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Importance Weighted Actor-Learner Architecture (IMPALA)
+
+"]
 		}
 	}
 	subgraph "clusterModel Based" {
@@ -146,7 +352,10 @@ digraph {
 		fontname="sans-serif"
 		fontsize=16
 		fillcolor="#f7fdff" style=filled
-		"Model Based" [label="Model Based" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		"Model Based" [label="Model Based" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="In model-based reinforcement learning, the agent uses the experience to try to
+model the environment, and then uses the model to predict the value/policy
+
+"]
 		"Model Based" -> PILCO [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Model Based" -> I2A [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Model Based" -> MBMF [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
@@ -161,20 +370,201 @@ digraph {
 		"Model Based" -> PlaNet [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Model Based" -> SimPLe [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Model Based" -> MuZero [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
-		PILCO [label=PILCO fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-		I2A [label=I2A fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-		MBMF [label=MBMF fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-		Exit [label=Exit fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-		AlphaZero [label=AlphaZero fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-		MVE [label=MVE fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-		STEVE [label=STEVE fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-		"ME-TRPO" [label="ME-TRPO" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-		"MB-MPO" [label="MB-MPO" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-		"World Models" [label="World Models" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-		PETS [label=PETS fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-		PlaNet [label=PlaNet fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-		SimPLe [label=SimPLe fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-		MuZero [label=MuZero fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		PILCO [label=PILCO fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="(from the abstract) In this paper, we introduce PILCO, a practical, data-
+efficient model-based policy search method. PILCO reduces model bias, one of
+the key problems of model-based reinforcement learning, in a principled way.
+By learning a probabilistic dynamics model and explicitly incorporating model
+uncertainty into long-term planning, PILCO can cope with very little data and
+facilitates learning froms cratch in only a few trials. Policy evaluationis
+performed in closed form using state-of-the-art approximate inference.
+Furthermore, policy gradients are computed analytically for policy
+improvement. We report unprecedented learning efficiency on challenging and
+high-dimensional control tasks.
+
+"]
+		I2A [label=I2A fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="(from the abstract) We introduce Imagination-Augmented Agents (I2As), a novel
+architecture for deep reinforcement learning combining model-free and model-
+based aspects. In contrast to most existing model-based reinforcement learning
+and planning methods, which prescribe how a model should be used to arrive at
+a policy, I2As learn to interpret predictions from a learned environment model
+to construct implicit plans in arbitrary ways, by using the predictions as
+additional context in deep policy networks. I2As show improved data
+efficiency, performance, and robustness to model misspecification compared to
+several baselines.
+
+"]
+		MBMF [label=MBMF fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="(from the abstract) Neural Network Dynamics for Model-Based Deep Reinforcement
+Learning with Model-Free Fine-Tuning. We demonstrate that medium-sized neural
+network models can in fact be combined with model predictive control (MPC) to
+achieve excellent sample complexity in a model-based reinforcement learning
+algorithm, producing stable and plausible gaits to accomplish various complex
+locomotion tasks. We also propose using deep neural network dynamics models to
+initialize a model-free learner, in order to combine the sample efficiency of
+model-based approaches with the high task-specific performance of model-free
+methods. We empirically demonstrate on MuJoCo locomotion tasks that our pure
+model-based approach trained on just random action data can follow arbitrary
+trajectories with excellent sample efficiency, and that our hybrid algorithm
+can accelerate model-free learning on high-speed benchmark tasks, achieving
+sample efficiency gains of 3-5x on swimmer, cheetah, hopper, and ant agents.
+
+"]
+		Exit [label=Exit fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Expert Iteration (ExIt) is a novel reinforcement learning algorithm which
+decomposes the problem into separate planning and generalisation tasks.
+Planning new policies is performed by tree search, while a deep neural network
+generalises those plans. Subsequently, tree search is improved by using the
+neural network policy to guide search, increasing the strength of new plans.
+In contrast, standard deep Reinforcement Learning algorithms rely on a neural
+network not only to generalise plans, but to discover them too. We show that
+ExIt outperforms REINFORCE for training a neural network to play the board
+game Hex, and our final tree search agent, trained tabula rasa, defeats MoHex
+1.0, the most recent Olympiad Champion player to be publicly released. (from
+the abstract)
+
+"]
+		AlphaZero [label=AlphaZero fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="AlphaZero generalises tabula rasa reinforcement learning from games of self-
+play approach. Starting from random play, and given no domain knowledge except
+the game rules, AlphaZero achieved within 24 hours a superhuman level of play
+in the games of chess and shogi (Japanese chess) as well as Go, and
+convincingly defeated a world-champion program in each case. (from the
+abstract)
+
+"]
+		MVE [label=MVE fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="(from the abstract) Recent model-free reinforcement learning algorithms have
+proposed incorporating learned dynamics models as a source of additional data
+with the intention of reducing sample complexity. Such methods hold the
+promise of incorporating imagined data coupled with a notion of model
+uncertainty to accelerate the learning of continuous control tasks.
+Unfortunately, they rely on heuristics that limit usage of the dynamics model.
+We present model-based value expansion, which controls for uncertainty in the
+model by only allowing imagination to fixed depth. By enabling wider use of
+learned dynamics models within a model-free reinforcement learning algorithm,
+we improve value estimation, which, in turn, reduces the sample complexity of
+learning.
+
+"]
+		STEVE [label=STEVE fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="(from the abstract) Integrating model-free and model-based approaches in
+reinforcement learning has the potential to achieve the high performance of
+model-free algorithms with low sample complexity. However, this is difficult
+because an imperfect dynamics model can degrade the performance of the
+learning algorithm, and in sufficiently complex environments, the dynamics
+model will almost always be imperfect. As a result, a key challenge is to
+combine model-based approaches with model-free learning in such a way that
+errors in the model do not degrade performance. We propose stochastic ensemble
+value expansion (STEVE), a novel model-based technique that addresses this
+issue. By dynamically interpolating between model rollouts of various horizon
+lengths for each individual example, STEVE ensures that the model is only
+utilized when doing so does not introduce significant errors. Our approach
+outperforms model-free baselines on challenging continuous control benchmarks
+with an order-of-magnitude increase in sample efficiency, and in contrast to
+previous model-based approaches, performance does not degrade in complex
+environments.
+
+"]
+		"ME-TRPO" [label="ME-TRPO" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="(from the abstract) Model-free reinforcement learning (RL) methods are
+succeeding in a growing number of tasks, aided by recent advances in deep
+learning. However, they tend to suffer from high sample complexity, which
+hinders their use in real-world domains. Alternatively, model-based
+reinforcement learning promises to reduce sample complexity, but tends to
+require careful tuning and to date have succeeded mainly in restrictive
+domains where simple models are sufficient for learning. In this paper, we
+analyze the behavior of vanilla model-based reinforcement learning methods
+when deep neural networks are used to learn both the model and the policy, and
+show that the learned policy tends to exploit regions where insufficient data
+is available for the model to be learned, causing instability in training. To
+overcome this issue, we propose to use an ensemble of models to maintain the
+model uncertainty and regularize the learning process. We further show that
+the use of likelihood ratio derivatives yields much more stable learning than
+backpropagation through time. Altogether, our approach Model-Ensemble Trust-
+Region Policy Optimization (ME-TRPO) significantly reduces the sample
+complexity compared to model-free deep RL methods on challenging continuous
+control benchmark tasks.
+
+"]
+		"MB-MPO" [label="MB-MPO" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="(from the abstract) Model-based reinforcement learning approaches carry the
+promise of being data efficient. However, due to challenges in learning
+dynamics models that sufficiently match the real-world dynamics, they struggle
+to achieve the same asymptotic performance as model-free methods. We propose
+Model-Based Meta-Policy-Optimization (MB-MPO), an approach that foregoes the
+strong reliance on accurate learned dynamics models. Using an ensemble of
+learned dynamic models, MB-MPO meta-learns a policy that can quickly adapt to
+any model in the ensemble with one policy gradient step. This steers the meta-
+policy towards internalizing consistent dynamics predictions among the
+ensemble while shifting the burden of behaving optimally w.r.t. the model
+discrepancies towards the adaptation step. Our experiments show that MB-MPO is
+more robust to model imperfections than previous model-based approaches.
+Finally, we demonstrate that our approach is able to match the asymptotic
+performance of model-free methods while requiring significantly less
+experience.
+
+"]
+		"World Models" [label="World Models" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="(from the abstract) A generative recurrent neural network is quickly trained
+in an unsupervised manner to model popular reinforcement learning environments
+through compressed spatio-temporal representations. The world model's
+extracted features are fed into compact and simple policies trained by
+evolution, achieving state of the art results in various environments. We also
+train our agent entirely inside of an environment generated by its own
+internal world model, and transfer this policy back into the actual
+environment.
+
+"]
+		PETS [label=PETS fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="(from the abstract) Model-based reinforcement learning (RL) algorithms can
+attain excellent sample efficiency, but often lag behind the best model-free
+algorithms in terms of asymptotic performance. This is especially true with
+high-capacity parametric function approximators, such as deep networks. In
+this paper, we study how to bridge this gap, by employing uncertainty-aware
+dynamics models. We propose a new algorithm called probabilistic ensembles
+with trajectory sampling (PETS) that combines uncertainty-aware deep network
+dynamics models with sampling-based uncertainty propagation. Our comparison to
+state-of-the-art model-based and model-free deep RL algorithms shows that our
+approach matches the asymptotic performance of model-free algorithms on
+several challenging benchmark tasks, while requiring significantly fewer
+samples (e.g., 8 and 125 times fewer samples than Soft Actor Critic and
+Proximal Policy Optimization respectively on the half-cheetah task).
+
+"]
+		PlaNet [label=PlaNet fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="(from the abstract) We propose the Deep Planning Network (PlaNet), a purely
+model-based agent that learns the environment dynamics from images and chooses
+actions through fast online planning in latent space. To achieve high
+performance, the dynamics model must accurately predict the rewards ahead for
+multiple time steps. We approach this using a latent dynamics model with both
+deterministic and stochastic transition components. Moreover, we propose a
+multi-step variational inference objective that we name latent overshooting.
+Using only pixel observations, our agent solves continuous control tasks with
+contact dynamics, partial observability, and sparse rewards, which exceed the
+difficulty of tasks that were previously solved by planning with learned
+models. PlaNet uses substantially fewer episodes and reaches final performance
+close to and sometimes higher than strong model-free algorithms.
+
+"]
+		SimPLe [label=SimPLe fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Simulated Policy Learning (SimPLe) is a complete model-based deep RL algorithm
+based on video prediction models and present a comparison of several model
+architectures, including a novel architecture that yields the best results in
+our setting. Our experiments evaluate SimPLe on a range of Atari games in low
+data regime of 100k interactions between the agent and the environment, which
+corresponds to two hours of real-time play. In most games SimPLe outperforms
+state-of-the-art model-free algorithms, in some games by over an order of
+magnitude. (from the abstract)
+
+"]
+		MuZero [label=MuZero fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="(from the abstract) Constructing agents with planning capabilities has long
+been one of the main challenges in the pursuit of artificial intelligence.
+Tree-based planning methods have enjoyed huge success in challenging domains,
+such as chess and Go, where a perfect simulator is available. However, in
+real-world problems the dynamics governing the environment are often complex
+and unknown. In this work we present the MuZero algorithm which, by combining
+a tree-based search with a learned model, achieves superhuman performance in a
+range of challenging and visually complex domains, without any knowledge of
+their underlying dynamics. MuZero learns a model that, when applied
+iteratively, predicts the quantities most directly relevant to planning: the
+reward, the action-selection policy, and the value function. When evaluated on
+57 different Atari games - the canonical video game environment for testing AI
+techniques, in which model-based planning approaches have historically
+struggled - our new algorithm achieved a new state of the art. When evaluated
+on Go, chess and shogi, without any knowledge of the game rules, MuZero
+matched the superhuman performance of the AlphaZero algorithm that was
+supplied with the game rules.
+
+"]
 	}
 	subgraph "clusterMeta-RL" {
 		label="Meta-RL"
@@ -182,17 +572,106 @@ digraph {
 		fontname="sans-serif"
 		fontsize=16
 		fillcolor="#f7fdff" style=filled
-		"Meta-RL" [label="Meta-RL" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		"Meta-RL" [label="Meta-RL" fillcolor="#ffe6cc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="In meta reinforcement learning, the agent is trained over distribution of
+tasks, and with the knowledge it tries to solve new unseen but related task.
+
+"]
 		"Meta-RL" -> DMRL [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Meta-RL" -> "RL^2" [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Meta-RL" -> MAML [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Meta-RL" -> SNAIL [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
 		"Meta-RL" -> ProMP [fontcolor=black fontname="sans-serif" fontsize=10 style=solid]
-		DMRL [label=DMRL fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-		"RL^2" [label="RL^2" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-		MAML [label=MAML fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-		SNAIL [label=SNAIL fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
-		ProMP [label=ProMP fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled"]
+		DMRL [label=DMRL fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="Deep Meta RL. (from the abstract) In recent years deep reinforcement learning
+(RL) systems have attained superhuman performance in a number of challenging
+task domains. However, a major limitation of such applications is their demand
+for massive amounts of training data. A critical present objective is thus to
+develop deep RL methods that can adapt rapidly to new tasks. In the present
+work we introduce a novel approach to this challenge, which we refer to as
+deep meta-reinforcement learning. Previous work has shown that recurrent
+networks can support meta-learning in a fully supervised context. We extend
+this approach to the RL setting. What emerges is a system that is trained
+using one RL algorithm, but whose recurrent dynamics implement a second, quite
+separate RL procedure. This second, learned RL algorithm can differ from the
+original one in arbitrary ways. Importantly, because it is learned, it is
+configured to exploit structure in the training domain. We unpack these points
+in a series of seven proof-of-concept experiments, each of which examines a
+key aspect of deep meta-RL. We consider prospects for extending and scaling up
+the approach, and also point out some potentially important implications for
+neuroscience.
+
+"]
+		"RL^2" [label="RL^2" fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="(from the abstract) Deep reinforcement learning (deep RL) has been successful
+in learning sophisticated behaviors automatically; however, the learning
+process requires a huge number of trials. In contrast, animals can learn new
+tasks in just a few trials, benefiting from their prior knowledge about the
+world. This paper seeks to bridge this gap. Rather than designing a \"fast\"
+reinforcement learning algorithm, we propose to represent it as a recurrent
+neural network (RNN) and learn it from data. In our proposed method, RL2, the
+algorithm is encoded in the weights of the RNN, which are learned slowly
+through a general-purpose (\"slow\") RL algorithm. The RNN receives all
+information a typical RL algorithm would receive, including observations,
+actions, rewards, and termination flags; and it retains its state across
+episodes in a given Markov Decision Process (MDP). The activations of the RNN
+store the state of the \"fast\" RL algorithm on the current (previously unseen)
+MDP. We evaluate RL2 experimentally on both small-scale and large-scale
+problems. On the small-scale side, we train it to solve randomly generated
+multi-arm bandit problems and finite MDPs. After RL2 is trained, its
+performance on new MDPs is close to human-designed algorithms with optimality
+guarantees. On the large-scale side, we test RL2 on a vision-based navigation
+task and show that it scales up to high-dimensional problems.
+
+"]
+		MAML [label=MAML fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="(from the abstract) We propose an algorithm for meta-learning that is model-
+agnostic, in the sense that it is compatible with any model trained with
+gradient descent and applicable to a variety of different learning problems,
+including classification, regression, and reinforcement learning. The goal of
+meta-learning is to train a model on a variety of learning tasks, such that it
+can solve new learning tasks using only a small number of training samples. In
+our approach, the parameters of the model are explicitly trained such that a
+small number of gradient steps with a small amount of training data from a new
+task will produce good generalization performance on that task. In effect, our
+method trains the model to be easy to fine-tune. We demonstrate that this
+approach leads to state-of-the-art performance on two few-shot image
+classification benchmarks, produces good results on few-shot regression, and
+accelerates fine-tuning for policy gradient reinforcement learning with neural
+network policies.
+
+"]
+		SNAIL [label=SNAIL fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="(from the abstract) Deep neural networks excel in regimes with large amounts
+of data, but tend to struggle when data is scarce or when they need to adapt
+quickly to changes in the task. In response, recent work in meta-learning
+proposes training a meta-learner on a distribution of similar tasks, in the
+hopes of generalization to novel but related tasks by learning a high-level
+strategy that captures the essence of the problem it is asked to solve.
+However, many recent meta-learning approaches are extensively hand-designed,
+either using architectures specialized to a particular application, or hard-
+coding algorithmic components that constrain how the meta-learner solves the
+task. We propose a class of simple and generic meta-learner architectures that
+use a novel combination of temporal convolutions and soft attention; the
+former to aggregate information from past experience and the latter to
+pinpoint specific pieces of information. In the most extensive set of meta-
+learning experiments to date, we evaluate the resulting Simple Neural
+AttentIve Learner (or SNAIL) on several heavily-benchmarked tasks. On all
+tasks, in both supervised and reinforcement learning, SNAIL attains state-of-
+the-art performance by significant margins.
+
+"]
+		ProMP [label=ProMP fillcolor="#dae8fc" fontname="sans-serif" fontsize=12 shape=box style="rounded,bold,filled" tooltip="ProMP: Proximal Meta-Policy Search (from the abstract) Credit assignment in
+Meta-reinforcement learning (Meta-RL) is still poorly understood. Existing
+methods either neglect credit assignment to pre-adaptation behavior or
+implement it naively. This leads to poor sample-efficiency during meta-
+training as well as ineffective task identification strategies. This paper
+provides a theoretical analysis of credit assignment in gradient-based Meta-
+RL. Building on the gained insights we develop a novel meta-learning algorithm
+that overcomes both the issue of poor credit assignment and previous
+difficulties in estimating meta-policy gradients. By controlling the
+statistical distance of both pre-adaptation and adapted policies during meta-
+policy search, the proposed algorithm endows efficient and stable meta-
+learning. Our approach leads to superior pre-adaptation policy behavior and
+consistently outperforms previous Meta-RL algorithms in sample-efficiency,
+wall-clock time, and asymptotic performance.
+
+"]
 	}
 	"Reinforcement Learning" -> "Model Free" [fontcolor=black fontname="sans-serif" fontsize=10]
 	"Reinforcement Learning" -> "Model Based" [fontcolor=black fontname="sans-serif" fontsize=10]
@@ -211,6 +690,11 @@ digraph {
 		rank=same
 		1994
 		SARSA
+	}
+	{
+		rank=same
+		1995
+		"TD-Gammon"
 	}
 	{
 		rank=same

@@ -6,6 +6,10 @@ from enum import Enum
 import re
 import sys
 
+import html2text
+import markdown
+
+
 # "Orientation" of the graph: left-right or top-bottom.
 RANKDIR = "TB"  # LR or TB
 
@@ -202,6 +206,15 @@ class NodeBase(ABC):
             attrs['style'] = 'rounded,bold,filled'
         if 'fillcolor' not in attrs:
             attrs['fillcolor'] = '#dae8fc'
+        if 'tooltip' not in attrs:
+            lines = self.description.split('\n')
+            if lines:
+                html = markdown.markdown(lines[0])
+                cvt = html2text.HTML2Text()
+                cvt.ignore_emphasis = True
+                cvt.ignore_links = True
+                txt = cvt.handle(html)
+                attrs['tooltip'] = txt
         graph.node(self.graph_name, label=f'{self.title}', **attrs)
 
     def _export_connections(self, graph, cluster):
@@ -362,7 +375,7 @@ class Node(NodeBase):
 # The nodes. Note: Within their group, keep nodes relatively sorted by their publication year
 #
 rl = Group('Reinforcement Learning',
-           'Reinforcement learning (RL) is an area of machine learning concerned with how software agents ought to take actions in an environment in order to maximize the notion of cumulative reward [from Wikipedia]',
+           'Reinforcement learning (RL) is an area of machine learning concerned with how software agents ought to take actions in an environment in order to maximize the notion of cumulative reward [from [Wikipedia](https://en.wikipedia.org/wiki/Reinforcement_learning)]',
            None, graph_type="node", style='rounded,bold,filled', fillcolor='#ffe6cc',
            links=[('A (Long) Peek into Reinforcement Learning', 'https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html'),
                   ('(book) Reinforcement Learning: An Introduction - 2nd Edition - Richard S. Sutton and Andrew G. Barto', 'http://incompleteideas.net/book/the-book.html')
@@ -378,7 +391,7 @@ rl = Group('Reinforcement Learning',
 model_free = Group('Model Free',
                     'In model free reinforcement learning, the agent directly tries to predict the value/policy without having or trying to model the environment',
                     rl, style='filled', fillcolor='#f7fdff')
-root_model_free = Node('Model Free', '', model_free, output_md=False, fillcolor='#ffe6cc', weight='10')
+root_model_free = Node('Model Free', model_free.description, model_free, output_md=False, fillcolor='#ffe6cc', weight='10')
 rl.connect(root_model_free)
 
 model_based = Group('Model Based',
@@ -386,7 +399,7 @@ model_based = Group('Model Based',
                     rl, style='filled', fillcolor='#f7fdff',
                     links=[('Model-Based Reinforcement Learning: Theory and Practice', 'https://bair.berkeley.edu/blog/2019/12/12/mbpo/'),
                         ])
-root_model_based = Node('Model Based', '', model_based, output_md=False, fillcolor='#ffe6cc')
+root_model_based = Node('Model Based', model_based.description, model_based, output_md=False, fillcolor='#ffe6cc')
 rl.connect(root_model_based)
 
 meta_rl = Group('Meta-RL',
@@ -394,7 +407,7 @@ meta_rl = Group('Meta-RL',
                 rl, style='filled', fillcolor='#f7fdff',
                 links=[('Meta Reinforcement Learning', 'https://lilianweng.github.io/lil-log/2019/06/23/meta-reinforcement-learning.html')
                        ])
-root_meta_rl = Node('Meta-RL', '', meta_rl, output_md=False, fillcolor='#ffe6cc')
+root_meta_rl = Node('Meta-RL', meta_rl.description, meta_rl, output_md=False, fillcolor='#ffe6cc')
 rl.connect(root_meta_rl)
 
 value_gradient = Group('Value Gradient',
@@ -411,8 +424,8 @@ policy_gradient = Group('Policy Gradient/Actor-Critic',
                         ('An introduction to Policy Gradients with Cartpole and Doom', 'https://www.freecodecamp.org/news/an-introduction-to-policy-gradients-with-cartpole-and-doom-495b5ef2207f/')
                         ])
 
-root_value_gradient = Node('Value Gradient', '', value_gradient, output_md=False, fillcolor='#ffe6cc')
-root_policy_gradient = Node('Policy Gradient/Actor-Critic', '', policy_gradient, output_md=False, fillcolor='#ffe6cc')
+root_value_gradient = Node('Value Gradient', value_gradient.description, value_gradient, output_md=False, fillcolor='#ffe6cc')
+root_policy_gradient = Node('Policy Gradient/Actor-Critic', policy_gradient.description, policy_gradient, output_md=False, fillcolor='#ffe6cc')
 
 root_model_free.connect(root_value_gradient)
 root_model_free.connect(root_policy_gradient)
@@ -441,8 +454,19 @@ qlearning = Node('Q-learning',
            )
 root_value_gradient.connect(qlearning, style=ROOT_EDGE)
 
+td_gammon = Node('TD-Gammon',
+           'TD-Gammon is a model-free reinforcement learning algorithm similar to Q-learning, and uses a multi-layer perceptron with one hidden layer as the value function approximator. It learns the game entirely by playing against itself and achieves superhuman level of play.',
+           value_gradient,
+           flags=[],
+           authors='Gerald Tesauro',
+           year=1995,
+           url='https://dl.acm.org/doi/10.1145/203330.203343',
+           links=[]
+           )
+root_value_gradient.connect(td_gammon, style=ROOT_EDGE)
+
 dqn = Node('DQN',
-           'Deep Q Network. Q-Learning with using deep neural network as value estimator',
+           'Deep Q Network (DQN) is Q-Learning with deep neural network as state-action value estimator and uses a replay buffer to sample experiences from previous trajectories to make learning more stable.',
            value_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.RB],
            authors='Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Alex Graves, Ioannis Antonoglou, Daan Wierstra, Martin Riedmiller',
@@ -513,7 +537,7 @@ dqn.connect(c51)
 # dqn_per.connecT(c51, syle=INVIS)
 
 rainbow = Node('RAINBOW',
-           'Examines six extensions to the DQN algorithm and empirically studies their combination',
+           'Combines six DQN extensions, namely Double Q-Learning, prioritized replay, dueling networks, multi-step learning, distributional DQN, and noisy DQN into single model to achieve state of the art performance',
            value_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.RB],
            authors='Matteo Hessel, Joseph Modayil, Hado van Hasselt, Tom Schaul, Georg Ostrovski, Will Dabney, Dan Horgan, Bilal Piot, Mohammad Azar, David Silver',
@@ -536,7 +560,8 @@ dqn_her = Node('DQN+HER',
 dqn.connect(dqn_her)
 
 iqn = Node('IQN',
-           'Implicit Quantile Networks (IQN)',
+           """Implicit Quantile Networks (IQN). From the abstract: In this work, we build on recent advances in distributional reinforcement learning to give a generally applicable, flexible, and state-of-the-art distributional variant of DQN. We achieve this by using quantile regression to approximate the full quantile function for the state-action return distribution. By reparameterizing a distribution over the sample space, this yields an implicitly defined return distribution and gives rise to a large class of risk-sensitive policies. We demonstrate improved performance on the 57 Atari 2600 games in the ALE, and use our algorithm's implicitly defined distributions to study the effects of risk-sensitive policies in Atari games. 
+           """,
            value_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.RB, Flag.DI],
            authors='Will Dabney, Georg Ostrovski, David Silver, Rémi Munos',
@@ -558,7 +583,7 @@ dqn.connect(apex_dqn)
 # dqn_per.connecT(c51, syle=INVIS)
 
 r2d2 = Node('R2D2',
-           'Recurrent Replay Distributed DQN (R2D2). (from the abstract) Building on the recent successes of distributed training of RL agents, in this paper we investigate the training of RNN-based RL agents from distributed prioritized experience replay. We study the effects of parameter lag resulting in representational drift and recurrent state staleness and empirically derive an improved training strategy. Using a single network architecture and fixed set of hyper-parameters, the resulting agent, Recurrent Replay Distributed DQN, quadruples the previous state of the art on Atari-57, and matches the state of the art on DMLab-30. It is the first agent to exceed human-level performance in 52 of the 57 Atari games.',
+           """Recurrent Replay Distributed DQN (R2D2). (from the abstract) Building on the recent successes of distributed training of RL agents, in this paper we investigate the training of RNN-based RL agents from distributed prioritized experience replay. We study the effects of parameter lag resulting in representational drift and recurrent state staleness and empirically derive an improved training strategy. Using a single network architecture and fixed set of hyper-parameters, the resulting agent, Recurrent Replay Distributed DQN, quadruples the previous state of the art on Atari-57, and matches the state of the art on DMLab-30. It is the first agent to exceed human-level performance in 52 of the 57 Atari games.""",
            value_gradient,
            flags=[Flag.OFP, Flag.CS, Flag.DA, Flag.RB],
            authors='Steven Kapturowski, Georg Ostrovski, John Quan, Remi Munos, Will Dabney',
@@ -1106,7 +1131,9 @@ This is a loose taxonomy of reinforcement learning algorithms. I'm by no means e
 
     md += """## <A name="taxonomy"></a>Taxonomy
 
-Below is the taxonomy of reinforcement learning algorithms. Solid line indicates some progression from one idea to another. Dashed line indicates a loose connection. On the left you can see the timeline of the publication year of the algorithms. Open the .SVG file to view the full scale of the graph.
+Below is the taxonomy of reinforcement learning algorithms. Solid line indicates some progression from one idea to another. Dashed line indicates a loose connection. On the left you can see the timeline of the publication year of the algorithms. 
+
+It's recommended to open the .SVG file in a new window. Hovering the mouse over the algorithm will activate tooltip containing the description of the algorithm.
 
 ![RL Taxonomy](rl-taxonomy.gv.svg "RL Taxonomy")\n\n"""
 
