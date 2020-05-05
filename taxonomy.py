@@ -831,6 +831,18 @@ svpg = Node('SVPG',
 root_policy_gradient.connect(svpg, style=ROOT_EDGE)
 a2c.connect(svpg, style=ORDER_EDGE)  # just to maintain relative timeline order
 
+reactor = Node('Reactor',
+               'From the abstract: In this work we present a new agent architecture, called Reactor, which combines multiple algorithmic and architectural contributions to produce an agent with higher sample-efficiency than Prioritized Dueling DQN (Wang et al., 2016) and Categorical DQN (Bellemare et al., 2017), while giving better run-time performance than A3C (Mnih et al., 2016). Our first contribution is a new policy evaluation algorithm called Distributional Retrace, which brings multi-step off-policy updates to the distributional reinforcement learning setting. The same approach can be used to convert several classes of multi-step policy evaluation algorithms designed for expected value evaluation into distributional ones. Next, we introduce the β-leave-one-out policy gradient algorithm which improves the trade-off between variance and bias by using action values as a baseline. Our final algorithmic contribution is a new prioritized replay algorithm for sequences, which exploits the temporal locality of neighboring observations for more efficient replay prioritization. Using the Atari 2600 benchmarks, we show that each of these innovations contribute to both the sample efficiency and final agent performance. Finally, we demonstrate that Reactor reaches state-of-the-art performance after 200 million frames and less than a day of training.',
+           policy_gradient,
+           flags=[Flag.OFP, Flag.RNN, Flag.RB, Flag.DI],
+           authors='Audrunas Gruslys, Will Dabney, Mohammad Gheshlaghi Azar, Bilal Piot, Marc Bellemare, Remi Munos',
+           year=2017,
+           url='https://arxiv.org/abs/1704.04651',
+           links=[]
+           )
+root_policy_gradient.connect(reactor, style=ROOT_EDGE)
+
+
 d4pg = Node('D4PG',
            'Distributed Distributional Deep Deterministic Policy Gradient (D4PG) adopts the very successful distributional perspective on reinforcement learning and adapts it to the continuous control setting. It combines this within a distributed framework. It also combines this technique with a number of additional, simple improvements such as the use of N-step returns and prioritized experience replay [from the paper\'s abstract]',
            policy_gradient,
@@ -875,6 +887,17 @@ td3 = Node('TD3',
            links=[('Twin Delayed DDPG (Spinning Up)', 'https://spinningup.openai.com/en/latest/algorithms/td3.html')])
 ddpg.connect(td3)
 ddqn.connect(td3, style=WEAK_LINK, label='double Q-learning')
+
+mpo = Node('MPO',
+           'Maximum a Posteriori Policy Optimization (MPO) is an RL method that combines the sample efficiency of off-policy methods with the scalability and  hyperparameter robustness of  on-policy methods.  It is an EM style method, which alternates an E-step that re-weights state-action samples with an M step that updates a deep neural network with supervised training.  MPO achieves state of the art results on many continuous control tasks while using an order of magnitude fewer samples when compared with PPO',
+           policy_gradient,
+           flags=[Flag.OFP, Flag.CS, Flag.CA, Flag.DA],
+           authors='Abbas Abdolmaleki, Jost Tobias Springenberg, Yuval Tassa, Remi Munos, Nicolas Heess, Martin Riedmiller',
+           year=2018,
+           url='https://arxiv.org/abs/1806.06920',
+           links=[])
+root_policy_gradient.connect(mpo, style=ROOT_EDGE)
+
 
 impala = Node('IMPALA',
            'Importance Weighted Actor-Learner Architecture (IMPALA)',
